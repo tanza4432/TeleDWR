@@ -1,4 +1,6 @@
+import 'package:dwr0001/Application/Map/map.dart';
 import 'package:dwr0001/Application/MenuOld.dart';
+import 'package:dwr0001/components/burgerMenu/widgetMenuItem.dart';
 import 'package:flutter/material.dart';
 
 class NavigationBurgerMenuWidget extends StatelessWidget {
@@ -35,25 +37,20 @@ class NavigationBurgerMenuWidget extends StatelessWidget {
               text: "หน้าหลัก",
               icon: Icons.home_filled,
               Path: MenuPageOld(data: ''),
-            )
+            ),
+            buildMenuItem(
+              text: "แผนที่",
+              icon: Icons.map,
+              Path: MapPage(),
+            ),
+            buildMenuItem(
+              text: "ลุ่มแม่น้ำ",
+              icon: Icons.water_drop_outlined,
+              Path: MapPage(),
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget buildMenuItem(
-      {String text, IconData icon, var Path, BuildContext context}) {
-    return ListTile(
-      leading: Icon(icon, color: Colors.black45),
-      title: Text(
-        text,
-        style: TextStyle(fontSize: 18),
-      ),
-      onTap: () {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (BuildContext context) => Path));
-      },
     );
   }
 }
