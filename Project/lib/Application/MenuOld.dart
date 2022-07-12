@@ -1,3 +1,4 @@
+import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
 import 'package:dwr0001/components/bodyold.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,17 +24,22 @@ class _MenuPageOldState extends State<MenuPageOld> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
+      drawer: NavigationBurgerMenuWidget(),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('หน้าหลัก'),
+      ),
       body: Container(
         height: size.height,
         width: double.infinity,
         constraints: BoxConstraints.expand(),
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/banner/banner02/background03.png'),
-              fit: BoxFit.fill),
-        ),
+        // decoration: BoxDecoration(
+        //   image: DecorationImage(
+        //       image: AssetImage('assets/banner/banner02/background03.png'),
+        //       fit: BoxFit.fill),
+        // ),
         child: Column(children: <Widget>[
-          SizedBox(height: size.height * 0.15),
+          // SizedBox(height: size.height * 0.15),
           GestureDetector(
             onTap: () {},
             child: Image(
