@@ -1,18 +1,18 @@
-import 'package:dwr0001/Application/Station/Select.dart';
+import 'package:dwr0001/Application/Menu.dart';
+import 'package:dwr0001/Models/station_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_plugin_pdf_viewer/flutter_plugin_pdf_viewer.dart';
 
-// ignore: must_be_immutable
 class PdfViewer extends StatefulWidget {
-  PdfViewer(this.basinID);
   var basinID;
+  final List<StationModel> data;
+
+  PdfViewer({Key key, this.basinID, this.data}) : super(key: key);
   @override
-  _PdfViewerState createState() => _PdfViewerState(basinID);
+  _PdfViewerState createState() => _PdfViewerState();
 }
 
 class _PdfViewerState extends State<PdfViewer> {
-  _PdfViewerState(this.basinID);
-  var basinID;
   bool _isLoading = true;
   PDFDocument document;
 
@@ -23,10 +23,9 @@ class _PdfViewerState extends State<PdfViewer> {
   }
 
   loadDocument() async {
-    print(basinID);
-    if (basinID == 1) {
+    if (widget.basinID == 1) {
       document = await PDFDocument.fromAsset('assets/pdf/mk/mk.pdf');
-    } else if (basinID == 2) {
+    } else if (widget.basinID == 2) {
       document = await PDFDocument.fromAsset('assets/pdf/sl/sl.pdf');
     } else {
       document = await PDFDocument.fromAsset('assets/pdf/kk/kk.pdf');
@@ -41,13 +40,17 @@ class _PdfViewerState extends State<PdfViewer> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           backgroundColor: Colors.blue[800],
           title: const Text('PDF TeleDWR'),
           leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
+            color: Colors.white,
             onPressed: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => StationOld(basinID)))
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MenuPage(data: widget.data)))
             },
           ),
         ),

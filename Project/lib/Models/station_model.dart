@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-class StationModel{
+class StationModel {
   final String STN_ID;
   final String STN_Name;
   final String CURR_Acc_Rain_15_M;
@@ -17,6 +17,7 @@ class StationModel{
   final String CURR_CCTV;
   final String CURR_STATUS;
   final String LAST_UPDATE;
+  final int BASINID;
 
   StationModel({
     this.STN_ID,
@@ -35,9 +36,10 @@ class StationModel{
     this.CURR_CCTV,
     this.CURR_STATUS,
     this.LAST_UPDATE,
+    this.BASINID,
   });
 
-  factory StationModel.fromJson(final json){
+  factory StationModel.fromJson(final json) {
     return StationModel(
         STN_ID: json['STN_ID'],
         STN_Name: json['STN_Name'],
@@ -54,9 +56,7 @@ class StationModel{
         WF: json['WF'],
         CURR_CCTV: json['CURR_CCTV'],
         CURR_STATUS: json['CURR_STATUS'],
-        LAST_UPDATE: json['LAST_UPDATE']
-    );
-
+        LAST_UPDATE: json['LAST_UPDATE'],
+        BASINID: json['BASIONID']);
   }
 }
-

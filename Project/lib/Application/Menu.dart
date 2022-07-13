@@ -1,9 +1,17 @@
-import 'package:dwr0001/Application/OverViewPage.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:dwr0001/Application/Station/TabOneStation.dart';
+import 'package:dwr0001/Application/StationPage.dart';
+import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
+import 'package:dwr0001/Application/forecast/forecast.dart';
+import 'package:dwr0001/Application/pdf/PdfViewer.dart';
+import 'package:dwr0001/Models/station_model.dart';
+import 'package:dwr0001/components/BoxDetail.dart';
+import 'package:dwr0001/components/onwillpop.dart';
+import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 
-class MenuPage extends StatelessWidget {
-  final String data;
+class MenuPage extends StatefulWidget {
+  final List<StationModel> data;
 
   MenuPage({
     Key key,
@@ -11,134 +19,447 @@ class MenuPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _MenuPageState createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  List<Map<String, dynamic>> items = <Map<String, dynamic>>[
+    <String, dynamic>{'title': "ลุ่มแม่น้ำกลอง"},
+    <String, dynamic>{'title': "ลุ่มน้ำสาละวิน"},
+    <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ"},
+    <String, dynamic>{'title': "..."},
+    <String, dynamic>{'title': "..."},
+    <String, dynamic>{'title': "..."},
+    <String, dynamic>{'title': "..."},
+    <String, dynamic>{'title': "..."},
+  ];
+
+  DateTime backbuttonpressedTime;
+  int optionSelected = 1;
+
+  void checkOption(int index) {
+    setState(() {
+      optionSelected = index;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    Size size = MediaQuery.of(context).size;
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        drawer: NavigationBurgerMenuWidget(data: widget.data),
         appBar: AppBar(
-          title: Text(
-            'TELEDWR-Menu',
-            textAlign: TextAlign.center,
-            style: TextStyle(
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: Icon(
+                Icons.menu,
                 color: Colors.white,
-                fontFamily: 'Kanit',
-                fontSize: 18.0,
-                fontWeight: FontWeight.w700),
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            ),
           ),
-          elevation: 10.0,
+          centerTitle: true,
+          title: Text(
+            'หน้าหลัก',
+            style: DefaultTitleW(),
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.search,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: MySearchDelegate(widget.data),
+                );
+              },
+            )
+          ],
+          backgroundColor: Colors.lightBlue[600],
         ),
-        body: Container(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
               children: [
-                Text(
-                  'เลือกลุ่มแม่น้ำ',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'Kanit',
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w700),
+                Header(),
+                Container(
+                  width: double.infinity,
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            BoxDetail(
+                              title: "เกี่ยวกับโครงการ",
+                              path: PdfViewer(
+                                  basinID: optionSelected, data: widget.data),
+                            ),
+                            SizedBox(width: 20),
+                            BoxDetail(
+                              title: "การคาดการณ์",
+                              path: ForecastPage(
+                                  basinID: optionSelected, data: widget.data),
+                            ),
+                          ],
+                        ),
+                        Divider(color: Colors.black38),
+                        Text(
+                          "TeleDWR-รายการสถานี",
+                          style: DefaultStyleB(),
+                        ),
+                        SizedBox(height: 10),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.lightBlue[600],
+                            boxShadow: [
+                              BoxShadow(
+                                spreadRadius: 3,
+                                color: Colors.lightBlue[600],
+                              ),
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(
+                              optionSelected == 1
+                                  ? "ลุ่มแม่น้ำกลอง"
+                                  : optionSelected == 2
+                                      ? "ลุ่มน้ำสาละวิน"
+                                      : optionSelected == 3
+                                          ? "ลุ่มน้ำกกและโขงเหนือ"
+                                          : "ไม่พบข้อมูล",
+                              style: DefaultStyleW(),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          height: size.height * 0.60,
+                          color: Colors.white,
+                          child: TabOneStation(optionSelected, widget.data),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    SizedBox(
-                      height: 25.0,
-                    ),
-                    SizedBox(
-                      height: 7.0,
-                    ),
-                    SizedBox(
-                      height: 50.0,
-                      // ignore: deprecated_member_use
-                      child: RaisedButton(
-                        child: Text(
-                          'ลุ่มน้ำแม่กลอง',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontFamily: 'Kanit',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w400),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container Header() {
+    return Container(
+      width: double.infinity,
+      color: Colors.black12,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("เลือกลุ่มแม่น้ำ", style: DefaultStyleB()),
+            SizedBox(height: 5),
+            Container(
+              height: 100,
+              child: GridView.count(
+                crossAxisCount: 4,
+                mainAxisSpacing: 20,
+                crossAxisSpacing: 20,
+                children: [
+                  for (int i = 0; i < items.length; i++)
+                    InkWell(
+                      child: Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: optionSelected == i + 1
+                              ? Colors.lightBlue[600]
+                              : Colors.white,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(12),
+                          ),
                         ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        color: Colors.white,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  // builder: (context) => OverViewPage()));
-                                  builder: (context) => OverViewPage(1)));
-                        },
+                        width: 50,
+                        child: Text(
+                          items[i]['title'],
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontFamily: 'Kanit',
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w200,
+                              color: optionSelected == i + 1
+                                  ? Colors.white
+                                  : Colors.black54),
+                        ),
+                      ),
+                      onTap: () {
+                        checkOption(i + 1);
+                      },
+                    )
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class MySearchDelegate extends SearchDelegate {
+  MySearchDelegate(this.dataserach);
+  List<StationModel> dataserach;
+
+  @override
+  Widget buildLeading(BuildContext context) => IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => close(context, null),
+      );
+
+  @override
+  List<Widget> buildActions(BuildContext context) => [
+        IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            if (query.isEmpty) {
+              close(context, null);
+            } else {
+              query = '';
+            }
+          },
+        )
+      ];
+  @override
+  Widget buildResults(BuildContext context) {
+    if (query != null) {
+      List<StationModel> suggestions = dataserach.where((dataserach) {
+        final result =
+            dataserach.STN_ID.toLowerCase() + dataserach.STN_Name.toLowerCase();
+        final input = query.toLowerCase();
+
+        return result.contains(input);
+      }).toList();
+      return ListView.builder(
+          itemCount: suggestions.length,
+          itemBuilder: (context, index) {
+            final StationModel suggestion = suggestions[index];
+
+            return ListTile(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StationPage(
+                        stn_id: suggestion.STN_ID,
+                        basinID: suggestion.BASINID,
+                        RF: suggestion.RF,
+                        WL: suggestion.WL,
+                        CCTV: suggestion.CURR_CCTV,
+                        data: dataserach),
+                  ),
+                );
+              },
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Ink(
+                      child: new ListTile(
+                    leading: Container(
+                      child: AvatarGlow(
+                        glowColor: Colors.blue,
+                        endRadius: 40.0,
+                        duration: Duration(milliseconds: 2000),
+                        repeat: true,
+                        showTwoGlows: true,
+                        repeatPauseDuration: Duration(milliseconds: 200),
+                        child: CircleAvatar(
+                          radius: 18.0,
+                          child: CircleAvatar(
+                            radius: 0,
+                            backgroundColor: Colors.greenAccent,
+                          ),
+                          backgroundColor: suggestion.CURR_STATUS == "0"
+                              ? Colors.green
+                              : suggestion.CURR_STATUS == "1"
+                                  ? Colors.green
+                                  : suggestion.CURR_STATUS == "2"
+                                      ? Colors.green
+                                      : suggestion.CURR_STATUS == "3"
+                                          ? Colors.white
+                                          : suggestion.CURR_STATUS == "4"
+                                              ? Colors.grey
+                                              : suggestion.CURR_STATUS == "5"
+                                                  ? Colors.black
+                                                  : Colors.green,
+                        ),
                       ),
                     ),
-                    SizedBox(
-                      height: 5.0,
+                    title: new Text(
+                      suggestion.STN_ID,
+                      style: TextStyle(
+                          color: Colors.black54,
+                          fontFamily: 'Kanit',
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w400),
                     ),
-                    SizedBox(
-                      height: 7.0,
+                    subtitle: new Text(
+                      suggestion.STN_Name,
+                      style: TextStyle(
+                          color: Colors.black54,
+                          fontFamily: 'Kanit',
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w200),
                     ),
-                    SizedBox(
-                      height: 50.0,
-                      // ignore: deprecated_member_use
-                      child: RaisedButton(
-                        child: Text(
-                          'ลุ่มน้ำสาละวิน',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontFamily: 'Kanit',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w400),
+                    trailing: Wrap(
+                      spacing: 12,
+                      children: <Widget>[
+                        Image.asset(
+                          suggestion.CURR_STATUS == "0"
+                              ? 'assets/banner/bell/green.png'
+                              : suggestion.CURR_STATUS == "1"
+                                  ? "assets/banner/bell/yellow.png"
+                                  : suggestion.CURR_STATUS == "2"
+                                      ? "assets/banner/bell/red.png"
+                                      : suggestion.CURR_STATUS == "3"
+                                          ? "assets/banner/bell/gray.png"
+                                          : suggestion.CURR_STATUS == "4"
+                                              ? "assets/banner/bell/gray.png"
+                                              : suggestion.CURR_STATUS == "5"
+                                                  ? "assets/banner/bell/gray.png"
+                                                  : "",
+                          height: 45,
                         ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        color: Colors.white,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  // builder: (context) => OverViewPage()));
-                                  builder: (context) => OverViewPage(2)));
-                        },
-                      ),
+                        Icon(Icons.arrow_forward_ios),
+                      ],
                     ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    SizedBox(
-                      height: 7.0,
-                    ),
-                    SizedBox(
-                      height: 50.0,
-                      // ignore: deprecated_member_use
-                      child: RaisedButton(
-                        child: Text(
-                          'ลุ่มน้ำกกและโขงเหนือ',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontFamily: 'Kanit',
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0))),
-                        color: Colors.white,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  // builder: (context) => OverViewPage()));
-                                  builder: (context) => OverViewPage(3)));
-                        },
-                      ),
-                    ),
-                  ],
+                  )),
+                ],
+              ),
+            );
+          });
+    } else {
+      return ListTile(title: Text("ไม่พบข้อมูล"));
+    }
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<StationModel> suggestions = dataserach.where((dataserach) {
+      final result = dataserach.STN_ID.toLowerCase() +
+          " " +
+          dataserach.STN_Name.toLowerCase();
+      final input = query.toLowerCase();
+
+      return result.contains(input);
+    }).toList();
+
+    return ListView.builder(
+        itemCount: suggestions.length,
+        itemBuilder: (context, index) {
+          final StationModel suggestion = suggestions[index];
+
+          return ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StationPage(
+                      stn_id: suggestion.STN_ID,
+                      basinID: suggestion.BASINID,
+                      RF: suggestion.RF,
+                      WL: suggestion.WL,
+                      CCTV: suggestion.CURR_CCTV,
+                      data: dataserach),
                 ),
-              ]),
-        ));
+              );
+            },
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Ink(
+                    child: new ListTile(
+                  leading: Container(
+                    child: AvatarGlow(
+                      glowColor: Colors.blue,
+                      endRadius: 40.0,
+                      duration: Duration(milliseconds: 2000),
+                      repeat: true,
+                      showTwoGlows: true,
+                      repeatPauseDuration: Duration(milliseconds: 200),
+                      child: CircleAvatar(
+                        radius: 18.0,
+                        child: CircleAvatar(
+                          radius: 0,
+                          backgroundColor: Colors.greenAccent,
+                        ),
+                        backgroundColor: suggestion.CURR_STATUS == "0"
+                            ? Colors.green
+                            : suggestion.CURR_STATUS == "1"
+                                ? Colors.green
+                                : suggestion.CURR_STATUS == "2"
+                                    ? Colors.green
+                                    : suggestion.CURR_STATUS == "3"
+                                        ? Colors.white
+                                        : suggestion.CURR_STATUS == "4"
+                                            ? Colors.grey
+                                            : suggestion.CURR_STATUS == "5"
+                                                ? Colors.black
+                                                : Colors.green,
+                      ),
+                    ),
+                  ),
+                  title: new Text(
+                    suggestion.STN_ID,
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontFamily: 'Kanit',
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  subtitle: new Text(
+                    suggestion.STN_Name,
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontFamily: 'Kanit',
+                        fontSize: 14.0,
+                        fontWeight: FontWeight.w200),
+                  ),
+                  trailing: Wrap(
+                    spacing: 12,
+                    children: <Widget>[
+                      Image.asset(
+                        suggestion.CURR_STATUS == "0"
+                            ? 'assets/banner/bell/green.png'
+                            : suggestion.CURR_STATUS == "1"
+                                ? "assets/banner/bell/yellow.png"
+                                : suggestion.CURR_STATUS == "2"
+                                    ? "assets/banner/bell/red.png"
+                                    : suggestion.CURR_STATUS == "3"
+                                        ? "assets/banner/bell/gray.png"
+                                        : suggestion.CURR_STATUS == "4"
+                                            ? "assets/banner/bell/gray.png"
+                                            : suggestion.CURR_STATUS == "5"
+                                                ? "assets/banner/bell/gray.png"
+                                                : "",
+                        height: 45,
+                      ),
+                      Icon(Icons.arrow_forward_ios),
+                    ],
+                  ),
+                )),
+              ],
+            ),
+          );
+        });
   }
 }

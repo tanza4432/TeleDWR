@@ -1,4 +1,6 @@
-import 'package:dwr0001/Application/MenuOld.dart';
+import 'package:dwr0001/Application/Menu.dart';
+import 'package:dwr0001/Application/OverViewPage.dart';
+import 'package:dwr0001/Models/station_model.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/material.dart';
 
@@ -9,6 +11,36 @@ class WelcomeOld extends StatefulWidget {
 
 class _WelcomeState extends State<WelcomeOld> {
   DateTime backbuttonpressedTime;
+
+  List<StationModel> newdata = [];
+
+  void GetData(BuildContext context) async {
+    for (var i = 1; i < 4; i++) {
+      List<StationModel> data = await getStationListTab(i, "1");
+      for (StationModel result in data) {
+        newdata.add(
+          StationModel(
+            STN_ID: result.STN_ID,
+            STN_Name: result.STN_Name,
+            RF: result.RF,
+            WL: result.WL,
+            BASINID: i,
+            CURR_CCTV: result.CURR_CCTV,
+            CURR_STATUS: result.CURR_STATUS,
+          ),
+        );
+      }
+      print(i);
+    }
+  }
+
+  @override
+  void initState() {
+    GetData(context);
+    print("สำเร็จ");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -29,8 +61,8 @@ class _WelcomeState extends State<WelcomeOld> {
               onTap: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
-                      builder: (context) => MenuPageOld(
-                            data: '',
+                      builder: (context) => MenuPage(
+                            data: newdata,
                           )),
                 );
               },
@@ -44,22 +76,5 @@ class _WelcomeState extends State<WelcomeOld> {
         ),
       ),
     );
-  }
-
-  Future<bool> onWillPop() async {
-    DateTime currentTime = DateTime.now();
-
-    bool backButton = backbuttonpressedTime == null ||
-        currentTime.difference(backbuttonpressedTime) > Duration(seconds: 3);
-
-    if (backButton) {
-      backbuttonpressedTime = currentTime;
-      Fluttertoast.showToast(
-          msg: "กดอีกครั้งเพื่อออก!!",
-          backgroundColor: Colors.black,
-          textColor: Colors.white);
-      return false;
-    }
-    return true;
   }
 }

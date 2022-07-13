@@ -1,3 +1,4 @@
+import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 
 class buildMenuItem extends StatelessWidget {
@@ -15,7 +16,7 @@ class buildMenuItem extends StatelessWidget {
       leading: Icon(icon, color: Colors.black45),
       title: Text(
         text,
-        style: TextStyle(fontSize: 18),
+        style: DefaultStyleB(),
       ),
       onTap: () {
         Navigator.pushReplacement(context,

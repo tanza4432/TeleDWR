@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dwr0001/Application/Menu.dart';
 import 'package:dwr0001/Application/OverViewPage.dart';
 import 'package:dwr0001/Application/Tab/TabFour.dart';
 import 'package:dwr0001/Application/Tab/TabOne.dart';
@@ -12,15 +13,14 @@ import 'package:flutter/painting.dart' as painting;
 import '../Models/data_Model.dart';
 
 class StationPage extends StatelessWidget {
-  // ignore: non_constant_identifier_names
+  final List<StationModel> data;
   final String stn_id;
   final int basinID;
   final String RF;
   final String WL;
   final String CCTV;
-  // ignore: non_constant_identifier_names
-  // StationPage({Key key, @required this.stn_id, this.basinID}) : super(key: key);
-  StationPage({this.stn_id, this.basinID, this.RF, this.WL, this.CCTV});
+  StationPage(
+      {this.stn_id, this.basinID, this.RF, this.WL, this.CCTV, this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +28,16 @@ class StationPage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: DefaultTabController(
         length: 4,
-        child: MyDisplayClass(stn_id, basinID, RF, WL, CCTV),
+        child: MyDisplayClass(stn_id, basinID, RF, WL, CCTV, data),
       ),
     );
   }
 }
 
-// ignore: must_be_immutable
 class MyDisplayClass extends StatelessWidget {
-  MyDisplayClass(this.stnId, this.basinID, this.RF, this.WL, this.CCTV);
+  MyDisplayClass(
+      this.stnId, this.basinID, this.RF, this.WL, this.CCTV, this.data);
+  List<StationModel> data;
   var stnId;
   var basinID;
   var RF;
@@ -124,7 +125,8 @@ class MyDisplayClass extends StatelessWidget {
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => OverViewPage(basinID)))
+                MaterialPageRoute(builder: (context) => MenuPage(data: data)))
+            // Navigator.pop(context)
           },
         ),
         flexibleSpace: Container(

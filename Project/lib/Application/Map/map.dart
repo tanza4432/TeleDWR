@@ -1,10 +1,14 @@
 import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
+import 'package:dwr0001/Models/station_model.dart';
+import 'package:dwr0001/components/onwillpop.dart';
+import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import "package:latlong/latlong.dart";
 
 class MapPage extends StatefulWidget {
-  MapPage({Key key}) : super(key: key);
+  final List<StationModel> data;
+  MapPage({Key key, this.data}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -53,23 +57,40 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      drawer: NavigationBurgerMenuWidget(),
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('แผนที่'),
-      ),
-      body: FlutterMap(
-        options: MapOptions(
-          center: LatLng(13.782694, 100.5549202),
-          zoom: 10.25,
-        ),
-        layers: [
-          TileLayerOptions(
-            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    return WillPopScope(
+      onWillPop: onWillPop,
+      child: Scaffold(
+        drawer: NavigationBurgerMenuWidget(data: widget.data),
+        appBar: AppBar(
+          leading: Builder(
+            builder: (context) => IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
+              onPressed: () => Scaffold.of(context).openDrawer(),
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+            ),
           ),
-          MarkerLayerOptions(markers: _markers.toList())
-        ],
+          centerTitle: true,
+          title: Text(
+            'แผนที่',
+            style: DefaultTitleW(),
+          ),
+          backgroundColor: Colors.lightBlue[600],
+        ),
+        body: FlutterMap(
+          options: MapOptions(
+            center: LatLng(13.782694, 100.5549202),
+            zoom: 10.25,
+          ),
+          layers: [
+            TileLayerOptions(
+              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            ),
+            MarkerLayerOptions(markers: _markers.toList())
+          ],
+        ),
       ),
     );
   }

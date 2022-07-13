@@ -31,6 +31,9 @@ class TabOne extends StatelessWidget {
                 future: getStation(stnId),
                 // ignore: missing_return
                 builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
                   final StationModel station = snapshot.data;
                   if (snapshot.hasData) {
                     var CURR_Acc_Rain_15_M_ = "";
