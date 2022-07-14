@@ -14,7 +14,7 @@ class TabTwo extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             final List<DataModelGet> data = snapshot.data;
-            print(data);
+            // print(data);
             return SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: DataTable(

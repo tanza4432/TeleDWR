@@ -113,7 +113,7 @@ class TabOneStation extends StatelessWidget {
                                       ? "assets/banner/bell/gray.png"
                                       : station[i].CURR_STATUS == "5"
                                           ? "assets/banner/bell/gray.png"
-                                          : "",
+                                          : "assets/banner/bell/gray.png",
                   height: 45,
                 ),
                 // icon-1

@@ -27,10 +27,10 @@ class _MenuPageState extends State<MenuPage> {
     <String, dynamic>{'title': "ลุ่มแม่น้ำกลอง"},
     <String, dynamic>{'title': "ลุ่มน้ำสาละวิน"},
     <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ"},
-    <String, dynamic>{'title': "..."},
-    <String, dynamic>{'title': "..."},
-    <String, dynamic>{'title': "..."},
-    <String, dynamic>{'title': "..."},
+    <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง"},
+    <String, dynamic>{'title': "ลุ่มน้ำบางกะปิ"},
+    <String, dynamic>{'title': "อำเภอบางสะพาน"},
+    <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช"},
     <String, dynamic>{'title': "..."},
   ];
 
@@ -137,13 +137,22 @@ class _MenuPageState extends State<MenuPage> {
                                       ? "ลุ่มน้ำสาละวิน"
                                       : optionSelected == 3
                                           ? "ลุ่มน้ำกกและโขงเหนือ"
-                                          : "ไม่พบข้อมูล",
+                                          : optionSelected == 4
+                                              ? "ลุ่มน้ำสงครามและห้วยหลวง"
+                                              : optionSelected == 5
+                                                  ? "ลุ่มน้ำบางปะกง"
+                                                  : optionSelected == 6
+                                                      ? "อำเภอบางสะพาน"
+                                                      : optionSelected == 7
+                                                          ? "จังหวัดนครศรีธรรมราช"
+                                                          : "ไม่พบข้อมูล",
                               style: DefaultStyleW(),
                             ),
                           ),
                         ),
                         Container(
                           height: size.height * 0.60,
+                          width: double.infinity,
                           color: Colors.white,
                           child: TabOneStation(optionSelected, widget.data),
                         ),
@@ -172,10 +181,16 @@ class _MenuPageState extends State<MenuPage> {
             SizedBox(height: 5),
             Container(
               height: 100,
-              child: GridView.count(
-                crossAxisCount: 4,
-                mainAxisSpacing: 20,
-                crossAxisSpacing: 20,
+              child: GridView(
+                scrollDirection: Axis.horizontal,
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 20),
+                // scrollDirection: Axis.horizontal,
+                // crossAxisCount: 8,
+                // mainAxisSpacing: 20,
+                // crossAxisSpacing: 20,
                 children: [
                   for (int i = 0; i < items.length; i++)
                     InkWell(
@@ -190,16 +205,21 @@ class _MenuPageState extends State<MenuPage> {
                           ),
                         ),
                         width: 50,
-                        child: Text(
-                          items[i]['title'],
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontFamily: 'Kanit',
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w200,
-                              color: optionSelected == i + 1
-                                  ? Colors.white
-                                  : Colors.black54),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            items[i]['title'],
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                                fontFamily: 'Kanit',
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w200,
+                                color: optionSelected == i + 1
+                                    ? Colors.white
+                                    : Colors.black54),
+                          ),
                         ),
                       ),
                       onTap: () {
