@@ -35,9 +35,17 @@ class BoxDetail extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.only(right: 5, left: 5),
-          child: Text(
-            title,
-            style: DefaultStyleW(),
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: DefaultStyleW(),
+              ),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.white,
+              ),
+            ],
           ),
         ),
       ),

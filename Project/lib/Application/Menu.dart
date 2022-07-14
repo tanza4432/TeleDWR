@@ -241,6 +241,9 @@ class MySearchDelegate extends SearchDelegate {
       ];
   @override
   Widget buildResults(BuildContext context) {
+    if (dataserach.length == 0) {
+      dataserach = [];
+    }
     if (query != null) {
       List<StationModel> suggestions = dataserach.where((dataserach) {
         final result =
