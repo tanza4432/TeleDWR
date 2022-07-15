@@ -23,13 +23,3 @@ class RiverProviderTabTwo with ChangeNotifier {
     _listData.add(dataRiver);
   }
 }
-
-class RiverProviderTabFour with ChangeNotifier {
-  List<StationModel> get dataRiver => _listData;
-
-  List<StationModel> _listData = [];
-
-  void addData(StationModel dataRiver) {
-    _listData.add(dataRiver);
-  }
-}

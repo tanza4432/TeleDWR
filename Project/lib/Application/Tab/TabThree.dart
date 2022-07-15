@@ -1,6 +1,6 @@
 import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/data_Model.dart';
-import 'package:dwr0001/screen/welcome/welcome.dart';
+import 'package:dwr0001/components/AreaAndLineChart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

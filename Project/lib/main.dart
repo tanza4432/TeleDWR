@@ -1,5 +1,5 @@
 import 'package:dwr0001/Application/providers/river_provider.dart';
-import 'package:dwr0001/screen/welcome/welcomeold.dart';
+import 'package:dwr0001/screen/welcome/welcome.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,15 +18,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => RiverProviderTabTwo(),
         ),
-        ChangeNotifierProvider(
-          create: (context) => RiverProviderTabFour(),
-        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'mytitle',
         theme: ThemeData(primarySwatch: Colors.cyan),
-        home: WelcomeOld(),
+        home: Welcome(),
       ),
     );
   }
