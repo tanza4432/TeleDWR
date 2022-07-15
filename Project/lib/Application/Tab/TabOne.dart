@@ -30,7 +30,7 @@ class TabOne extends StatelessWidget {
             fit: BoxFit.fill,
           ),
         ),
-        child: Consumer<RiverProvider>(
+        child: Consumer<RiverProviderTabOne>(
             builder: (context, Data, _) => Column(
                   children: <Widget>[
                     CustomPaint(painter: CurvePainter()),
@@ -69,11 +69,6 @@ class TabOne extends StatelessWidget {
                               Data.addData(station);
                             }
                           }
-                          for (var i in Data.dataRiver) {
-                            print(i.STN_ID);
-                          }
-                          print(Data.dataRiver.length);
-
                           var CURR_Acc_Rain_15_M_ = "";
                           var CURR_Acc_Rain_30_M_ = "";
                           var CURR_Acc_Rain_60_M_ = "";

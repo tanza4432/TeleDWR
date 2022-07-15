@@ -17,17 +17,6 @@ class TabFour extends StatelessWidget {
             : basinId == 3
                 ? "kokkhong"
                 : "kokkhong";
-    // if (basinId == 1) {
-    //   basinName = 'maeklong';
-    // }
-    // if (basinId == 2) {
-    //   basinName = 'salawin';
-    // }
-
-    // if (basinId == 3) {
-    //   basinName = 'kokkhong';
-    // }
-
     if (CCTV == "") {
       return Padding(
           padding: const EdgeInsets.all(8.0),

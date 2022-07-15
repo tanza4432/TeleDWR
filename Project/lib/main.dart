@@ -13,7 +13,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => RiverProvider(),
+          create: (context) => RiverProviderTabOne(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => RiverProviderTabTwo(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => RiverProviderTabFour(),
         ),
       ],
       child: MaterialApp(
