@@ -5,6 +5,7 @@ import 'package:dwr0001/Application/Tab/TabOne.dart';
 import 'package:dwr0001/Application/Tab/TabThree.dart';
 import 'package:dwr0001/Application/Tab/TabTwo.dart';
 import 'package:dwr0001/Models/station_model.dart';
+import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/painting.dart' as painting;
@@ -51,19 +52,6 @@ class MyDisplayClass extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: FloatingActionButton(
-      // child: Icon(Icons.refresh_outlined),
-      //     onPressed: () async {
-      //   await loadData();
-      //   imageCache.clear();
-      //   Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //     var stationPage = StationPage(
-      //       stn_id: stnId,
-      //       basinID: basinID,
-      //     );
-      //     return stationPage;
-      //   }));
-      // }),
       appBar: AppBar(
         bottom: TabBar(
           tabs: [
@@ -111,11 +99,7 @@ class MyDisplayClass extends StatelessWidget {
         ),
         title: Text(
           'TELEDWR-ข้อมูลตรวจวัด',
-          style: TextStyle(
-              color: Colors.white,
-              fontFamily: 'Kanit',
-              fontSize: 18.0,
-              fontWeight: FontWeight.w700),
+          style: DefaultTitleW(),
         ),
         elevation: 0.0,
         automaticallyImplyLeading: true,
@@ -182,23 +166,6 @@ class MyDisplayClass extends StatelessWidget {
   }
 }
 
-Future<StationModel> getStation(String stn_id) async {
-  final String url =
-      "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
-          stn_id;
-
-  //final String url = "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
-  //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
-  //final String url = "https://jsonplaceholder.typicode.com/todos/1";
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    final station = jsonDecode(response.body);
-    return StationModel.fromJson(station);
-  } else {
-    throw Exception('Failed load data with status code ${response.statusCode}');
-  }
-}
-
 List<StationModel> parseStation(String responseBody) {
   final parsed = json.decode(responseBody);
   return parsed
@@ -227,57 +194,11 @@ List<StationModel> parseData(String responseBody) {
       .toList();
 }
 
-// ignore: non_constant_identifier_names
-Future<StationModel> getStationData(String stn_id) async {
-  //final String url ="http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json?stn_id=" + stn_id;
-  final String url =
-      "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_Data_json?stn_id=" +
-          stn_id;
-  //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
-  //final String url = "https://jsonplaceholder.typicode.com/todos/1";
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    final station = jsonDecode(response.body);
-    return StationModel.fromJson(station);
-  } else {
-    throw Exception();
-  }
-}
-
-List<DataModelGet> parseData_(String responseBody) {
-  final parsed = json.decode(responseBody);
-  return parsed
-      .map<DataModelGet>((json) => DataModelGet.fromJson(json))
-      .toList();
-}
-
-// ignore: non_constant_identifier_names
-Future<List<DataModelGet>> getStationData24H(String stn_id) async {
-  //final String url ="http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json?stn_id=" + stn_id;
-  final String url =
-      "http://tele-kokkhong.dwr.go.th/webservice/getdata?station_ID=" + stn_id;
-  //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
-  //final String url = "https://jsonplaceholder.typicode.com/todos/1";
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    return parseData_(response.body);
-  } else {
-    throw Exception();
-  }
-}
-
 class CurvePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
-    // ignore: todo
-    // TODO: Set properties to paint
-
     var path = Path();
-
-    // ignore: todo
-    // TODO: Draw your path
-
     canvas.drawPath(path, paint);
   }
 
