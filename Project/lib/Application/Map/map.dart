@@ -33,21 +33,43 @@ class _MapPageState extends State<MapPage> {
             height: 40,
             point: item,
             builder: (ctx) => Container(
-                child: IconButton(
-              icon: Icon(Icons.location_on_outlined),
-              color: Color(0xff6200eee),
-              iconSize: 45.0,
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (builder) {
-                      return Container(
-                        color: Colors.white,
-                        child: Text("TEST"),
-                      );
-                    });
-              },
-            )),
+              child: IconButton(
+                icon: Icon(Icons.location_on_outlined),
+                color: Color(0xff6200eee),
+                iconSize: 45.0,
+                onPressed: () {
+                  showModalBottomSheet(
+                      backgroundColor: Colors.transparent,
+                      context: context,
+                      builder: (builder) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                              right: 15, left: 15, bottom: 30),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.8),
+                                  blurRadius: 3,
+                                  offset: Offset(
+                                      2, 2), // changes position of shadow
+                                ),
+                              ],
+                              color: Colors.white.withOpacity(0.8),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            height: 150,
+                            child: Row(
+                              children: [
+                                Text("TEST55"),
+                              ],
+                            ),
+                          ),
+                        );
+                      });
+                },
+              ),
+            ),
           ),
         );
       });
