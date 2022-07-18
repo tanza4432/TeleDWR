@@ -29,6 +29,10 @@ class TabOne extends StatelessWidget {
         height: size.height,
         width: double.infinity,
         decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.white60, Colors.black]),
           image: DecorationImage(
             image: AssetImage('assets/banner/banner02/background04.png'),
             fit: BoxFit.fill,
@@ -137,7 +141,7 @@ class TabOne extends StatelessWidget {
                                           ],
                                         )
                                       ])),
-                                  SizedBox(height: size.height * 0.01),
+                                  SizedBox(height: size.height * 0.04),
                                   Container(
                                     width: c_width,
                                     padding: EdgeInsets.all(3.0),
@@ -187,7 +191,7 @@ class TabOne extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  SizedBox(height: size.height * 0.02),
+                                  SizedBox(height: size.height * 0.04),
                                   Container(
                                     child: Row(
                                       mainAxisAlignment:
@@ -216,6 +220,7 @@ class TabOne extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  SizedBox(height: size.height * 0.02),
                                   Container(
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 5.0),

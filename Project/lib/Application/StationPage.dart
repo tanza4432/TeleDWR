@@ -120,11 +120,7 @@ class MyDisplayClass extends StatelessWidget {
                 offset: Offset(0, 2), // changes position of shadow
               ),
             ],
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: <Color>[Colors.blue, Colors.lightBlueAccent],
-            ),
+            color: Colors.lightBlue[600],
           ),
         ),
       ),

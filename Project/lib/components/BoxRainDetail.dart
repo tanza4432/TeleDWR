@@ -38,15 +38,30 @@ class BoxRainDetail extends StatelessWidget {
       ),
       child: Column(
         children: [
-          new Image(
-            image: AssetImage('assets/TabOne/hailstorm_Gray.png'),
-            width: size.width * 0.1,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              child: new Image(
+                image: AssetImage('assets/TabOne/hailstorm_Gray.png'),
+                width: size.width * 0.1,
+              ),
+            ),
           ),
           Container(
               padding: EdgeInsets.all(5.0),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(3),
-                color: Colors.white.withOpacity(0.3),
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.blue[400], Colors.blue[200]]),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.8),
+                    blurRadius: 3,
+                    offset: Offset(2, 2), // changes position of shadow
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,

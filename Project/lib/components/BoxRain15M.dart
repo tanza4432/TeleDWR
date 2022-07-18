@@ -56,11 +56,20 @@ class BoxRain15M extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Colors.blue[300], Colors.blue[100]])),
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.blue[300], Colors.blue[100]],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.8),
+                          blurRadius: 3,
+                          offset: Offset(2, 2), // changes position of shadow
+                        ),
+                      ],
+                    ),
                     padding: EdgeInsets.all(1.0),
                     alignment: Alignment.topRight,
                     child: Column(
