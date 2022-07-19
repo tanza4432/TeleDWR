@@ -123,7 +123,7 @@ class _MenuPageState extends State<MenuPage> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Favorite",
+                                    "ติดตามสถานี",
                                     style: DefaultStyleW(),
                                   ),
                                   Icon(
@@ -142,9 +142,88 @@ class _MenuPageState extends State<MenuPage> {
                           child: FadeInDown(
                             from: 0,
                             child: Container(
-                              width: double.infinity,
                               height: 200,
-                              color: Colors.green,
+                              color: Colors.black12,
+                              child: GridView(
+                                scrollDirection: Axis.horizontal,
+                                gridDelegate:
+                                    SliverGridDelegateWithMaxCrossAxisExtent(
+                                        maxCrossAxisExtent: 300,
+                                        crossAxisSpacing: 20,
+                                        mainAxisSpacing: 20),
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: InkWell(
+                                      onTap: () {
+                                        print("object");
+                                      },
+                                      child: Container(
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(12),
+                                          ),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      print("favorite");
+                                                    },
+                                                    child: Icon(Icons
+                                                        .star_border_outlined),
+                                                  ),
+                                                ],
+                                              ),
+                                              Container(
+                                                child: AvatarGlow(
+                                                  glowColor: Colors.blue,
+                                                  endRadius: 40.0,
+                                                  duration: Duration(
+                                                      milliseconds: 2000),
+                                                  repeat: true,
+                                                  showTwoGlows: true,
+                                                  repeatPauseDuration: Duration(
+                                                      milliseconds: 200),
+                                                  child: CircleAvatar(
+                                                    radius: 18.0,
+                                                    child: CircleAvatar(
+                                                      radius: 0,
+                                                      backgroundColor:
+                                                          Colors.greenAccent,
+                                                    ),
+                                                    backgroundColor:
+                                                        Colors.green,
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                "TC140805",
+                                                style: FavoriteStyle(),
+                                              ),
+                                              Text(
+                                                "สถานี สนามกีฬาเทศบาลตำบลวังกะ",
+                                                style: FavoriteStyle(),
+                                                overflow: TextOverflow.fade,
+                                                maxLines: 1,
+                                                softWrap: false,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -243,10 +322,6 @@ class _MenuPageState extends State<MenuPage> {
                     maxCrossAxisExtent: 200,
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 20),
-                // scrollDirection: Axis.horizontal,
-                // crossAxisCount: 8,
-                // mainAxisSpacing: 20,
-                // crossAxisSpacing: 20,
                 children: [
                   for (int i = 0; i < items.length; i++)
                     InkWell(

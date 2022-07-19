@@ -30,9 +30,10 @@ class TabOne extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.white60, Colors.black]),
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white60, Colors.black],
+          ),
           image: DecorationImage(
             image: AssetImage('assets/banner/banner02/background04.png'),
             fit: BoxFit.fill,

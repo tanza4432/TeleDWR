@@ -39,3 +39,11 @@ TextStyle DefaultTitleB() {
       fontSize: 22.0,
       fontWeight: FontWeight.w200);
 }
+
+TextStyle FavoriteStyle() {
+  return TextStyle(
+      color: Colors.black,
+      fontFamily: 'Kanit',
+      fontSize: 10.0,
+      fontWeight: FontWeight.w200);
+}
