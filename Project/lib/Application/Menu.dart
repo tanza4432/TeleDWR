@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Application/Station/TabOneStation.dart';
 import 'package:dwr0001/Application/StationPage.dart';
@@ -42,6 +43,8 @@ class _MenuPageState extends State<MenuPage> {
       optionSelected = index;
     });
   }
+
+  bool isVisible = true;
 
   @override
   Widget build(BuildContext context) {
@@ -95,20 +98,73 @@ class _MenuPageState extends State<MenuPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            BoxDetail(
-                              title: "เกี่ยวกับโครงการ",
-                              path: PdfViewer(
-                                  basinID: optionSelected, data: widget.data),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              isVisible = !isVisible;
+                            });
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: Colors.lightBlue[600],
+                              boxShadow: [
+                                BoxShadow(
+                                  spreadRadius: 3,
+                                  color: Colors.lightBlue[600],
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 20),
-                            BoxDetail(
-                              title: "การคาดการณ์",
-                              path: ForecastPage(
-                                  basinID: optionSelected, data: widget.data),
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Favorite",
+                                    style: DefaultStyleW(),
+                                  ),
+                                  Icon(
+                                    !isVisible
+                                        ? Icons.arrow_drop_down_circle_outlined
+                                        : Icons.arrow_drop_up_outlined,
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
+                        ),
+                        Visibility(
+                          visible: isVisible,
+                          child: FadeInDown(
+                            from: 0,
+                            child: Container(
+                              width: double.infinity,
+                              height: 200,
+                              color: Colors.green,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          child: Row(
+                            children: [
+                              BoxDetail(
+                                title: "เกี่ยวกับโครงการ",
+                                path: PdfViewer(
+                                    basinID: optionSelected, data: widget.data),
+                              ),
+                              SizedBox(width: 20),
+                              BoxDetail(
+                                title: "การคาดการณ์",
+                                path: ForecastPage(
+                                    basinID: optionSelected, data: widget.data),
+                              ),
+                            ],
+                          ),
                         ),
                         Divider(color: Colors.black38),
                         Text(
