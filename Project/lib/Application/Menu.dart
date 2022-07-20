@@ -5,11 +5,13 @@ import 'package:dwr0001/Application/StationPage.dart';
 import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
 import 'package:dwr0001/Application/forecast/forecast.dart';
 import 'package:dwr0001/Application/pdf/PdfViewer.dart';
+import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/components/BoxDetail.dart';
 import 'package:dwr0001/components/onwillpop.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
   final List<StationModel> data;
@@ -43,6 +45,13 @@ class _MenuPageState extends State<MenuPage> {
       optionSelected = index;
     });
   }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  List<StationModel> newResult = [];
 
   bool isVisible = true;
 
@@ -137,95 +146,50 @@ class _MenuPageState extends State<MenuPage> {
                             ),
                           ),
                         ),
-                        Visibility(
-                          visible: isVisible,
-                          child: FadeInDown(
-                            from: 0,
-                            child: Container(
-                              height: 200,
-                              color: Colors.black12,
-                              child: GridView(
-                                scrollDirection: Axis.horizontal,
-                                gridDelegate:
-                                    SliverGridDelegateWithMaxCrossAxisExtent(
-                                        maxCrossAxisExtent: 300,
-                                        crossAxisSpacing: 20,
-                                        mainAxisSpacing: 20),
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 10),
-                                    child: InkWell(
-                                      onTap: () {
-                                        print("object");
-                                      },
-                                      child: Container(
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(12),
-                                          ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10.0),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  InkWell(
-                                                    onTap: () {
-                                                      print("favorite");
-                                                    },
-                                                    child: Icon(Icons
-                                                        .star_border_outlined),
-                                                  ),
-                                                ],
-                                              ),
-                                              Container(
-                                                child: AvatarGlow(
-                                                  glowColor: Colors.blue,
-                                                  endRadius: 40.0,
-                                                  duration: Duration(
-                                                      milliseconds: 2000),
-                                                  repeat: true,
-                                                  showTwoGlows: true,
-                                                  repeatPauseDuration: Duration(
-                                                      milliseconds: 200),
-                                                  child: CircleAvatar(
-                                                    radius: 18.0,
-                                                    child: CircleAvatar(
-                                                      radius: 0,
-                                                      backgroundColor:
-                                                          Colors.greenAccent,
-                                                    ),
-                                                    backgroundColor:
-                                                        Colors.green,
-                                                  ),
-                                                ),
-                                              ),
-                                              Text(
-                                                "TC140805",
-                                                style: FavoriteStyle(),
-                                              ),
-                                              Text(
-                                                "สถานี สนามกีฬาเทศบาลตำบลวังกะ",
-                                                style: FavoriteStyle(),
-                                                overflow: TextOverflow.fade,
-                                                maxLines: 1,
-                                                softWrap: false,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                        FadeInDown(
+                          from: 0,
+                          child: Consumer<FavoriteRiver>(
+                              builder: (context, Data, _) {
+                            var alreadyFavorite;
+                            for (var result in widget.data) {
+                              alreadyFavorite =
+                                  Data.favorite.contains(result.STN_ID);
+                              if (alreadyFavorite) {
+                                newResult.add(
+                                  StationModel(
+                                    STN_ID: result.STN_ID,
+                                    STN_Name: result.STN_Name,
+                                    RF: result.RF,
+                                    WL: result.WL,
+                                    BASINID: 0,
+                                    CURR_CCTV: result.CURR_CCTV,
+                                    CURR_STATUS: result.CURR_STATUS,
                                   ),
-                                ],
+                                );
+                              }
+                            }
+
+                            final List<StationModel> station = newResult;
+                            return Visibility(
+                              visible: isVisible,
+                              child: Container(
+                                width: double.infinity,
+                                color: Colors.black12,
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 200,
+                                      child: resultData(
+                                          station, widget.data, setState),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                            // return DataFavorite(
+                            //     isVisible: isVisible,
+                            //     alreadyFavorite: alreadyFavorite);
+                          }),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -365,6 +329,109 @@ class _MenuPageState extends State<MenuPage> {
       ),
     );
   }
+}
+
+ListView resultData(
+    List<StationModel> station, List<StationModel> data, setState) {
+  return ListView.builder(
+    scrollDirection: Axis.horizontal,
+    itemCount: station.length,
+    itemBuilder: (context, int i) =>
+        Consumer<FavoriteRiver>(builder: (context, Data, _) {
+      final alreadyFavorite = Data.favorite.contains(station[i].STN_ID);
+      return Padding(
+        padding: const EdgeInsets.only(
+          top: 10,
+          bottom: 10,
+          right: 10,
+          left: 10,
+        ),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => StationPage(
+                    stn_id: station[i].STN_ID,
+                    basinID: 0,
+                    RF: station[i].RF,
+                    WL: station[i].WL,
+                    CCTV: station[i].CURR_CCTV,
+                    data: data),
+              ),
+            );
+          },
+          child: Container(
+            width: 100,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(
+                Radius.circular(12),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (!alreadyFavorite) {
+                              Data.addData(station[i].STN_ID);
+                            } else {
+                              Data.removeData(station[i].STN_ID);
+                            }
+                          });
+                        },
+                        child: Icon(
+                          alreadyFavorite
+                              ? Icons.star_outlined
+                              : Icons.star_border_outlined,
+                          color: alreadyFavorite ? Colors.yellow : null,
+                        ),
+                      )
+                    ],
+                  ),
+                  Container(
+                    child: AvatarGlow(
+                      glowColor: Colors.blue,
+                      endRadius: 40.0,
+                      duration: Duration(milliseconds: 2000),
+                      repeat: true,
+                      showTwoGlows: true,
+                      repeatPauseDuration: Duration(milliseconds: 200),
+                      child: CircleAvatar(
+                        radius: 18.0,
+                        child: CircleAvatar(
+                          radius: 0,
+                          backgroundColor: Colors.greenAccent,
+                        ),
+                        backgroundColor: Colors.green,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    station[i].STN_ID,
+                    style: FavoriteStyle(),
+                  ),
+                  Text(
+                    station[i].STN_Name,
+                    style: FavoriteStyle(),
+                    overflow: TextOverflow.fade,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    }),
+  );
 }
 
 class MySearchDelegate extends SearchDelegate {

@@ -23,3 +23,21 @@ class RiverProviderTabTwo with ChangeNotifier {
     _listData.add(dataRiver);
   }
 }
+
+class FavoriteRiver with ChangeNotifier {
+  List<dynamic> get favorite => _listData;
+
+  List<dynamic> _listData = [];
+
+  void addData(var favorite) {
+    _listData.add(favorite);
+  }
+
+  void removeData(var favorite) {
+    for (var i = 0; i < _listData.length; i++) {
+      if (favorite == _listData[i]) {
+        _listData.remove(favorite);
+      }
+    }
+  }
+}

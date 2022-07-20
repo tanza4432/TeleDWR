@@ -18,6 +18,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => RiverProviderTabTwo(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => FavoriteRiver(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -4,11 +4,13 @@ import 'package:dwr0001/Application/Tab/TabFour.dart';
 import 'package:dwr0001/Application/Tab/TabOne.dart';
 import 'package:dwr0001/Application/Tab/TabThree.dart';
 import 'package:dwr0001/Application/Tab/TabTwo.dart';
+import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/painting.dart' as painting;
+import 'package:provider/provider.dart';
 import '../Models/data_Model.dart';
 
 class StationPage extends StatelessWidget {
@@ -33,7 +35,7 @@ class StationPage extends StatelessWidget {
   }
 }
 
-class MyDisplayClass extends StatelessWidget {
+class MyDisplayClass extends StatefulWidget {
   MyDisplayClass(
       this.stnId, this.basinID, this.RF, this.WL, this.CCTV, this.data);
   List<StationModel> data;
@@ -48,6 +50,12 @@ class MyDisplayClass extends StatelessWidget {
 
   String get family => null;
 
+  @override
+  State<MyDisplayClass> createState() => _MyDisplayClassState();
+}
+
+class _MyDisplayClassState extends State<MyDisplayClass> {
+  final _suggestions = <StationModel>[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,11 +114,38 @@ class MyDisplayClass extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () => {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => MenuPage(data: data)))
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MenuPage(data: widget.data)))
             // Navigator.pop(context)
           },
         ),
+        actions: [
+          Consumer<FavoriteRiver>(
+            builder: (context, Data, _) {
+              final alreadyFavorite = Data.favorite.contains(widget.stnId);
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    if (!alreadyFavorite) {
+                      Data.addData(widget.stnId);
+                    } else {
+                      Data.removeData(widget.stnId);
+                    }
+                  });
+                },
+                child: Icon(
+                  alreadyFavorite
+                      ? Icons.star_outlined
+                      : Icons.star_border_outlined,
+                  color: alreadyFavorite ? Colors.yellow : null,
+                ),
+              );
+            },
+          ),
+          SizedBox(width: 20)
+        ],
         flexibleSpace: Container(
           decoration: BoxDecoration(
             boxShadow: [
@@ -133,13 +168,13 @@ class MyDisplayClass extends StatelessWidget {
         child: TabBarView(
           children: [
             Container(
-              child: TabOne(stnId),
+              child: TabOne(widget.stnId),
             ),
             Container(
-              child: TabTwo(stnId),
+              child: TabTwo(widget.stnId),
             ),
             Container(
-              child: TabThree(stnId),
+              child: TabThree(widget.stnId),
             ),
             RefreshIndicator(
               // ignore: missing_return
@@ -147,13 +182,13 @@ class MyDisplayClass extends StatelessWidget {
                 imageCache.clear();
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
                   var stationPage = StationPage(
-                    stn_id: stnId,
-                    basinID: basinID,
+                    stn_id: widget.stnId,
+                    basinID: widget.basinID,
                   );
                   return stationPage;
                 }));
               },
-              child: TabFour(stnId, basinID, CCTV),
+              child: TabFour(widget.stnId, widget.basinID, widget.CCTV),
             ),
           ],
         ),
