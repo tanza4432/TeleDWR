@@ -39,6 +39,12 @@ class _MenuPageState extends State<MenuPage> {
 
   DateTime backbuttonpressedTime;
   int optionSelected = 1;
+  List<StationModel> newResult = [];
+  var alreadyFavorite;
+
+  bool isVisible = false;
+  bool isCheckVisible = false;
+  bool check = false;
 
   void checkOption(int index) {
     setState(() {
@@ -51,219 +57,234 @@ class _MenuPageState extends State<MenuPage> {
     super.initState();
   }
 
-  List<StationModel> newResult = [];
-
-  bool isVisible = true;
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return WillPopScope(
-      onWillPop: onWillPop,
-      child: Scaffold(
-        drawer: NavigationBurgerMenuWidget(data: widget.data),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: Icon(
-                Icons.menu,
-                color: Colors.white,
+    return Consumer<FavoriteRiver>(
+      builder: (context, Data, _) {
+        if (Data.favorite.length > 0) {
+          if (newResult.length == 0) {
+            isVisible = !isVisible;
+          }
+        }
+        return WillPopScope(
+          onWillPop: onWillPop,
+          child: Scaffold(
+            drawer: NavigationBurgerMenuWidget(data: widget.data),
+            appBar: AppBar(
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                ),
               ),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              centerTitle: true,
+              title: Text(
+                'หน้าหลัก',
+                style: DefaultTitleW(),
+              ),
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    showSearch(
+                      context: context,
+                      delegate: MySearchDelegate(widget.data),
+                    );
+                  },
+                )
+              ],
+              backgroundColor: Colors.lightBlue[600],
             ),
-          ),
-          centerTitle: true,
-          title: Text(
-            'หน้าหลัก',
-            style: DefaultTitleW(),
-          ),
-          actions: [
-            IconButton(
-              icon: Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                showSearch(
-                  context: context,
-                  delegate: MySearchDelegate(widget.data),
-                );
-              },
-            )
-          ],
-          backgroundColor: Colors.lightBlue[600],
-        ),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: [
-                Header(),
-                Container(
-                  width: double.infinity,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              isVisible = !isVisible;
-                            });
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.lightBlue[600],
-                              boxShadow: [
-                                BoxShadow(
-                                  spreadRadius: 3,
-                                  color: Colors.lightBlue[600],
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "ติดตามสถานี",
-                                    style: DefaultStyleW(),
-                                  ),
-                                  Icon(
-                                    !isVisible
-                                        ? Icons.arrow_drop_down_circle_outlined
-                                        : Icons.arrow_drop_up_outlined,
-                                    color: Colors.white,
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        FadeInDown(
-                          from: 0,
-                          child: Consumer<FavoriteRiver>(
-                              builder: (context, Data, _) {
-                            var alreadyFavorite;
-                            for (var result in widget.data) {
-                              alreadyFavorite =
-                                  Data.favorite.contains(result.STN_ID);
-                              if (alreadyFavorite) {
-                                newResult.add(
-                                  StationModel(
-                                    STN_ID: result.STN_ID,
-                                    STN_Name: result.STN_Name,
-                                    RF: result.RF,
-                                    WL: result.WL,
-                                    BASINID: 0,
-                                    CURR_CCTV: result.CURR_CCTV,
-                                    CURR_STATUS: result.CURR_STATUS,
-                                  ),
-                                );
-                              }
-                            }
-
-                            final List<StationModel> station = newResult;
-                            return Visibility(
-                              visible: isVisible,
+            body: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  children: [
+                    Header(),
+                    Container(
+                      width: double.infinity,
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isVisible = !isVisible;
+                                });
+                              },
                               child: Container(
                                 width: double.infinity,
-                                color: Colors.black12,
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      height: 200,
-                                      child: resultData(
-                                          station, widget.data, setState),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(5),
+                                  color: Colors.lightBlue[600],
+                                  boxShadow: [
+                                    BoxShadow(
+                                      spreadRadius: 3,
+                                      color: Colors.lightBlue[600],
                                     ),
                                   ],
                                 ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "ติดตามสถานี",
+                                        style: DefaultStyleW(),
+                                      ),
+                                      Icon(
+                                        !isVisible
+                                            ? Icons
+                                                .arrow_drop_down_circle_outlined
+                                            : Icons.arrow_drop_up_outlined,
+                                        color: Colors.white,
+                                      )
+                                    ],
+                                  ),
+                                ),
                               ),
-                            );
-                            // return DataFavorite(
-                            //     isVisible: isVisible,
-                            //     alreadyFavorite: alreadyFavorite);
-                          }),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 10, bottom: 10),
-                          child: Row(
-                            children: [
-                              BoxDetail(
-                                title: "เกี่ยวกับโครงการ",
-                                path: PdfViewer(
-                                    basinID: optionSelected, data: widget.data),
-                              ),
-                              SizedBox(width: 20),
-                              BoxDetail(
-                                title: "การคาดการณ์",
-                                path: ForecastPage(
-                                    basinID: optionSelected, data: widget.data),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(color: Colors.black38),
-                        Text(
-                          "TeleDWR-รายการสถานี",
-                          style: DefaultStyleB(),
-                        ),
-                        SizedBox(height: 10),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.lightBlue[600],
-                            boxShadow: [
-                              BoxShadow(
-                                spreadRadius: 3,
-                                color: Colors.lightBlue[600],
-                              ),
-                            ],
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              optionSelected == 1
-                                  ? "ลุ่มแม่น้ำกลอง"
-                                  : optionSelected == 2
-                                      ? "ลุ่มน้ำสาละวิน"
-                                      : optionSelected == 3
-                                          ? "ลุ่มน้ำกกและโขงเหนือ"
-                                          : optionSelected == 4
-                                              ? "ลุ่มน้ำสงครามและห้วยหลวง"
-                                              : optionSelected == 5
-                                                  ? "ลุ่มน้ำบางปะกง"
-                                                  : optionSelected == 6
-                                                      ? "อำเภอบางสะพาน"
-                                                      : optionSelected == 7
-                                                          ? "จังหวัดนครศรีธรรมราช"
-                                                          : "ไม่พบข้อมูล",
-                              style: DefaultStyleW(),
                             ),
-                          ),
+                            FadeInDown(
+                              from: 0,
+                              child: Consumer<FavoriteRiver>(
+                                  builder: (context, Data, _) {
+                                for (var result in widget.data) {
+                                  alreadyFavorite =
+                                      Data.favorite.contains(result.STN_ID);
+                                  if (alreadyFavorite) {
+                                    for (var i = 0; i < newResult.length; i++) {
+                                      check = newResult[i]
+                                          .STN_ID
+                                          .contains(result.STN_ID);
+                                      if (check) {
+                                        break;
+                                      }
+                                    }
+                                    if (check == false) {
+                                      newResult.add(
+                                        StationModel(
+                                          STN_ID: result.STN_ID,
+                                          STN_Name: result.STN_Name,
+                                          RF: result.RF,
+                                          WL: result.WL,
+                                          BASINID: 0,
+                                          CURR_CCTV: result.CURR_CCTV,
+                                          CURR_STATUS: result.CURR_STATUS,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                }
+                                final List<StationModel> station = newResult;
+                                return Visibility(
+                                  visible: isVisible,
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: Colors.black12,
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          height: 200,
+                                          child: resultData(
+                                              station, widget.data, setState),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Row(
+                                children: [
+                                  BoxDetail(
+                                    title: "เกี่ยวกับโครงการ",
+                                    path: PdfViewer(
+                                        basinID: optionSelected,
+                                        data: widget.data),
+                                  ),
+                                  SizedBox(width: 20),
+                                  BoxDetail(
+                                    title: "การคาดการณ์",
+                                    path: ForecastPage(
+                                        basinID: optionSelected,
+                                        data: widget.data),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Divider(color: Colors.black38),
+                            Text(
+                              "TeleDWR-รายการสถานี",
+                              style: DefaultStyleB(),
+                            ),
+                            SizedBox(height: 10),
+                            Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: Colors.lightBlue[600],
+                                boxShadow: [
+                                  BoxShadow(
+                                    spreadRadius: 3,
+                                    color: Colors.lightBlue[600],
+                                  ),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(
+                                  optionSelected == 1
+                                      ? "ลุ่มแม่น้ำกลอง"
+                                      : optionSelected == 2
+                                          ? "ลุ่มน้ำสาละวิน"
+                                          : optionSelected == 3
+                                              ? "ลุ่มน้ำกกและโขงเหนือ"
+                                              : optionSelected == 4
+                                                  ? "ลุ่มน้ำสงครามและห้วยหลวง"
+                                                  : optionSelected == 5
+                                                      ? "ลุ่มน้ำบางปะกง"
+                                                      : optionSelected == 6
+                                                          ? "อำเภอบางสะพาน"
+                                                          : optionSelected == 7
+                                                              ? "จังหวัดนครศรีธรรมราช"
+                                                              : "ไม่พบข้อมูล",
+                                  style: DefaultStyleW(),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: size.height * 0.60,
+                              width: double.infinity,
+                              color: Colors.white,
+                              child: TabOneStation(optionSelected, widget.data),
+                            ),
+                          ],
                         ),
-                        Container(
-                          height: size.height * 0.60,
-                          width: double.infinity,
-                          color: Colors.white,
-                          child: TabOneStation(optionSelected, widget.data),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
