@@ -120,7 +120,7 @@ class TabOneStation extends StatelessWidget {
             ),
             onTap: () {
               // await FlutterSession().set('river', basinID.toString());
-              Navigator.push(
+              Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
                       builder: (context) => StationPage(

@@ -198,8 +198,8 @@ class _MenuPageState extends State<MenuPage> {
                                       children: [
                                         Container(
                                           height: 200,
-                                          child: resultData(
-                                              station, widget.data, setState),
+                                          child:
+                                              resultData(station, widget.data),
                                         ),
                                       ],
                                     ),
@@ -350,109 +350,109 @@ class _MenuPageState extends State<MenuPage> {
       ),
     );
   }
-}
 
-ListView resultData(
-    List<StationModel> station, List<StationModel> data, setState) {
-  return ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemCount: station.length,
-    itemBuilder: (context, int i) =>
-        Consumer<FavoriteRiver>(builder: (context, Data, _) {
-      final alreadyFavorite = Data.favorite.contains(station[i].STN_ID);
-      return Padding(
-        padding: const EdgeInsets.only(
-          top: 10,
-          bottom: 10,
-          right: 10,
-          left: 10,
-        ),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => StationPage(
-                    stn_id: station[i].STN_ID,
-                    basinID: 0,
-                    RF: station[i].RF,
-                    WL: station[i].WL,
-                    CCTV: station[i].CURR_CCTV,
-                    data: data),
+  ListView resultData(List<StationModel> station, List<StationModel> data) {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: station.length,
+      itemBuilder: (context, int i) =>
+          Consumer<FavoriteRiver>(builder: (context, Data, _) {
+        final alreadyFavorite = Data.favorite.contains(station[i].STN_ID);
+        return Padding(
+          padding: const EdgeInsets.only(
+            top: 10,
+            bottom: 10,
+            right: 10,
+            left: 10,
+          ),
+          child: InkWell(
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => StationPage(
+                      stn_id: station[i].STN_ID,
+                      basinID: 0,
+                      RF: station[i].RF,
+                      WL: station[i].WL,
+                      CCTV: station[i].CURR_CCTV,
+                      data: data),
+                ),
+              );
+            },
+            child: Container(
+              width: 100,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
+                ),
               ),
-            );
-          },
-          child: Container(
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(12),
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          setState(() {
-                            if (!alreadyFavorite) {
-                              Data.addData(station[i].STN_ID);
-                            } else {
-                              Data.removeData(station[i].STN_ID);
-                            }
-                          });
-                        },
-                        child: Icon(
-                          alreadyFavorite
-                              ? Icons.star_outlined
-                              : Icons.star_border_outlined,
-                          color: alreadyFavorite ? Colors.yellow : null,
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    child: AvatarGlow(
-                      glowColor: Colors.blue,
-                      endRadius: 40.0,
-                      duration: Duration(milliseconds: 2000),
-                      repeat: true,
-                      showTwoGlows: true,
-                      repeatPauseDuration: Duration(milliseconds: 200),
-                      child: CircleAvatar(
-                        radius: 18.0,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (!alreadyFavorite) {
+                                Data.addData(station[i].STN_ID);
+                              } else {
+                                Data.removeData(station[i].STN_ID);
+                                station.remove(station[i]);
+                              }
+                            });
+                          },
+                          child: Icon(
+                            alreadyFavorite
+                                ? Icons.star_outlined
+                                : Icons.star_border_outlined,
+                            color: alreadyFavorite ? Colors.yellow : null,
+                          ),
+                        )
+                      ],
+                    ),
+                    Container(
+                      child: AvatarGlow(
+                        glowColor: Colors.blue,
+                        endRadius: 40.0,
+                        duration: Duration(milliseconds: 2000),
+                        repeat: true,
+                        showTwoGlows: true,
+                        repeatPauseDuration: Duration(milliseconds: 200),
                         child: CircleAvatar(
-                          radius: 0,
-                          backgroundColor: Colors.greenAccent,
+                          radius: 18.0,
+                          child: CircleAvatar(
+                            radius: 0,
+                            backgroundColor: Colors.greenAccent,
+                          ),
+                          backgroundColor: Colors.green,
                         ),
-                        backgroundColor: Colors.green,
                       ),
                     ),
-                  ),
-                  Text(
-                    station[i].STN_ID,
-                    style: FavoriteStyle(),
-                  ),
-                  Text(
-                    station[i].STN_Name,
-                    style: FavoriteStyle(),
-                    overflow: TextOverflow.fade,
-                    maxLines: 1,
-                    softWrap: false,
-                  ),
-                ],
+                    Text(
+                      station[i].STN_ID,
+                      style: FavoriteStyle(),
+                    ),
+                    Text(
+                      station[i].STN_Name,
+                      style: FavoriteStyle(),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-      );
-    }),
-  );
+        );
+      }),
+    );
+  }
 }
 
 class MySearchDelegate extends SearchDelegate {
