@@ -32,6 +32,7 @@ dependencies:
   provider: ^6.0.3
   fl_chart: ^0.35.0
   animate_do: ^2.1.0
+  device_info_plus: ^0.7.2
 
 dev_dependencies:
   flutter_test:

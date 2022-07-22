@@ -11,6 +11,7 @@ import 'package:dwr0001/components/BoxDetail.dart';
 import 'package:dwr0001/components/onwillpop.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_session/flutter_session.dart';
 import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
@@ -397,7 +398,7 @@ class _MenuPageState extends State<MenuPage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            setState(() {
+                            setState(() async{
                               if (!alreadyFavorite) {
                                 Data.addData(station[i].STN_ID);
                               } else {
