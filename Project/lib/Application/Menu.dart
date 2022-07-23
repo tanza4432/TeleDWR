@@ -11,7 +11,6 @@ import 'package:dwr0001/components/BoxDetail.dart';
 import 'package:dwr0001/components/onwillpop.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_session/flutter_session.dart';
 import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
@@ -398,7 +397,7 @@ class _MenuPageState extends State<MenuPage> {
                       children: [
                         InkWell(
                           onTap: () {
-                            setState(() async{
+                            setState(() {
                               if (!alreadyFavorite) {
                                 Data.addData(station[i].STN_ID);
                               } else {
@@ -430,7 +429,19 @@ class _MenuPageState extends State<MenuPage> {
                             radius: 0,
                             backgroundColor: Colors.greenAccent,
                           ),
-                          backgroundColor: Colors.green,
+                          backgroundColor: station[i].CURR_STATUS == "0"
+                              ? Colors.green
+                              : station[i].CURR_STATUS == "1"
+                                  ? Colors.green
+                                  : station[i].CURR_STATUS == "2"
+                                      ? Colors.green
+                                      : station[i].CURR_STATUS == "3"
+                                          ? Colors.white
+                                          : station[i].CURR_STATUS == "4"
+                                              ? Colors.grey
+                                              : station[i].CURR_STATUS == "5"
+                                                  ? Colors.black
+                                                  : Colors.green,
                         ),
                       ),
                     ),

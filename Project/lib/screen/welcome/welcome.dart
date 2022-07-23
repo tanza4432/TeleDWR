@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dwr0001/Application/Menu.dart';
 import 'package:dwr0001/Application/providers/river_provider.dart';
@@ -21,17 +19,6 @@ class _WelcomeState extends State<Welcome> {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     await FlutterSession().set('token', androidInfo.androidId);
-    await FlutterSession().set('data', androidInfo.androidId);
-    print("Token : " + await FlutterSession().get('token'));
-    print("Data : " + await FlutterSession().get('data'));
-    await FlutterSession().set('data', "sssss");
-    print("Data : " + await FlutterSession().get('data'));
-
-    // Consumer<FavoriteRiver>(builder: (context, Data, _) async {
-    //   await FlutterSession().set('mappedData', Data.favorite);
-    // });
-    // dynamic token = await FlutterSession().get("token");
-    // print(token);
   }
 
   void GetData(BuildContext context) async {
@@ -78,22 +65,27 @@ class _WelcomeState extends State<Welcome> {
         child: Column(
           children: <Widget>[
             SizedBox(height: size.height * 0.8),
-            GestureDetector(
-              onTap: () {
-                // SetSession();
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => MenuPage(
-                            data: newdata,
-                          )),
-                );
-              },
-              child: Image(
-                image: AssetImage('assets/banner/banner01/sign_in.png'),
-                fit: BoxFit.cover,
-                height: size.height * 0.11,
-              ),
-            ),
+            Consumer<FavoriteRiver>(builder: (context, Data, _) {
+              return GestureDetector(
+                onTap: () async {
+                  var data = await FlutterSession().get('data');
+                  for (var i in data) {
+                    Data.addData(i);
+                  }
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context) => MenuPage(
+                              data: newdata,
+                            )),
+                  );
+                },
+                child: Image(
+                  image: AssetImage('assets/banner/banner01/sign_in.png'),
+                  fit: BoxFit.cover,
+                  height: size.height * 0.11,
+                ),
+              );
+            }),
           ],
         ),
       ),

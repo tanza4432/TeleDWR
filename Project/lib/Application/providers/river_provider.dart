@@ -1,8 +1,8 @@
-import 'package:dwr0001/Models/dataOffline_Model.dart';
-import 'package:dwr0001/Models/data_Model.dart';
+import 'dart:convert';
+
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_session/flutter_session.dart';
 
 class RiverProviderTabOne with ChangeNotifier {
   List<StationModel> get dataRiver => _listData;
@@ -25,18 +25,23 @@ class RiverProviderTabTwo with ChangeNotifier {
 }
 
 class FavoriteRiver with ChangeNotifier {
-  List<dynamic> get favorite => _listData;
+  List<String> get favorite => _listData;
 
-  List<dynamic> _listData = [];
+  List<String> _listData = [];
 
-  void addData(var favorite) {
+  void addData(var favorite) async {
     _listData.add(favorite);
+    String dataSession = jsonEncode(_listData);
+    await FlutterSession().set('data', dataSession);
+
   }
 
-  void removeData(var favorite) {
+  Future<void> removeData(var favorite) async {
     for (var i = 0; i < _listData.length; i++) {
       if (favorite == _listData[i]) {
         _listData.remove(favorite);
+        String dataSession = jsonEncode(_listData);
+        await FlutterSession().set('data', dataSession);
       }
     }
   }
