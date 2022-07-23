@@ -69,8 +69,10 @@ class _WelcomeState extends State<Welcome> {
               return GestureDetector(
                 onTap: () async {
                   var data = await FlutterSession().get('data');
-                  for (var i in data) {
-                    Data.addData(i);
+                  if (data != null) {
+                    for (var i in data) {
+                      Data.addData(i);
+                    }
                   }
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
