@@ -83,6 +83,7 @@ class AreaAndLineChart extends StatelessWidget {
                   ),
                 ),
               ),
+              
             ],
           );
         },

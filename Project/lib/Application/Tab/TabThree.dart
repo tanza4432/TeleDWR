@@ -2,6 +2,7 @@ import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/data_Model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
 import 'package:dwr0001/components/AreaAndLineChart.dart';
+import 'package:dwr0001/components/AreaChart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +23,14 @@ class TabThree extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             data = snapshot.data;
-            return AreaAndLineChart.withSampleData(data);
+            // return AreaAndLineChart.withSampleData(data);
+            return AreaChart(data: data);
           } else if (snapshot.hasError) {
             for (var i in Data.dataRiver) {
               if (i.stnId == stnId) {
                 data = i.data;
-                return AreaAndLineChart.withSampleData(data);
+                // return AreaAndLineChart.withSampleData(data);
+                return AreaChart();
               }
             }
             if (snapshot.data == null) {
