@@ -42,7 +42,7 @@ class _AreaChartState extends State<AreaChart> {
             xValueMapper: (RainChartData rains, _) => rains.day,
             yValueMapper: (RainChartData rains, _) => rains.rain,
             // dataLabelMapper: (RainChartData rains, _) => rains.label,
-            animationDuration: 6500,
+            // animationDuration: 6500,
             enableTooltip: true,
           ),
         ],

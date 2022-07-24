@@ -27,14 +27,13 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   List<Map<String, dynamic>> items = <Map<String, dynamic>>[
-    <String, dynamic>{'title': "ลุ่มแม่น้ำกลอง"},
+    <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง"},
     <String, dynamic>{'title': "ลุ่มน้ำสาละวิน"},
     <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ"},
     <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง"},
-    <String, dynamic>{'title': "ลุ่มน้ำบางกะปิ"},
+    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง"},
     <String, dynamic>{'title': "อำเภอบางสะพาน"},
     <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช"},
-    <String, dynamic>{'title': "..."},
   ];
 
   DateTime backbuttonpressedTime;
