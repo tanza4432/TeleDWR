@@ -88,6 +88,8 @@ class StationModel {
     this.CURR_STATUS,
     this.LAST_UPDATE,
     this.BASINID,
+    this.LAT,
+    this.LON,
   });
 
   final String STN_ID;
@@ -107,6 +109,8 @@ class StationModel {
   final String CURR_STATUS;
   final String LAST_UPDATE;
   final int BASINID;
+  final String LAT;
+  final String LON;
 
   factory StationModel.fromJson(Map<String, dynamic> json) => StationModel(
         STN_ID: json["STN_ID"],
@@ -126,6 +130,8 @@ class StationModel {
         CURR_STATUS: json["CURR_STATUS"],
         LAST_UPDATE: json["LAST_UPDATE"],
         BASINID: json["BASINID"],
+        LAT: json["LAT"],
+        LON: json["LON"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -146,5 +152,7 @@ class StationModel {
         "CURR_STATUS": CURR_STATUS,
         "LAST_UPDATE": LAST_UPDATE,
         "BASINID": BASINID,
+        "LAT": LAT,
+        "LON": LON,
       };
 }

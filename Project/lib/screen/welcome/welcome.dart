@@ -19,10 +19,11 @@ class _WelcomeState extends State<Welcome> {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     await FlutterSession().set('token', androidInfo.androidId);
+    await FlutterSession().set('data', '');
   }
 
   void GetData(BuildContext context) async {
-    for (var i = 1; i < 4; i++) {
+    for (var i = 1; i < 5; i++) {
       List<StationModel> data = await getStationListTab(i, "1");
       for (StationModel result in data) {
         newdata.add(
@@ -69,11 +70,31 @@ class _WelcomeState extends State<Welcome> {
               return GestureDetector(
                 onTap: () async {
                   var data = await FlutterSession().get('data');
-                  if (data != null) {
-                    for (var i in data) {
-                      Data.addData(i);
-                    }
-                  }
+                  print(data);
+                  // print(data[0].basinId);
+                  // print(jsonDecode(data));
+                  // json.decode(data);
+                  // jsonDecode(data);
+                  // if (data != '') {
+                  //   try {
+                  //     var objText = '{"stn_id": "bezkoder", "basinId": "30"}';
+                  //     FavoriteData user =
+                  //         FavoriteData.fromJson(jsonDecode(data));
+                  //     print(user);
+                  //   } catch (e) {
+                  //     print(e);
+                  //   }
+                  // print(jsonDecode(data));
+                  // List<dynamic> list = jsonDecode(data);
+                  // List<dynamic> list = jsonDecode(receivedJson);
+                  // FavoriteData fact = FavoriteData.fromJson(list[0]);
+                  // for (FavoriteData i in data.cast()) {
+                  //   print(i.stn_id);
+
+                  //   // Data.addData(
+                  //   //     FavoriteData(stn_id: i.stn_id, basinId: i.basinId));
+                  // }
+                  // }
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                         builder: (context) => MenuPage(

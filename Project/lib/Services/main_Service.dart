@@ -8,13 +8,13 @@ List<StationModel> parseStation(String responseBody, String tab) {
   var parsed = [];
   switch (tab) {
     case "1":
-      parsed = json.decode(responseBody);
+      parsed = json.decode(responseBody.toString());
       return parsed
           .map<StationModel>((json) => StationModel.fromJson(json))
           .toList();
       break;
     case "2":
-      parsed = json.decode(responseBody);
+      parsed = json.decode(responseBody.toString());
       var result = parsed.where((status) =>
           (status["CURR_STATUS"] == "1" || status["CURR_STATUS"] == "2"));
       return result
@@ -35,7 +35,9 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
           ? "http://tele-salawin.dwr.go.th/webservice/webservice_sl_json"
           : basinId == 3
               ? "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json"
-              : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
+              : basinId == 4
+                  ? "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
+                  : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
     return parseStation(response.body, tab);
@@ -44,11 +46,17 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
   }
 }
 
-Future<StationModel> getStation(String stn_id) async {
-  final String url =
-      "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
-          stn_id;
-
+Future<StationModel> getStation(String stn_id, int basinId) async {
+  String url;
+  if (basinId == 4) {
+    url =
+        "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_id?stn_id=" +
+            stn_id;
+  } else {
+    url =
+        "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
+            stn_id;
+  }
   //final String url = "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
   //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
   //final String url = "https://jsonplaceholder.typicode.com/todos/1";

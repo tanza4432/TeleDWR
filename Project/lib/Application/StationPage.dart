@@ -170,7 +170,7 @@ class _MyDisplayClassState extends State<MyDisplayClass> {
           child: TabBarView(
             children: [
               Container(
-                child: TabOne(widget.stnId),
+                child: TabOne(widget.stnId, widget.basinID),
               ),
               Container(
                 child: TabTwo(widget.stnId),

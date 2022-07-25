@@ -11,8 +11,9 @@ import 'package:responsive_flutter/responsive_flutter.dart';
 
 // ignore: must_be_immutable
 class TabOne extends StatelessWidget {
-  TabOne(this.stnId);
+  TabOne(this.stnId, this.basinID);
   var stnId;
+  int basinID;
   List<StationModel> resultOffline = [];
   bool check = false;
 
@@ -44,7 +45,7 @@ class TabOne extends StatelessWidget {
                   children: <Widget>[
                     CustomPaint(painter: CurvePainter()),
                     FutureBuilder<StationModel>(
-                        future: getStation(stnId),
+                        future: getStation(stnId, basinID),
                         // ignore: missing_return
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
