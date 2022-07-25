@@ -25,6 +25,7 @@ class TabOne extends StatelessWidget {
     double deviceWidth = MediaQuery.of(context).size.width;
     double deviceHeight = MediaQuery.of(context).size.height;
     StationModel station;
+    print(basinID);
     return Scaffold(
       body: Container(
         height: size.height,

@@ -33,7 +33,6 @@ class FavoriteRiver with ChangeNotifier {
     _listData.add(favorite);
     String dataSession = jsonEncode(_listData);
     await FlutterSession().set('data', dataSession);
-
   }
 
   Future<void> removeData(var favorite) async {

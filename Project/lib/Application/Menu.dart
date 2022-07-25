@@ -397,9 +397,8 @@ class _MenuPageState extends State<MenuPage> {
                         InkWell(
                           onTap: () {
                             setState(() {
-                              if (!alreadyFavorite) {
-                                Data.addData(station[i].STN_ID);
-                              } else {
+                              if (alreadyFavorite) {
+                                // Data.addData(station[i].STN_ID);
                                 Data.removeData(station[i].STN_ID);
                                 station.remove(station[i]);
                               }

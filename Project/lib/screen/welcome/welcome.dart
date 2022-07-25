@@ -19,7 +19,7 @@ class _WelcomeState extends State<Welcome> {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     await FlutterSession().set('token', androidInfo.androidId);
-    await FlutterSession().set('data', '');
+    // await FlutterSession().set('data', '');
   }
 
   void GetData(BuildContext context) async {
@@ -70,31 +70,11 @@ class _WelcomeState extends State<Welcome> {
               return GestureDetector(
                 onTap: () async {
                   var data = await FlutterSession().get('data');
-                  print(data);
-                  // print(data[0].basinId);
-                  // print(jsonDecode(data));
-                  // json.decode(data);
-                  // jsonDecode(data);
-                  // if (data != '') {
-                  //   try {
-                  //     var objText = '{"stn_id": "bezkoder", "basinId": "30"}';
-                  //     FavoriteData user =
-                  //         FavoriteData.fromJson(jsonDecode(data));
-                  //     print(user);
-                  //   } catch (e) {
-                  //     print(e);
-                  //   }
-                  // print(jsonDecode(data));
-                  // List<dynamic> list = jsonDecode(data);
-                  // List<dynamic> list = jsonDecode(receivedJson);
-                  // FavoriteData fact = FavoriteData.fromJson(list[0]);
-                  // for (FavoriteData i in data.cast()) {
-                  //   print(i.stn_id);
-
-                  //   // Data.addData(
-                  //   //     FavoriteData(stn_id: i.stn_id, basinId: i.basinId));
-                  // }
-                  // }
+                  if (data != null) {
+                    for (var i in data) {
+                      Data.addData(i);
+                    }
+                  }
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
                         builder: (context) => MenuPage(
