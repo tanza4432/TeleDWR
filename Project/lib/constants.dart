@@ -47,3 +47,11 @@ TextStyle FavoriteStyle() {
       fontSize: 10.0,
       fontWeight: FontWeight.w200);
 }
+
+TextStyle DefaultStyleTextBoxMap() {
+  return TextStyle(
+      color: Colors.black,
+      fontFamily: 'Kanit',
+      fontSize: 15.0,
+      fontWeight: FontWeight.w200);
+}

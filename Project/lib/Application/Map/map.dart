@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Application/StationPage.dart';
 import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
@@ -107,13 +108,14 @@ class _MapPageState extends State<MapPage> {
   }
 
   Future<dynamic> OnpressShow(StationModel item) {
+    Size size = MediaQuery.of(context).size;
     return showModalBottomSheet(
-      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       context: context,
       builder: (builder) {
         return InkWell(
           onTap: () {
+            Navigator.pop(context);
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -146,44 +148,68 @@ class _MapPageState extends State<MapPage> {
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      child: AvatarGlow(
-                        glowColor: Colors.blue,
-                        endRadius: 40.0,
-                        duration: Duration(milliseconds: 2000),
-                        repeat: true,
-                        showTwoGlows: true,
-                        repeatPauseDuration: Duration(milliseconds: 200),
-                        child: CircleAvatar(
-                          radius: 18.0,
-                          child: CircleAvatar(
-                            radius: 0,
-                            backgroundColor: Colors.greenAccent,
-                          ),
-                          backgroundColor: item.CURR_STATUS == "0"
-                              ? Colors.green
-                              : item.CURR_STATUS == "1"
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AvatarGlow(
+                            glowColor: Colors.blue,
+                            endRadius: 40.0,
+                            duration: Duration(milliseconds: 2000),
+                            repeat: true,
+                            showTwoGlows: true,
+                            repeatPauseDuration: Duration(milliseconds: 200),
+                            child: CircleAvatar(
+                              radius: 18.0,
+                              child: CircleAvatar(
+                                radius: 0,
+                                backgroundColor: Colors.greenAccent,
+                              ),
+                              backgroundColor: item.CURR_STATUS == "0"
                                   ? Colors.green
-                                  : item.CURR_STATUS == "2"
+                                  : item.CURR_STATUS == "1"
                                       ? Colors.green
-                                      : item.CURR_STATUS == "3"
-                                          ? Colors.white
-                                          : item.CURR_STATUS == "4"
-                                              ? Colors.grey
-                                              : item.CURR_STATUS == "5"
-                                                  ? Colors.black
-                                                  : Colors.green,
-                        ),
+                                      : item.CURR_STATUS == "2"
+                                          ? Colors.green
+                                          : item.CURR_STATUS == "3"
+                                              ? Colors.white
+                                              : item.CURR_STATUS == "4"
+                                                  ? Colors.grey
+                                                  : item.CURR_STATUS == "5"
+                                                      ? Colors.black
+                                                      : Colors.green,
+                            ),
+                          ),
+                          Text(
+                            item.CURR_Acc_Rain_1_D,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(item.STN_Name),
-                        Text(item.LAST_UPDATE),
-                      ],
+                    Container(
+                      width: size.width * 0.42,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TitleTextBoxMap(
+                              text: "สถานี : ", datamap: item.STN_ID),
+                          DetailTextBoxMap(text: "", datamap: item.STN_Name),
+                          DetailTextBoxMap(text: "", datamap: item.LAST_UPDATE),
+                        ],
+                      ),
+                    ),
+                    Transform.rotate(
+                      angle: 180 * pi / 180,
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.black,
+                        ),
+                        onPressed: null,
+                      ),
                     ),
                   ],
                 ),
@@ -202,7 +228,6 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: onWillPop,
       child: Scaffold(
@@ -235,10 +260,53 @@ class _MapPageState extends State<MapPage> {
             TileLayerOptions(
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             ),
-            MarkerLayerOptions(markers: _markers.toList())
+            // PolygonLayerOptions(
+            //   polygonCulling: false,
+            //   polygons: [
+            //     Polygon(
+            //       points: [
+                    
+            //       ],
+            //       color: Colors.blue,
+            //     ),
+            //   ],
+            // ),
+            MarkerLayerOptions(markers: _markers.toList()),
           ],
         ),
       ),
     );
+  }
+}
+
+class TitleTextBoxMap extends StatelessWidget {
+  TitleTextBoxMap({
+    Key key,
+    this.datamap,
+    this.text,
+  }) : super(key: key);
+
+  String text;
+  String datamap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text + datamap, style: DefaultStyleB());
+  }
+}
+
+class DetailTextBoxMap extends StatelessWidget {
+  DetailTextBoxMap({
+    Key key,
+    this.datamap,
+    this.text,
+  }) : super(key: key);
+
+  String text;
+  String datamap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(text + datamap, style: DefaultStyleTextBoxMap());
   }
 }

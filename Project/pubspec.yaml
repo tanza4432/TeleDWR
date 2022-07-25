@@ -48,6 +48,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/mapLayers/
     - assets/pdf/mk/mk.pdf
     - assets/pdf/kk/kk.pdf
     - assets/pdf/sl/sl.pdf

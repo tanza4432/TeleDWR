@@ -90,7 +90,7 @@ Future<StationModel> getStationData(String stn_id) async {
   }
 }
 
-List<DataModelGet> parseData_(String responseBody) {
+Future<List<DataModelGet>> parseData_(String responseBody) {
   final parsed = json.decode(responseBody);
   return parsed
       .map<DataModelGet>((json) => DataModelGet.fromJson(json))
@@ -104,6 +104,20 @@ Future<List<DataModelGet>> getStationData24H(String stn_id) async {
   //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
   //final String url = "https://jsonplaceholder.typicode.com/todos/1";
   final response = await http.get(Uri.parse(url));
+  final parsed = json.decode(response.body);
+  if (parsed.length == 0) {
+    final String url =
+        "https://tele-songkramhuailuang.dwr.go.th/webservice/getdata?station_id=TC140605";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final parsed = json.decode(response.body);
+      return parsed
+          .map<DataModelGet>((json) => DataModelGet.fromJson(json))
+          .toList();
+    } else {
+      throw Exception();
+    }
+  }
   if (response.statusCode == 200) {
     return parseData_(response.body);
   } else {
