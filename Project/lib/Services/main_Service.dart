@@ -90,7 +90,7 @@ Future<StationModel> getStationData(String stn_id) async {
   }
 }
 
-Future<List<DataModelGet>> parseData_(String responseBody) {
+List<DataModelGet> parseData_(String responseBody) {
   final parsed = json.decode(responseBody);
   return parsed
       .map<DataModelGet>((json) => DataModelGet.fromJson(json))
