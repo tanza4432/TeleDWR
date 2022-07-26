@@ -260,17 +260,17 @@ class _MapPageState extends State<MapPage> {
             TileLayerOptions(
               urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
             ),
-            // PolygonLayerOptions(
-            //   polygonCulling: false,
-            //   polygons: [
-            //     Polygon(
-            //       points: [
+            PolygonLayerOptions(
+              polygonCulling: true,
+              polygons: [
+                Polygon(
+                  points: [
                     
-            //       ],
-            //       color: Colors.blue,
-            //     ),
-            //   ],
-            // ),
+                  ],
+                  color: Colors.blue,
+                ),
+              ],
+            ),
             MarkerLayerOptions(markers: _markers.toList()),
           ],
         ),

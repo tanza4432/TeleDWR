@@ -1,10 +1,13 @@
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:responsive_flutter/responsive_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class AreaChart extends StatefulWidget {
   var data;
-  AreaChart({Key key, this.data}) : super(key: key);
+  String stnid;
+  String title;
+  AreaChart({Key key, this.data, this.stnid, this.title}) : super(key: key);
 
   @override
   State<AreaChart> createState() => _AreaChartState();
@@ -15,6 +18,7 @@ class _AreaChartState extends State<AreaChart> {
   List<RainChartData> _chartWaterDData;
   List<RainChartData> _chartWaterFData;
   TooltipBehavior _tooltipBehavior;
+  ZoomPanBehavior _zoomPanbehavior;
 
   @override
   void initState() {
@@ -22,62 +26,94 @@ class _AreaChartState extends State<AreaChart> {
     _chartWaterDData = getChartWaterDData();
     _chartWaterFData = getChartWaterFData();
     _tooltipBehavior = TooltipBehavior(enable: true);
+    _zoomPanbehavior = ZoomPanBehavior(
+      enablePinching: true,
+      enableDoubleTapZooming: true,
+      enableSelectionZooming: true,
+      enablePanning: true,
+      zoomMode: ZoomMode.x,
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      isAlwaysShown: true,
-      child: GridView.builder(
-        itemCount: 3,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-        itemBuilder: (BuildContext context, int index) {
-          return SafeArea(
-            child: SfCartesianChart(
-              tooltipBehavior: _tooltipBehavior,
-              backgroundColor: Colors.transparent,
-              title: ChartTitle(
-                text: index == 0
-                    ? " กราฟแสดงปริมาณน้ำฝน (มม.) "
-                    : index == 1
-                        ? " กราฟแสดงระดับน้ำ (ม.รทก.) "
-                        : " กราฟแสดงปริมาณน้ำ (ลบม. / วินาที) ",
-                textStyle: DefaultTitleB(),
-              ),
-              primaryYAxis: NumericAxis(
-                labelFormat: '{value} มม.',
-              ),
-              series: <ChartSeries<RainChartData, dynamic>>[
-                SplineSeries(
-                  name: 'ปริมาณน้ำฝน',
-                  // color: Colors.red,
-                  dataSource: index == 0
-                      ? _chartRainData
-                      : index == 1
-                          ? _chartWaterDData
-                          : _chartWaterFData,
-                  xValueMapper: (RainChartData rains, _) => rains.day,
-                  yValueMapper: (RainChartData rains, _) => rains.rain,
-                  dataLabelMapper: (RainChartData rains, _) => rains.label,
-                  // animationDuration: 6500,
-                  enableTooltip: true,
+    Size size = MediaQuery.of(context).size;
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(5.0),
+          color: Colors.lightBlue[700],
+          child: Row(
+            children: [
+              Icon(Icons.location_on_outlined),
+              Flexible(
+                child: Text(
+                  "สถานี : " + widget.stnid + " " + widget.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: ResponsiveFlutter.of(context).fontSize(2),
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
+                    fontFamily: 'Kanit',
+                    decoration: TextDecoration.none,
+                  ),
                 ),
-              ],
-              // <ChartSeries>[
-              //   AreaSeries<SalesData, double>(
-              //     color: Colors.red,
-              //     width: 6,
-              //     dataSource: _chartData,
-              //     xValueMapper: (SalesData sales, _) => sales.year,
-              //     yValueMapper: (SalesData sales, _) => sales.sales,
-              //   )
-              // ],
+              ),
+            ],
+          ),
+        ),
+        Container(
+          width: double.infinity,
+          height: size.height * 0.76,
+          child: Scrollbar(
+            isAlwaysShown: true,
+            child: GridView.builder(
+              itemCount: 3,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1),
+              itemBuilder: (BuildContext context, int index) {
+                return SafeArea(
+                  child: SfCartesianChart(
+                    tooltipBehavior: _tooltipBehavior,
+                    backgroundColor: Colors.transparent,
+                    zoomPanBehavior: _zoomPanbehavior,
+                    title: ChartTitle(
+                      text: index == 0
+                          ? " กราฟแสดงปริมาณน้ำฝน (มม.) "
+                          : index == 1
+                              ? " กราฟแสดงระดับน้ำ (ม.รทก.) "
+                              : " กราฟแสดงปริมาณน้ำ (ลบม. / วินาที) ",
+                      textStyle: DefaultTitleB(),
+                    ),
+                    primaryYAxis: NumericAxis(
+                      labelFormat: '{value} มม.',
+                      interactiveTooltip: InteractiveTooltip(enable: false),
+                    ),
+                    primaryXAxis: CategoryAxis(
+                      edgeLabelPlacement: EdgeLabelPlacement.shift,
+                    ),
+                    series: [
+                      SplineSeries(
+                        name: 'ปริมาณน้ำฝน',
+                        dataSource: index == 0
+                            ? _chartRainData
+                            : index == 1
+                                ? _chartWaterDData
+                                : _chartWaterFData,
+                        xValueMapper: (RainChartData rains, _) => rains.label,
+                        yValueMapper: (RainChartData rains, _) => rains.rain,
+                        // dataLabelSettings: DataLabelSettings(isVisible: true),
+                        enableTooltip: true,
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -134,7 +170,7 @@ class _AreaChartState extends State<AreaChart> {
 
 class RainChartData {
   RainChartData(this.day, this.rain, this.label);
-  final double day;
-  final double rain;
-  final String label;
+  double day;
+  double rain;
+  String label;
 }

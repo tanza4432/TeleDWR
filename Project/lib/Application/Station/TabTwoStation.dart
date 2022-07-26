@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
+import 'package:dwr0001/components/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import '../StationPage.dart';
@@ -117,7 +118,7 @@ class TabTwoStation extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Text(snapshot.error.toString());
         }
-        return CircularProgressIndicator();
+        return LoadingSquareCircle();
       },
     );
   }

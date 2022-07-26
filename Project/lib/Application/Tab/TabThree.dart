@@ -1,16 +1,15 @@
 import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/data_Model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
-import 'package:dwr0001/components/AreaAndLineChart.dart';
 import 'package:dwr0001/components/AreaChart.dart';
+import 'package:dwr0001/components/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../StationPage.dart';
-
 // ignore: must_be_immutable
 class TabThree extends StatelessWidget {
-  TabThree(this.stnId);
+  TabThree(this.stnId, this.title);
+  String title;
   List<DataModelGet> resultOffline = [];
   bool check = false;
   var stnId;
@@ -24,7 +23,11 @@ class TabThree extends StatelessWidget {
           if (snapshot.hasData) {
             data = snapshot.data;
             // return AreaAndLineChart.withSampleData(data);
-            return AreaChart(data: data);
+            return AreaChart(
+              data: data,
+              stnid: stnId,
+              title: title,
+            );
           } else if (snapshot.hasError) {
             for (var i in Data.dataRiver) {
               if (i.stnId == stnId) {
@@ -32,14 +35,16 @@ class TabThree extends StatelessWidget {
                 // return AreaAndLineChart.withSampleData(data);
                 return AreaChart(
                   data: data,
+                  stnid: stnId,
+                  title: title,
                 );
               }
             }
             if (snapshot.data == null) {
-              return CircularProgressIndicator();
+              return LoadingSquareCircle();
             }
           }
-          return CircularProgressIndicator();
+          return LoadingSquareCircle();
         },
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
+import 'package:dwr0001/components/loading.dart';
 import 'package:flutter/material.dart';
 import '../StationPage.dart';
 
@@ -9,6 +10,7 @@ class TabOneStation extends StatelessWidget {
   var basinID;
   List<StationModel> newResult = [];
   TabOneStation(this.basinID, this.data);
+
   @override
   Widget build(BuildContext context) {
     print("Tab : " + basinID.toString());
@@ -37,7 +39,7 @@ class TabOneStation extends StatelessWidget {
           final List<StationModel> station = newResult;
           return resultData(station);
         }
-        return CircularProgressIndicator();
+        return LoadingSquareCircle();
       },
     );
   }
