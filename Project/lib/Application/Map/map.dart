@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:avatar_glow/avatar_glow.dart';
+import 'package:dwr0001/Application/Map/widgets/detailTextBox.dart';
+import 'package:dwr0001/Application/Map/widgets/titleTextBox.dart';
 import 'package:dwr0001/Application/StationPage.dart';
 import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
 import 'package:dwr0001/Models/station_model.dart';
@@ -20,11 +22,12 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   Set<Marker> _markers = {};
-  // final mark = [
-  //   LatLng(13.777183, 100.629559),
-  //   LatLng(13.7785028, 100.6149977),
-  //   LatLng(13.777694, 100.624656),
-  // ];
+  List<LatLng> mark1 = [
+    LatLng(17.862117, 102.749477),
+    LatLng(18.373412, 103.567112),
+    LatLng(17.623500, 104.479912),
+    LatLng(17.100776, 103.021375),
+  ];
   List mark = [];
   List result = [];
 
@@ -201,15 +204,40 @@ class _MapPageState extends State<MapPage> {
                         ],
                       ),
                     ),
-                    Transform.rotate(
-                      angle: 180 * pi / 180,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.black,
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Transform.rotate(
+                          angle: 45 * pi / 180,
+                          child: Container(
+                            clipBehavior: Clip.antiAlias,
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 3,
+                                color: Colors.blue[800],
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(6),
+                              ),
+                              color: Colors.blue[800],
+                            ),
+                          ),
                         ),
-                        onPressed: null,
-                      ),
+                        ClipPath(
+                          clipBehavior: Clip.antiAlias,
+                          child: Container(
+                            height: 30 * sqrt2,
+                            width: 30 * sqrt2,
+                            child: Icon(
+                              Icons.turn_right,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -264,10 +292,10 @@ class _MapPageState extends State<MapPage> {
               polygonCulling: true,
               polygons: [
                 Polygon(
-                  points: [
-                    
-                  ],
-                  color: Colors.blue,
+                  points: mark1,
+                  color: Colors.blue.withOpacity(0.4),
+                  borderStrokeWidth: 4,
+                  borderColor: Colors.red,
                 ),
               ],
             ),
@@ -276,37 +304,5 @@ class _MapPageState extends State<MapPage> {
         ),
       ),
     );
-  }
-}
-
-class TitleTextBoxMap extends StatelessWidget {
-  TitleTextBoxMap({
-    Key key,
-    this.datamap,
-    this.text,
-  }) : super(key: key);
-
-  String text;
-  String datamap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text + datamap, style: DefaultStyleB());
-  }
-}
-
-class DetailTextBoxMap extends StatelessWidget {
-  DetailTextBoxMap({
-    Key key,
-    this.datamap,
-    this.text,
-  }) : super(key: key);
-
-  String text;
-  String datamap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(text + datamap, style: DefaultStyleTextBoxMap());
   }
 }
