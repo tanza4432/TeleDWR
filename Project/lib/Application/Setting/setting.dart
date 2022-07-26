@@ -1,10 +1,10 @@
 import 'package:dwr0001/Application/Menu.dart';
-import 'package:dwr0001/Application/Setting/contact/contact.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/components/BoxAbout.dart';
 import 'package:dwr0001/components/onwillpop.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatefulWidget {
   final List<StationModel> data;
@@ -51,15 +51,46 @@ class _SettingPageState extends State<SettingPage> {
                 style: DefaultTitleB(),
               ),
               Divider(color: Colors.black38),
-              BoxAbout(
-                  title: "ติดต่อเรา",
-                  icon: Icons.wifi_calling_3_outlined,
-                  path: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ContactPage()),
-                    );
-                  }),
+              ExpansionTile(
+                leading: Icon(
+                  Icons.wifi_calling_3_outlined,
+                  color: Colors.black,
+                ),
+                title: Text(
+                  "ติดต่อเรา",
+                  style: DefaultStyleB(),
+                ),
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          BoxAbout(
+                            title: "เว็บไซต์",
+                            icon: Icons.web_asset,
+                            path: () {
+                              launch("http://tele-kokkhong.dwr.go.th/");
+                            },
+                          ),
+                          BoxAbout(
+                            title: "อีเมล",
+                            icon: Icons.email_outlined,
+                            path: () {
+                              launch("mailto:terkid1412@gmail.com?subject="
+                                  "&body="
+                                  "");
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               BoxAbout(
                 title: "เกี่ยวกับ TeleDWR",
                 icon: Icons.info_outline,

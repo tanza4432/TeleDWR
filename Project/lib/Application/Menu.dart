@@ -173,13 +173,14 @@ class _MenuPageState extends State<MenuPage> {
                                       }
                                     }
                                     if (check == false) {
+                                      print(result.BASINID);
                                       newResult.add(
                                         StationModel(
                                           STN_ID: result.STN_ID,
                                           STN_Name: result.STN_Name,
                                           RF: result.RF,
                                           WL: result.WL,
-                                          BASINID: 0,
+                                          BASINID: result.BASINID,
                                           CURR_CCTV: result.CURR_CCTV,
                                           CURR_STATUS: result.CURR_STATUS,
                                         ),
@@ -371,7 +372,7 @@ class _MenuPageState extends State<MenuPage> {
                 MaterialPageRoute(
                   builder: (context) => StationPage(
                       stn_id: station[i].STN_ID,
-                      basinID: 0,
+                      basinID: station[i].BASINID,
                       RF: station[i].RF,
                       WL: station[i].WL,
                       CCTV: station[i].CURR_CCTV,

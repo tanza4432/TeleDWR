@@ -28,21 +28,25 @@ List<StationModel> parseStation(String responseBody, String tab) {
 }
 
 Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
-  //final response = await http.get('http://192.168.1.2:8000/products.json');
-  final String url = basinId == 1
-      ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
-      : basinId == 2
-          ? "http://tele-salawin.dwr.go.th/webservice/webservice_sl_json"
-          : basinId == 3
-              ? "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json"
-              : basinId == 4
-                  ? "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
-                  : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    return parseStation(response.body, tab);
-  } else {
-    throw Exception('Unable to fetch products from the REST API');
+  try {
+    //final response = await http.get('http://192.168.1.2:8000/products.json');
+    final String url = basinId == 1
+        ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
+        : basinId == 2
+            ? "http://tele-salawin.dwr.go.th/webservice/webservice_sl_json"
+            : basinId == 3
+                ? "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json"
+                : basinId == 4
+                    ? "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
+                    : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return parseStation(response.body, tab);
+    } else {
+      throw Exception('Unable to fetch products from the REST API');
+    }
+  } catch (e) {
+    print(e);
   }
 }
 

@@ -30,7 +30,9 @@ class TabThree extends StatelessWidget {
               if (i.stnId == stnId) {
                 data = i.data;
                 // return AreaAndLineChart.withSampleData(data);
-                return AreaChart();
+                return AreaChart(
+                  data: data,
+                );
               }
             }
             if (snapshot.data == null) {

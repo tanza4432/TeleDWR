@@ -6,7 +6,7 @@ import 'package:dwr0001/components/burgerMenu/widgetMenuItem.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 
-class NavigationBurgerMenuWidget extends StatelessWidget {
+class NavigationBurgerMenuWidget extends StatefulWidget {
   final List<StationModel> data;
 
   NavigationBurgerMenuWidget({
@@ -14,6 +14,22 @@ class NavigationBurgerMenuWidget extends StatelessWidget {
     @required this.data,
   }) : super(key: key);
 
+  @override
+  State<NavigationBurgerMenuWidget> createState() =>
+      _NavigationBurgerMenuWidgetState();
+}
+
+class _NavigationBurgerMenuWidgetState
+    extends State<NavigationBurgerMenuWidget> {
+  List<String> items = [
+    'Item1',
+    'Item2',
+    'Item3',
+    'Item4',
+    'Item5',
+    'Item6',
+  ];
+  String selectedItem = 'Item 1';
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -25,13 +41,6 @@ class NavigationBurgerMenuWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // IconButton(
-                //   onPressed: () {
-                //     Navigator.of(context).pop();
-                //   },
-                //   icon: Icon(Icons.arrow_back_ios_new),
-                // ),
-                // SizedBox(width: 30),
                 Image(
                   image: AssetImage('assets/images/logo.png'),
                   height: 60,
@@ -48,18 +57,19 @@ class NavigationBurgerMenuWidget extends StatelessWidget {
             buildMenuItem(
               text: "หน้าหลัก",
               icon: Icons.home_filled,
-              Path: MenuPage(data: data),
+              Path: MenuPage(data: widget.data),
             ),
             buildMenuItem(
               text: "แผนที่",
               icon: Icons.map,
-              Path: MapPage(data: data),
+              Path: MapPage(data: widget.data),
             ),
             buildMenuItem(
               text: "ตั้งค่า",
               icon: Icons.settings,
-              Path: SettingPage(data: data),
+              Path: SettingPage(data: widget.data),
             ),
+            
           ],
         ),
       ),

@@ -14,6 +14,7 @@ class Welcome extends StatefulWidget {
 
 class _WelcomeState extends State<Welcome> {
   List<StationModel> newdata = [];
+  int checkCallApi = 0;
 
   void SetSession() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -25,6 +26,7 @@ class _WelcomeState extends State<Welcome> {
   void GetData(BuildContext context) async {
     for (var i = 1; i < 5; i++) {
       List<StationModel> data = await getStationListTab(i, "1");
+      checkCallApi = i;
       for (StationModel result in data) {
         newdata.add(
           StationModel(
@@ -37,6 +39,9 @@ class _WelcomeState extends State<Welcome> {
             CURR_STATUS: result.CURR_STATUS,
           ),
         );
+      }
+      if (checkCallApi == 4) {
+        setState(() {});
       }
       print(i);
     }
@@ -66,29 +71,35 @@ class _WelcomeState extends State<Welcome> {
         child: Column(
           children: <Widget>[
             SizedBox(height: size.height * 0.8),
-            Consumer<FavoriteRiver>(builder: (context, Data, _) {
-              return GestureDetector(
-                onTap: () async {
-                  var data = await FlutterSession().get('data');
-                  if (data != null) {
-                    for (var i in data) {
-                      Data.addData(i);
-                    }
-                  }
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context) => MenuPage(
-                              data: newdata,
-                            )),
-                  );
-                },
-                child: Image(
-                  image: AssetImage('assets/banner/banner01/sign_in.png'),
-                  fit: BoxFit.cover,
-                  height: size.height * 0.11,
-                ),
-              );
-            }),
+            checkCallApi == 4
+                ? Consumer<FavoriteRiver>(
+                    builder: (context, Data, _) {
+                      return GestureDetector(
+                        onTap: () async {
+                          var data = await FlutterSession().get('data');
+                          if (data != null) {
+                            for (var i in data) {
+                              Data.addData(i);
+                            }
+                          }
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => MenuPage(
+                                data: newdata,
+                              ),
+                            ),
+                          );
+                        },
+                        child: Image(
+                          image:
+                              AssetImage('assets/banner/banner01/sign_in.png'),
+                          fit: BoxFit.cover,
+                          height: size.height * 0.11,
+                        ),
+                      );
+                    },
+                  )
+                : Container(),
           ],
         ),
       ),

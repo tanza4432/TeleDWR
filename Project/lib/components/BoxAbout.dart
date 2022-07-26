@@ -31,7 +31,7 @@ class BoxAbout extends StatelessWidget {
                   icon,
                   color: Colors.black,
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 30),
                 Text(
                   title,
                   style: DefaultStyleB(),
