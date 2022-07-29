@@ -1,3 +1,4 @@
+import 'package:dwr0001/Application/providers/map_provider.dart';
 import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/screen/welcome/welcome.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => FavoriteRiver(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => MapProvider(),
         ),
       ],
       child: MaterialApp(

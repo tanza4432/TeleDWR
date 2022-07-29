@@ -2,15 +2,20 @@ import 'dart:math';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Application/Map/widgets/detailTextBox.dart';
 import 'package:dwr0001/Application/Map/widgets/titleTextBox.dart';
+import 'package:dwr0001/Application/Map/widgets/widgetMap.dart';
 import 'package:dwr0001/Application/StationPage.dart';
 import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
+import 'package:dwr0001/Application/providers/map_provider.dart';
+import 'package:dwr0001/Models/map_Model.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/map_Service.dart';
+import 'package:dwr0001/components/loading.dart';
 import 'package:dwr0001/components/onwillpop.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import "package:latlong/latlong.dart";
+import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
   final List<StationModel> data;
@@ -22,14 +27,9 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   Set<Marker> _markers = {};
-  List<LatLng> mark1 = [
-    LatLng(17.862117, 102.749477),
-    LatLng(18.373412, 103.567112),
-    LatLng(17.623500, 104.479912),
-    LatLng(17.100776, 103.021375),
-  ];
   List mark = [];
   List result = [];
+  List<LatLng> polygon = [];
 
   Future<void> get_data() async {
     List<StationModel> snapshots = await get_dataMap();
@@ -45,13 +45,6 @@ class _MapPageState extends State<MapPage> {
               height: 40,
               point: LatLng(double.parse(item.LAT), double.parse(item.LON)),
               builder: (ctx) => Container(
-                // decoration: BoxDecoration(
-                //   border: Border.all(
-                //     color: Colors.white,
-                //     width: 2,
-                //   ),
-                //   borderRadius: const BorderRadius.all(Radius.circular(40)),
-                // ),
                 child: InkWell(
                   child: Stack(
                     alignment: Alignment.center,
@@ -258,49 +251,58 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: onWillPop,
-      child: Scaffold(
-        drawer: NavigationBurgerMenuWidget(data: widget.data),
-        appBar: AppBar(
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: Icon(
-                Icons.menu,
-                color: Colors.white,
-              ),
-              onPressed: () => Scaffold.of(context).openDrawer(),
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            ),
-          ),
-          centerTitle: true,
-          title: Text(
-            'แผนที่',
-            style: DefaultTitleW(),
-          ),
-          backgroundColor: Colors.lightBlue[600],
-        ),
-        body: FlutterMap(
-          options: MapOptions(
-            center: LatLng(17.1408165, 103.4063071),
-            // กรุงเทพ LatLng(13.782694, 100.5549202),
-            zoom: 8,
-          ),
-          layers: [
-            TileLayerOptions(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-            ),
-            PolygonLayerOptions(
-              polygonCulling: true,
-              polygons: [
-                Polygon(
-                  points: mark1,
-                  color: Colors.blue.withOpacity(0.4),
-                  borderStrokeWidth: 4,
-                  borderColor: Colors.red,
+      child: Consumer<MapProvider>(
+        builder: (context, MapP, _) => Scaffold(
+          drawer: NavigationBurgerMenuWidget(data: widget.data),
+          appBar: AppBar(
+            leading: Builder(
+              builder: (context) => IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.white,
                 ),
-              ],
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              ),
             ),
-            MarkerLayerOptions(markers: _markers.toList()),
-          ],
+            centerTitle: true,
+            title: Text(
+              'แผนที่',
+              style: DefaultTitleW(),
+            ),
+            backgroundColor: Colors.lightBlue[600],
+          ),
+          body: MapP.dataPolygon.length == 0
+              ? FutureBuilder(
+                  future: get_polygon(),
+                  builder: (context, AsyncSnapshot snapshot) {
+                    MapModel result;
+                    if (snapshot?.connectionState != ConnectionState.done) {
+                      return LoadingSquareCircle();
+                    } else {
+                      result = snapshot.data;
+                      for (var a in result.features) {
+                        for (var i in a.geometry.coordinates[0][0]) {
+                          MapP.addData(LatLng(i[1], i[0]));
+                          polygon.add(
+                            LatLng(i[1], i[0]),
+                          );
+                        }
+                      }
+                    }
+                    return WidgetMap(polygon: polygon, markers: _markers);
+                  },
+                )
+              : Consumer<MapProvider>(
+                  builder: (context, MapS, _) {
+                    for (var i in MapS.dataPolygon) {
+                      polygon.add(
+                        LatLng(i.latitude, i.longitude),
+                      );
+                    }
+                    return WidgetMap(polygon: polygon, markers: _markers);
+                  },
+                ),
         ),
       ),
     );
