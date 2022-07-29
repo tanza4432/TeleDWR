@@ -24,7 +24,7 @@ class _TabFourState extends State<TabFour> {
             ? "salawin"
             : widget.basinId == 3
                 ? "kokkhong"
-                : "kokkhong";
+                : "songkramhuailuang";
     if (widget.CCTV == "") {
       return Column(
         children: [

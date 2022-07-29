@@ -70,148 +70,162 @@ class _MyDisplayClassState extends State<MyDisplayClass> {
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: onWillPop,
-      child: FutureBuilder<StationModel>(
-        future: getStation(widget.stnId, widget.basinID),
-        builder: (context, snapshot) {
-          if (snapshot?.connectionState != ConnectionState.done) {
-            return LoadingPage(size: size);
-          } else {
-            stationData = snapshot?.data;
-          }
-          return Scaffold(
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
-            appBar: AppBar(
-              bottom: TabBar(
-                tabs: [
-                  Tab(
-                    icon: Icon(Icons.pending_actions_sharp),
-                    child: Text(
-                      "สถานี",
-                      style: TextStyle(
-                          fontFamily: 'Kanit',
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.table_rows_outlined),
-                    child: Text(
-                      "ตาราง",
-                      style: TextStyle(
-                          fontFamily: 'Kanit',
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.bar_chart_outlined),
-                    child: Text(
-                      "กราฟ",
-                      style: TextStyle(
-                          fontFamily: 'Kanit',
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                  Tab(
-                    icon: Icon(Icons.camera),
-                    child: Text(
-                      "CCTV",
-                      style: TextStyle(
-                          fontFamily: 'Kanit',
-                          fontSize: 10.0,
-                          fontWeight: FontWeight.normal),
-                    ),
-                  ),
-                ],
-              ),
-              title: Text(
-                'TELEDWR-ข้อมูลตรวจวัด',
-                style: DefaultTitleW(),
-              ),
-              elevation: 0.0,
-              automaticallyImplyLeading: true,
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: () => {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MenuPage(data: widget.data),
-                    ),
-                  ),
-                  // Navigator.pop(context)
-                },
-              ),
-              actions: [
-                Consumer<FavoriteRiver>(
-                  builder: (context, Data, _) {
-                    final alreadyFavorite =
-                        Data.favorite.contains(widget.stnId);
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          if (!alreadyFavorite) {
-                            Data.addData(widget.stnId);
-                          } else {
-                            Data.removeData(widget.stnId);
-                          }
-                        });
-                      },
-                      child: Icon(
-                        alreadyFavorite
-                            ? Icons.star_outlined
-                            : Icons.star_border_outlined,
-                        color: alreadyFavorite ? Colors.yellow : null,
+      child: Consumer<RiverProviderTabOne>(
+        builder: (context, Data, _) => FutureBuilder<StationModel>(
+          future: getStation(widget.stnId, widget.basinID),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              stationData = snapshot?.data;
+            } else if (!snapshot.hasData) {
+              if (Data.dataRiver.length != 0) {
+                for (var i in Data.dataRiver) {
+                  if (i.STN_ID == widget.stnId) {
+                    stationData = i;
+                    break;
+                  }
+                }
+                if (stationData == null) {
+                  return LoadingPage(size: size);
+                }
+              } else {
+                return LoadingPage(size: size);
+              }
+            }
+            return Scaffold(
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              appBar: AppBar(
+                bottom: TabBar(
+                  tabs: [
+                    Tab(
+                      icon: Icon(Icons.pending_actions_sharp),
+                      child: Text(
+                        "สถานี",
+                        style: TextStyle(
+                            fontFamily: 'Kanit',
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.normal),
                       ),
-                    );
-                  },
-                ),
-                SizedBox(width: 20)
-              ],
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.8),
-                      blurRadius: 3,
-                      offset: Offset(0, 2), // changes position of shadow
+                    ),
+                    Tab(
+                      icon: Icon(Icons.table_rows_outlined),
+                      child: Text(
+                        "ตาราง",
+                        style: TextStyle(
+                            fontFamily: 'Kanit',
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.bar_chart_outlined),
+                      child: Text(
+                        "กราฟ",
+                        style: TextStyle(
+                            fontFamily: 'Kanit',
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.normal),
+                      ),
+                    ),
+                    Tab(
+                      icon: Icon(Icons.camera),
+                      child: Text(
+                        "CCTV",
+                        style: TextStyle(
+                            fontFamily: 'Kanit',
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.normal),
+                      ),
                     ),
                   ],
-                  color: Colors.lightBlue[600],
+                ),
+                title: Text(
+                  'TELEDWR-ข้อมูลตรวจวัด',
+                  style: DefaultTitleW(),
+                ),
+                elevation: 0.0,
+                automaticallyImplyLeading: true,
+                leading: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () => {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MenuPage(data: widget.data),
+                      ),
+                    ),
+                    // Navigator.pop(context)
+                  },
+                ),
+                actions: [
+                  Consumer<FavoriteRiver>(
+                    builder: (context, Data, _) {
+                      final alreadyFavorite =
+                          Data.favorite.contains(widget.stnId);
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            if (!alreadyFavorite) {
+                              Data.addData(widget.stnId);
+                            } else {
+                              Data.removeData(widget.stnId);
+                            }
+                          });
+                        },
+                        child: Icon(
+                          alreadyFavorite
+                              ? Icons.star_outlined
+                              : Icons.star_border_outlined,
+                          color: alreadyFavorite ? Colors.yellow : null,
+                        ),
+                      );
+                    },
+                  ),
+                  SizedBox(width: 20)
+                ],
+                flexibleSpace: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.8),
+                        blurRadius: 3,
+                        offset: Offset(0, 2), // changes position of shadow
+                      ),
+                    ],
+                    color: Colors.lightBlue[600],
+                  ),
                 ),
               ),
-            ),
-            body: WillPopScope(
-              onWillPop: () {
-                painting.imageCache.clear();
-                Navigator.of(context).pop(true);
-                return new Future.value(true);
-              },
-              child: TabBarView(
-                children: [
-                  Container(
-                    child: TabOne(widget.stnId, widget.basinID),
-                  ),
-                  Container(
-                    child: TabTwo(widget.stnId, stationData.STN_Name),
-                  ),
-                  Container(
-                    child: TabThree(widget.stnId, stationData.STN_Name),
-                  ),
-                  Container(
-                    child: RefreshIndicator(
-                      onRefresh: onPullToRefresh,
-                      child: TabFour(widget.stnId, widget.basinID, widget.CCTV,
-                          stationData.STN_Name),
+              body: WillPopScope(
+                onWillPop: () {
+                  painting.imageCache.clear();
+                  Navigator.of(context).pop(true);
+                  return new Future.value(true);
+                },
+                child: TabBarView(
+                  children: [
+                    Container(
+                      child: TabOne(widget.stnId, widget.basinID),
                     ),
-                  ),
-                ],
+                    Container(
+                      child: TabTwo(widget.stnId, stationData.STN_Name),
+                    ),
+                    Container(
+                      child: TabThree(widget.stnId, stationData.STN_Name),
+                    ),
+                    Container(
+                      child: RefreshIndicator(
+                        onRefresh: onPullToRefresh,
+                        child: TabFour(widget.stnId, widget.basinID,
+                            widget.CCTV, stationData.STN_Name),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
