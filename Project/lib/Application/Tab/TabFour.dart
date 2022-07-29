@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:full_screen_image/full_screen_image.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
+import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 
 class TabFour extends StatefulWidget {
   TabFour(this.stnId, this.basinId, this.CCTV, this.title);
@@ -76,17 +77,21 @@ class _TabFourState extends State<TabFour> {
                   ),
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: FullScreenWidget(
-                          child: ClipRRect(
-                        child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/images/loading1.gif',
-                          image: ('http://tele-' +
-                              widget.basinName +
-                              '.dwr.go.th/image/' +
-                              widget.stnId +
-                              '/CCTV_image/Overview_1.jpg'),
+                      child: ZoomOverlay(
+                        minScale: 0.5,
+                        maxScale: 3.0,
+                        twoTouchOnly: true,
+                        child: ClipRRect(
+                          child: FadeInImage.assetNetwork(
+                            placeholder: 'assets/images/loading1.gif',
+                            image: ('http://tele-' +
+                                widget.basinName +
+                                '.dwr.go.th/image/' +
+                                widget.stnId +
+                                '/CCTV_image/Overview_1.jpg'),
+                          ),
                         ),
-                      ))),
+                      )),
                 ),
               ),
               Padding(
@@ -98,7 +103,9 @@ class _TabFourState extends State<TabFour> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: FullScreenWidget(
+                    child: ZoomOverlay(
+                      minScale: 0.5,
+                      maxScale: 3.0,
                       child: ClipRRect(
                         child: FadeInImage.assetNetwork(
                           placeholder: 'assets/images/loading1.gif',

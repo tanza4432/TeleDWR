@@ -30,9 +30,9 @@ class WidgetMap extends StatelessWidget {
           polygons: [
             Polygon(
               points: polygon,
-              color: Colors.purple.withOpacity(0.4),
+              color: Colors.yellow[600].withOpacity(0.4),
               borderStrokeWidth: 2,
-              borderColor: Colors.purple,
+              borderColor: Colors.brown,
             ),
           ],
         ),

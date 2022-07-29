@@ -16,6 +16,21 @@ class LoadingSquareCircle extends StatelessWidget {
   }
 }
 
+class LoadingCubeGrid extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      // color: Colors.white,
+      child: Center(
+        child: SpinKitCubeGrid(
+          color: Colors.white,
+          size: 50.0,
+        ),
+      ),
+    );
+  }
+}
+
 class LoadingPage extends StatelessWidget {
   const LoadingPage({
     Key key,

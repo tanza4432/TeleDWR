@@ -3,6 +3,7 @@ import 'package:dwr0001/Application/Menu.dart';
 import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
+import 'package:dwr0001/components/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:provider/provider.dart';
@@ -68,38 +69,40 @@ class _WelcomeState extends State<Welcome> {
               image: AssetImage('assets/banner/banner01/background02.png'),
               fit: BoxFit.fill),
         ),
-        child: Column(
+        child: Stack(
+          alignment: Alignment.center,
           children: <Widget>[
-            SizedBox(height: size.height * 0.8),
-            checkCallApi == 4
-                ? Consumer<FavoriteRiver>(
-                    builder: (context, Data, _) {
-                      return GestureDetector(
-                        onTap: () async {
-                          var data = await FlutterSession().get('data');
-                          if (data != null) {
-                            for (var i in data) {
-                              Data.addData(i);
-                            }
-                          }
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(
-                              builder: (context) => MenuPage(
-                                data: newdata,
-                              ),
+            Positioned(
+                bottom: 100,
+                child: checkCallApi == 4
+                    ? Consumer<FavoriteRiver>(
+                        builder: (context, Data, _) {
+                          return GestureDetector(
+                            onTap: () async {
+                              var data = await FlutterSession().get('data');
+                              if (data != null) {
+                                for (var i in data) {
+                                  Data.addData(i);
+                                }
+                              }
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => MenuPage(
+                                    data: newdata,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Image(
+                              image: AssetImage(
+                                  'assets/banner/banner01/sign_in.png'),
+                              fit: BoxFit.cover,
+                              height: size.height * 0.11,
                             ),
                           );
                         },
-                        child: Image(
-                          image:
-                              AssetImage('assets/banner/banner01/sign_in.png'),
-                          fit: BoxFit.cover,
-                          height: size.height * 0.11,
-                        ),
-                      );
-                    },
-                  )
-                : Container(),
+                      )
+                    : LoadingCubeGrid()),
           ],
         ),
       ),
