@@ -37,8 +37,15 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
             : basinId == 3
                 ? "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json"
                 : basinId == 4
-                    ? "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
-                    : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
+                    ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
+                    // "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
+                    : basinId == 5
+                        ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
+                        : basinId == 6
+                            ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
+                            : basinId == 7
+                                ? "http://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json"
+                                : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       return parseStation(response.body, tab);
@@ -53,15 +60,18 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
 Future<StationModel> getStation(String stn_id, int basinId) async {
   try {
     String url;
-    if (basinId == 4) {
-      url =
-          "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_id?stn_id=" +
-              stn_id;
-    } else {
-      url =
-          "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
-              stn_id;
-    }
+    basinId == 4
+        ? url =
+            "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_id?stn_id=" +
+                stn_id
+        : basinId == 7
+            ? url =
+                "https://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json_id?stn_id=" +
+                    stn_id
+            : url =
+                "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
+                    stn_id;
+
     //final String url = "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
     //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
     //final String url = "https://jsonplaceholder.typicode.com/todos/1";
@@ -109,9 +119,11 @@ Future<List<DataModelGet>> getStationData24H(String stn_id) async {
   //final String url = "https://jsonplaceholder.typicode.com/todos/1";
   final response = await http.get(Uri.parse(url));
   final parsed = json.decode(response.body);
+  print(parsed.length);
   if (parsed.length == 0) {
     final String url =
-        "https://tele-songkramhuailuang.dwr.go.th/webservice/getdata?station_id=TC140605";
+        "https://tele-nakhonsri.dwr.go.th/webservice/getdata?station_id=TC140605";
+    // "https://tele-songkramhuailuang.dwr.go.th/webservice/getdata?station_id=TC140605";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);

@@ -253,57 +253,59 @@ class _MapPageState extends State<MapPage> {
       onWillPop: onWillPop,
       child: Consumer<MapProvider>(
         builder: (context, MapP, _) => Scaffold(
-          drawer: NavigationBurgerMenuWidget(data: widget.data),
-          appBar: AppBar(
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: Icon(
-                  Icons.menu,
-                  color: Colors.white,
+            drawer: NavigationBurgerMenuWidget(data: widget.data),
+            appBar: AppBar(
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
                 ),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               ),
+              centerTitle: true,
+              title: Text(
+                'แผนที่',
+                style: DefaultTitleW(),
+              ),
+              backgroundColor: Colors.lightBlue[600],
             ),
-            centerTitle: true,
-            title: Text(
-              'แผนที่',
-              style: DefaultTitleW(),
+            body: WidgetMap(markers: _markers)
+            // MapP.dataPolygon.length == 0
+            //     ? FutureBuilder(
+            //         future: get_polygon(),
+            //         builder: (context, AsyncSnapshot snapshot) {
+            //           MapModel result;
+            //           if (snapshot?.connectionState != ConnectionState.done) {
+            //             return LoadingSquareCircle();
+            //           } else {
+            //             result = snapshot.data;
+            //             for (var a in result.features) {
+            //               for (var i in a.geometry.coordinates[0][0]) {
+            //                 MapP.addData(LatLng(i[1], i[0]));
+            //                 polygon.add(
+            //                   LatLng(i[1], i[0]),
+            //                 );
+            //               }
+            //             }
+            //           }
+            //           return WidgetMap(polygon: polygon, markers: _markers);
+            //         },
+            //       )
+            //     : Consumer<MapProvider>(
+            //         builder: (context, MapS, _) {
+            //           for (var i in MapS.dataPolygon) {
+            //             polygon.add(
+            //               LatLng(i.latitude, i.longitude),
+            //             );
+            //           }
+            //           return WidgetMap(polygon: polygon, markers: _markers);
+            //         },
+            //       ),
             ),
-            backgroundColor: Colors.lightBlue[600],
-          ),
-          body: MapP.dataPolygon.length == 0
-              ? FutureBuilder(
-                  future: get_polygon(),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    MapModel result;
-                    if (snapshot?.connectionState != ConnectionState.done) {
-                      return LoadingSquareCircle();
-                    } else {
-                      result = snapshot.data;
-                      for (var a in result.features) {
-                        for (var i in a.geometry.coordinates[0][0]) {
-                          MapP.addData(LatLng(i[1], i[0]));
-                          polygon.add(
-                            LatLng(i[1], i[0]),
-                          );
-                        }
-                      }
-                    }
-                    return WidgetMap(polygon: polygon, markers: _markers);
-                  },
-                )
-              : Consumer<MapProvider>(
-                  builder: (context, MapS, _) {
-                    for (var i in MapS.dataPolygon) {
-                      polygon.add(
-                        LatLng(i.latitude, i.longitude),
-                      );
-                    }
-                    return WidgetMap(polygon: polygon, markers: _markers);
-                  },
-                ),
-        ),
       ),
     );
   }

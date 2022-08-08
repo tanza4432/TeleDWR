@@ -5,12 +5,12 @@ import "package:latlong/latlong.dart";
 class WidgetMap extends StatelessWidget {
   const WidgetMap({
     Key key,
-    @required this.polygon,
+    // @required this.polygon,
     @required Set<Marker> markers,
   })  : _markers = markers,
         super(key: key);
 
-  final List<LatLng> polygon;
+  // final List<LatLng> polygon;
   final Set<Marker> _markers;
 
   @override
@@ -25,17 +25,17 @@ class WidgetMap extends StatelessWidget {
         TileLayerOptions(
           urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         ),
-        PolygonLayerOptions(
-          polygonCulling: true,
-          polygons: [
-            Polygon(
-              points: polygon,
-              color: Colors.yellow[600].withOpacity(0.4),
-              borderStrokeWidth: 2,
-              borderColor: Colors.brown,
-            ),
-          ],
-        ),
+        // PolygonLayerOptions(
+        //   polygonCulling: true,
+        //   polygons: [
+        //     Polygon(
+        //       points: polygon,
+        //       color: Colors.yellow[600].withOpacity(0.4),
+        //       borderStrokeWidth: 2,
+        //       borderColor: Colors.brown,
+        //     ),
+        //   ],
+        // ),
         MarkerLayerOptions(markers: _markers.toList()),
       ],
     );
