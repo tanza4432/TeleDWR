@@ -43,7 +43,10 @@ class _MapPageState extends State<MapPage> {
             Marker(
               width: 40,
               height: 40,
-              point: LatLng(double.parse(item.LAT), double.parse(item.LON)),
+              point: LatLng(
+                double.parse(item.LAT),
+                double.parse(item.LON),
+              ),
               builder: (ctx) => Container(
                 child: InkWell(
                   child: Stack(
@@ -117,7 +120,7 @@ class _MapPageState extends State<MapPage> {
               MaterialPageRoute(
                 builder: (context) => StationPage(
                   stn_id: item.STN_ID,
-                  basinID: 4,
+                  basinID: 7,
                   RF: item.RF,
                   WL: item.WL,
                   CCTV: item.CURR_CCTV,

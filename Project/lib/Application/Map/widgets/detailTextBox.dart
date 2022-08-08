@@ -15,6 +15,9 @@ class DetailTextBoxMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text + datamap,
+      overflow: TextOverflow.fade,
+      maxLines: 1,
+      softWrap: false,
       style: DefaultStyleTextBoxMap(),
     );
   }

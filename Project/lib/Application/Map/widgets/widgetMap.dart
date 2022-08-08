@@ -17,9 +17,11 @@ class WidgetMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(17.1408165, 103.4063071),
-        // กรุงเทพ LatLng(13.782694, 100.5549202),
-        zoom: 8,
+        center:
+            // LatLng(17.1408165, 103.4063071),
+            // กรุงเทพ
+            LatLng(13.5654281, 101.4886013),
+        zoom: 6,
       ),
       layers: [
         TileLayerOptions(

@@ -46,7 +46,9 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
                             : basinId == 7
                                 ? "http://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json"
                                 : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
-    final response = await http.get(Uri.parse(url));
+    final response = await http.get(
+      Uri.parse(url),
+    );
     if (response.statusCode == 200) {
       return parseStation(response.body, tab);
     } else {
