@@ -28,24 +28,24 @@ class _WelcomeState extends State<Welcome> {
     for (var i = 1; i < 8; i++) {
       List<StationModel> data = await getStationListTab(i, "1");
       checkCallApi = i;
-      for (StationModel result in data) {
-        newdata.add(
-          StationModel(
-            STN_ID: result.STN_ID,
-            STN_Name: result.STN_Name,
-            RF: result.RF,
-            WL: result.WL,
-            BASINID: i,
-            CURR_CCTV: result.CURR_CCTV,
-            CURR_STATUS: result.CURR_STATUS,
-          ),
-        );
+      if (data != null) {
+        for (StationModel result in data) {
+          newdata.add(
+            StationModel(
+              STN_ID: result.STN_ID,
+              STN_Name: result.STN_Name,
+              RF: result.RF,
+              WL: result.WL,
+              BASINID: i,
+              CURR_CCTV: result.CURR_CCTV,
+              CURR_STATUS: result.CURR_STATUS,
+            ),
+          );
+        }
+        print(i);
       }
-      if (checkCallApi == 7) {
-        setState(() {});
-      }
-      print(i);
     }
+    setState(() {});
   }
 
   @override

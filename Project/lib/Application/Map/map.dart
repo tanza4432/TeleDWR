@@ -33,76 +33,78 @@ class _MapPageState extends State<MapPage> {
 
   Future<void> get_data() async {
     List<StationModel> snapshots = await get_dataMap();
-    for (StationModel data in snapshots) {
-      result.add(data);
-    }
-    for (StationModel item in result) {
-      setState(
-        () {
-          _markers.add(
-            Marker(
-              width: 40,
-              height: 40,
-              point: LatLng(
-                double.parse(item.LAT),
-                double.parse(item.LON),
-              ),
-              builder: (ctx) => Container(
-                child: InkWell(
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      AvatarGlow(
-                        glowColor: Colors.blue,
-                        endRadius: 100.0,
-                        duration: Duration(milliseconds: 2000),
-                        repeat: true,
-                        showTwoGlows: true,
-                        repeatPauseDuration: Duration(milliseconds: 200),
-                        child: CircleAvatar(
-                          radius: 18.0,
-                          child: CircleAvatar(
-                            radius: 0,
-                            backgroundColor: Colors.greenAccent,
-                          ),
-                          backgroundColor: item.CURR_STATUS == "0"
-                              ? Colors.green
-                              : item.CURR_STATUS == "1"
-                                  ? Colors.green
-                                  : item.CURR_STATUS == "2"
-                                      ? Colors.green
-                                      : item.CURR_STATUS == "3"
-                                          ? Colors.white
-                                          : item.CURR_STATUS == "4"
-                                              ? Colors.grey
-                                              : item.CURR_STATUS == "5"
-                                                  ? Colors.black
-                                                  : Colors.green,
-                        ),
-                      ),
-                      Text(
-                        item.CURR_Acc_Rain_1_D,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    OnpressShow(item);
-                  },
+    if (snapshots != null) {
+      for (StationModel data in snapshots) {
+        result.add(data);
+      }
+      for (StationModel item in result) {
+        setState(
+          () {
+            _markers.add(
+              Marker(
+                width: 40,
+                height: 40,
+                point: LatLng(
+                  double.parse(item.LAT),
+                  double.parse(item.LON),
                 ),
-                // IconButton(
-                //   icon: Icon(Icons.location_on_outlined),
-                //   color: Color(0xff6200eee),
-                //   iconSize: 45.0,
-                //   onPressed: () {
-                //     OnpressShow(item);
-                //   },
-                // ),
+                builder: (ctx) => Container(
+                  child: InkWell(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AvatarGlow(
+                          glowColor: Colors.blue,
+                          endRadius: 100.0,
+                          duration: Duration(milliseconds: 2000),
+                          repeat: true,
+                          showTwoGlows: true,
+                          repeatPauseDuration: Duration(milliseconds: 200),
+                          child: CircleAvatar(
+                            radius: 18.0,
+                            child: CircleAvatar(
+                              radius: 0,
+                              backgroundColor: Colors.greenAccent,
+                            ),
+                            backgroundColor: item.CURR_STATUS == "0"
+                                ? Colors.green
+                                : item.CURR_STATUS == "1"
+                                    ? Colors.green
+                                    : item.CURR_STATUS == "2"
+                                        ? Colors.green
+                                        : item.CURR_STATUS == "3"
+                                            ? Colors.white
+                                            : item.CURR_STATUS == "4"
+                                                ? Colors.grey
+                                                : item.CURR_STATUS == "5"
+                                                    ? Colors.black
+                                                    : Colors.green,
+                          ),
+                        ),
+                        Text(
+                          item.CURR_Acc_Rain_1_D,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      OnpressShow(item);
+                    },
+                  ),
+                  // IconButton(
+                  //   icon: Icon(Icons.location_on_outlined),
+                  //   color: Color(0xff6200eee),
+                  //   iconSize: 45.0,
+                  //   onPressed: () {
+                  //     OnpressShow(item);
+                  //   },
+                  // ),
+                ),
               ),
-            ),
-          );
-        },
-      );
+            );
+          },
+        );
+      }
     }
   }
 
