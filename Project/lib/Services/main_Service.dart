@@ -37,10 +37,9 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
             : basinId == 3
                 ? "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json"
                 : basinId == 4
-                    ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
-                    // "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
+                    ? "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
                     : basinId == 5
-                        ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
+                        ? "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json"
                         : basinId == 6
                             ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
                             : basinId == 7
@@ -66,13 +65,17 @@ Future<StationModel> getStation(String stn_id, int basinId) async {
         ? url =
             "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_id?stn_id=" +
                 stn_id
-        : basinId == 7
+        : basinId == 5
             ? url =
-                "https://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json_id?stn_id=" +
+                "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json_id?stn_id=" +
                     stn_id
-            : url =
-                "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
-                    stn_id;
+            : basinId == 7
+                ? url =
+                    "https://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json_id?stn_id=" +
+                        stn_id
+                : url =
+                    "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
+                        stn_id;
 
     //final String url = "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
     //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
