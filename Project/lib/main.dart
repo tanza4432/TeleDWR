@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'mytitle',
+        title: 'TeleDWR',
         theme: ThemeData(primarySwatch: Colors.cyan),
         home: Welcome(),
       ),

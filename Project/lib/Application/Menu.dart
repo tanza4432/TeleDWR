@@ -27,13 +27,13 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   List<Map<String, dynamic>> items = <Map<String, dynamic>>[
-    <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง"},
-    <String, dynamic>{'title': "ลุ่มน้ำสาละวิน"},
-    <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ"},
-    <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง"},
-    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง"},
-    <String, dynamic>{'title': "อำเภอบางสะพาน"},
-    <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช"},
+    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง", 'page': 1},
+    <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง", 'page': 2},
+    <String, dynamic>{'title': "ลุ่มน้ำสาละวิน", 'page': 3},
+    <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ", 'page': 4},
+    <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง", 'page': 5},
+    <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
+    <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช", 'page': 7},
   ];
 
   DateTime backbuttonpressedTime;
@@ -173,7 +173,7 @@ class _MenuPageState extends State<MenuPage> {
                                       }
                                     }
                                     if (check == false) {
-                                      print(result.BASINID);
+                                      print("BASIN : ${result.BASINID}");
                                       newResult.add(
                                         StationModel(
                                           STN_ID: result.STN_ID,
@@ -207,27 +207,27 @@ class _MenuPageState extends State<MenuPage> {
                                 );
                               }),
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Row(
-                                children: [
-                                  BoxDetail(
-                                    title: "เกี่ยวกับโครงการ",
-                                    path: PdfViewer(
-                                        basinID: optionSelected,
-                                        data: widget.data),
-                                  ),
-                                  SizedBox(width: 20),
-                                  BoxDetail(
-                                    title: "การคาดการณ์",
-                                    path: ForecastPage(
-                                        basinID: optionSelected,
-                                        data: widget.data),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Padding(
+                            //   padding:
+                            //       const EdgeInsets.only(top: 10, bottom: 10),
+                            //   child: Row(
+                            //     children: [
+                            //       BoxDetail(
+                            //         title: "เกี่ยวกับโครงการ",
+                            //         path: PdfViewer(
+                            //             basinID: optionSelected,
+                            //             data: widget.data),
+                            //       ),
+                            //       SizedBox(width: 20),
+                            //       BoxDetail(
+                            //         title: "การคาดการณ์",
+                            //         path: ForecastPage(
+                            //             basinID: optionSelected,
+                            //             data: widget.data),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                             Divider(color: Colors.black38),
                             Text(
                               "TeleDWR-รายการสถานี",
@@ -250,15 +250,15 @@ class _MenuPageState extends State<MenuPage> {
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
                                   optionSelected == 1
-                                      ? "ลุ่มแม่น้ำกลอง"
+                                      ? "ลุ่มน้ำบางปะกง"
                                       : optionSelected == 2
-                                          ? "ลุ่มน้ำสาละวิน"
+                                          ? "ลุ่มแม่น้ำกลอง"
                                           : optionSelected == 3
-                                              ? "ลุ่มน้ำกกและโขงเหนือ"
+                                              ? "ลุ่มน้ำสาละวิน"
                                               : optionSelected == 4
-                                                  ? "ลุ่มน้ำสงครามและห้วยหลวง"
+                                                  ? "ลุ่มน้ำกกและโขงเหนือ"
                                                   : optionSelected == 5
-                                                      ? "ลุ่มน้ำบางปะกง"
+                                                      ? "ลุ่มน้ำสงครามและห้วยหลวง"
                                                       : optionSelected == 6
                                                           ? "อำเภอบางสะพาน"
                                                           : optionSelected == 7
@@ -339,7 +339,7 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                       onTap: () {
-                        checkOption(i + 1);
+                        checkOption(items[i]['page']);
                       },
                     )
                 ],
