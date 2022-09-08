@@ -27,17 +27,18 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   List<Map<String, dynamic>> items = <Map<String, dynamic>>[
-    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง", 'page': 1},
-    <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง", 'page': 2},
-    <String, dynamic>{'title': "ลุ่มน้ำสาละวิน", 'page': 3},
-    <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ", 'page': 4},
-    <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง", 'page': 5},
+    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง", 'page': 5},
+    <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง", 'page': 1},
+    <String, dynamic>{'title': "ลุ่มน้ำสาละวิน", 'page': 2},
+    <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ", 'page': 3},
+    <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง", 'page': 4},
     <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
     <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช", 'page': 7},
   ];
 
   DateTime backbuttonpressedTime;
   int optionSelected = 1;
+  int SelectRiver = 0;
   List<StationModel> newResult = [];
   var alreadyFavorite;
 
@@ -173,7 +174,7 @@ class _MenuPageState extends State<MenuPage> {
                                       }
                                     }
                                     if (check == false) {
-                                      print("BASIN : ${result.BASINID}");
+                                      print(result.BASINID);
                                       newResult.add(
                                         StationModel(
                                           STN_ID: result.STN_ID,
@@ -249,19 +250,19 @@ class _MenuPageState extends State<MenuPage> {
                               child: Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
-                                  optionSelected == 1
-                                      ? "ลุ่มน้ำบางปะกง"
-                                      : optionSelected == 2
-                                          ? "ลุ่มแม่น้ำกลอง"
-                                          : optionSelected == 3
-                                              ? "ลุ่มน้ำสาละวิน"
-                                              : optionSelected == 4
-                                                  ? "ลุ่มน้ำกกและโขงเหนือ"
-                                                  : optionSelected == 5
-                                                      ? "ลุ่มน้ำสงครามและห้วยหลวง"
-                                                      : optionSelected == 6
+                                  SelectRiver == 1
+                                      ? "ลุ่มแม่น้ำกลอง"
+                                      : SelectRiver == 2
+                                          ? "ลุ่มน้ำสาละวิน"
+                                          : SelectRiver == 3
+                                              ? "ลุ่มน้ำกกและโขงเหนือ"
+                                              : SelectRiver == 4
+                                                  ? "ลุ่มน้ำสงครามและห้วยหลวง"
+                                                  : SelectRiver == 5
+                                                      ? "ลุ่มน้ำบางปะกง"
+                                                      : SelectRiver == 6
                                                           ? "อำเภอบางสะพาน"
-                                                          : optionSelected == 7
+                                                          : SelectRiver == 7
                                                               ? "จังหวัดนครศรีธรรมราช"
                                                               : "ไม่พบข้อมูล",
                                   style: DefaultStyleW(),
@@ -272,7 +273,7 @@ class _MenuPageState extends State<MenuPage> {
                               height: size.height * 0.60,
                               width: double.infinity,
                               color: Colors.white,
-                              child: TabOneStation(optionSelected, widget.data),
+                              child: TabOneStation(SelectRiver, widget.data),
                             ),
                           ],
                         ),
@@ -339,7 +340,10 @@ class _MenuPageState extends State<MenuPage> {
                         ),
                       ),
                       onTap: () {
-                        checkOption(items[i]['page']);
+                        setState(() {
+                          SelectRiver = items[i]['page'];
+                        });
+                        checkOption(i + 1);
                       },
                     )
                 ],

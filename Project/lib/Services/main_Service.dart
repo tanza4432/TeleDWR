@@ -31,15 +31,15 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
   try {
     //final response = await http.get('http://192.168.1.2:8000/products.json');
     final String url = basinId == 1
-        ? "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json"
+        ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
         : basinId == 2
-            ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
+            ? "http://tele-salawin.dwr.go.th/webservice/webservice_sl_json"
             : basinId == 3
-                ? "http://tele-salawin.dwr.go.th/webservice/webservice_sl_json"
+                ? "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json"
                 : basinId == 4
-                    ? "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json"
+                    ? "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
                     : basinId == 5
-                        ? "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json"
+                        ? "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json"
                         : basinId == 6
                             ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
                             : basinId == 7
@@ -61,11 +61,11 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
 Future<StationModel> getStation(String stn_id, int basinId) async {
   try {
     String url;
-    basinId == 5
+    basinId == 4
         ? url =
             "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_id?stn_id=" +
                 stn_id
-        : basinId == 1
+        : basinId == 5
             ? url =
                 "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json_id?stn_id=" +
                     stn_id
