@@ -25,7 +25,7 @@ class _WelcomeState extends State<Welcome> {
   }
 
   void GetData(BuildContext context) async {
-    for (var i = 1; i < 8; i++) {
+    for (var i = 1; i < 6; i++) {
       List<StationModel> data = await getStationListTab(i, "1");
       checkCallApi = i;
       if (data != null) {
@@ -74,7 +74,7 @@ class _WelcomeState extends State<Welcome> {
           children: <Widget>[
             Positioned(
                 bottom: 100,
-                child: checkCallApi == 7
+                child: checkCallApi == 5
                     ? Consumer<FavoriteRiver>(
                         builder: (context, Data, _) {
                           return GestureDetector(

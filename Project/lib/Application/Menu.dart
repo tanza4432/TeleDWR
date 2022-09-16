@@ -27,18 +27,18 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> {
   List<Map<String, dynamic>> items = <Map<String, dynamic>>[
-    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง", 'page': 5},
     <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง", 'page': 1},
     <String, dynamic>{'title': "ลุ่มน้ำสาละวิน", 'page': 2},
     <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ", 'page': 3},
     <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง", 'page': 4},
-    <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
-    <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช", 'page': 7},
+    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง", 'page': 5},
+    // <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
+    // <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช", 'page': 7},
   ];
 
   DateTime backbuttonpressedTime;
   int optionSelected = 1;
-  int SelectRiver = 0;
+  int SelectRiver = 1;
   List<StationModel> newResult = [];
   var alreadyFavorite;
 

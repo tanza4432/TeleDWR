@@ -127,8 +127,8 @@ Future<List<DataModelGet>> getStationData24H(String stn_id) async {
   print(parsed.length);
   if (parsed.length == 0) {
     final String url =
-        "https://tele-nakhonsri.dwr.go.th/webservice/getdata?station_id=TC140605";
-    // "https://tele-songkramhuailuang.dwr.go.th/webservice/getdata?station_id=TC140605";
+        // "https://tele-nakhonsri.dwr.go.th/webservice/getdata?station_id=TC140605";
+        "https://tele-songkramhuailuang.dwr.go.th/webservice/getdata?station_id=TC140605";
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       final parsed = json.decode(response.body);
