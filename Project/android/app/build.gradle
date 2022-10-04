@@ -43,8 +43,8 @@ android {
         applicationId "com.teledwrapp.app"
         minSdkVersion 19
         targetSdkVersion 31
-        versionCode 5
-        versionName '2.0.0'
+        versionCode 6
+        versionName '2.0.1'
     }
 
     // SetUp เพื่ออัพขึ้น Google Play
