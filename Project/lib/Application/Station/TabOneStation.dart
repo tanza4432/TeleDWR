@@ -69,16 +69,20 @@ class TabOneStation extends StatelessWidget {
                   backgroundColor: station[i].CURR_STATUS == "0"
                       ? Colors.green
                       : station[i].CURR_STATUS == "1"
-                          ? Colors.green
+                          ? Colors.yellow
                           : station[i].CURR_STATUS == "2"
-                              ? Colors.green
+                              ? Colors.red
                               : station[i].CURR_STATUS == "3"
                                   ? Colors.white
                                   : station[i].CURR_STATUS == "4"
                                       ? Colors.grey
                                       : station[i].CURR_STATUS == "5"
                                           ? Colors.black
-                                          : Colors.green,
+                                          : station[i].CURR_STATUS == "6"
+                                              ? Colors.yellow
+                                              : station[i].CURR_STATUS == "7"
+                                                  ? Colors.red
+                                                  : Colors.black,
                 ),
               ),
             ),

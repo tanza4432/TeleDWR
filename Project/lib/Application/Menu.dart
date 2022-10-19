@@ -32,8 +32,8 @@ class _MenuPageState extends State<MenuPage> {
     <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ", 'page': 3},
     <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง", 'page': 4},
     <String, dynamic>{'title': "ลุ่มน้ำบางปะกง", 'page': 5},
-    // <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
-    // <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช", 'page': 7},
+    <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
+    <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช", 'page': 7},
   ];
 
   DateTime backbuttonpressedTime;

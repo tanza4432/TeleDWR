@@ -16,6 +16,7 @@ class TabFour extends StatefulWidget {
 }
 
 class _TabFourState extends State<TabFour> {
+  bool check = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -27,9 +28,43 @@ class _TabFourState extends State<TabFour> {
                 ? "kokkhong"
                 : widget.basinId == 4
                     ? "songkramhuailuang"
-                    : "nakhonsri";
+                    : widget.basinId == 5
+                        ? "bangpakong"
+                        : widget.basinId == 6
+                            ? "bangsaphan"
+                            : widget.basinId == 7
+                                ? "nakhonsri"
+                                : "maeklong";
+    if (widget.basinId > 3) {
+      check = true;
+    }
     if (widget.CCTV == "") {
       return Column(
+        children: [
+          TabTitleBar(stnId: widget.stnId, title: widget.title),
+          Container(
+            height: size.height * 0.5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "สถานีนี้ไม่มีข้อมูล CCTV",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: 'Kanit',
+                      fontSize: 30,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black45),
+                ),
+              ],
+            ),
+          )
+        ],
+      );
+    }
+
+    return SingleChildScrollView(
+      child: Column(
         children: [
           TabTitleBar(stnId: widget.stnId, title: widget.title),
           Container(
@@ -37,52 +72,53 @@ class _TabFourState extends State<TabFour> {
             height: size.height * 0.75,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView(
-                children: <Widget>[
-                  Text(
-                    "สถานีนี้ไม่มีข้อมูล CCTV",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'Kanit',
-                      fontWeight: FontWeight.normal,
+              child: ListView(children: <Widget>[
+                Text(
+                  "ข้อมูลภาพ CCTV: " + widget.stnId,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontFamily: 'Kanit', fontWeight: FontWeight.normal),
+                ),
+                check
+                    ? Container()
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ZoomOverlay(
+                                minScale: 0.5,
+                                maxScale: 3.0,
+                                twoTouchOnly: true,
+                                child: ClipRRect(
+                                  child: FadeInImage.assetNetwork(
+                                    placeholder: 'assets/images/loading1.gif',
+                                    image: ('http://tele-' +
+                                        widget.basinName +
+                                        '.dwr.go.th/image/' +
+                                        widget.stnId +
+                                        '/CCTV_image/Overview_1.jpg'),
+                                  ),
+                                ),
+                              )),
+                        ),
+                      ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    return Column(
-      children: [
-        TabTitleBar(stnId: widget.stnId, title: widget.title),
-        Container(
-          width: double.infinity,
-          height: size.height * 0.75,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView(children: <Widget>[
-              Text(
-                "ข้อมูลภาพ CCTV: " + widget.stnId,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontFamily: 'Kanit', fontWeight: FontWeight.normal),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
+                    child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: ZoomOverlay(
                         minScale: 0.5,
                         maxScale: 3.0,
-                        twoTouchOnly: true,
                         child: ClipRRect(
                           child: FadeInImage.assetNetwork(
                             placeholder: 'assets/images/loading1.gif',
@@ -90,43 +126,19 @@ class _TabFourState extends State<TabFour> {
                                 widget.basinName +
                                 '.dwr.go.th/image/' +
                                 widget.stnId +
-                                '/CCTV_image/Overview_1.jpg'),
+                                '/CCTV_image/Staff_1.jpg'),
+                            fit: BoxFit.cover,
                           ),
-                        ),
-                      )),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ZoomOverlay(
-                      minScale: 0.5,
-                      maxScale: 3.0,
-                      child: ClipRRect(
-                        child: FadeInImage.assetNetwork(
-                          placeholder: 'assets/images/loading1.gif',
-                          image: ('http://tele-' +
-                              widget.basinName +
-                              '.dwr.go.th/image/' +
-                              widget.stnId +
-                              '/CCTV_image/Staff_1.jpg'),
-                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ]),
+                )
+              ]),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -19,6 +19,7 @@ class _AreaChartState extends State<AreaChart> {
   List<RainChartData> _chartWaterFData;
   TooltipBehavior _tooltipBehavior;
   ZoomPanBehavior _zoomPanbehavior;
+  bool notFound = false;
 
   @override
   void initState() {
@@ -38,82 +39,102 @@ class _AreaChartState extends State<AreaChart> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.data.length == 0) {
+      notFound = true;
+    }
     Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(5.0),
-          color: Colors.lightBlue[700],
-          child: Row(
-            children: [
-              Icon(Icons.location_on_outlined),
-              Flexible(
-                child: Text(
-                  "สถานี : " + widget.stnid + " " + widget.title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: ResponsiveFlutter.of(context).fontSize(2),
-                    color: Colors.white,
-                    fontWeight: FontWeight.normal,
-                    fontFamily: 'Kanit',
-                    decoration: TextDecoration.none,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.all(5.0),
+            color: Colors.lightBlue[700],
+            child: Row(
+              children: [
+                Icon(Icons.location_on_outlined),
+                Flexible(
+                  child: Text(
+                    "สถานี : " + widget.stnid + " " + widget.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: ResponsiveFlutter.of(context).fontSize(2),
+                      color: Colors.white,
+                      fontWeight: FontWeight.normal,
+                      fontFamily: 'Kanit',
+                      decoration: TextDecoration.none,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        Container(
-          width: double.infinity,
-          height: size.height * 0.76,
-          child: Scrollbar(
-            isAlwaysShown: true,
-            child: GridView.builder(
-              itemCount: 3,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1),
-              itemBuilder: (BuildContext context, int index) {
-                return SafeArea(
-                  child: SfCartesianChart(
-                    tooltipBehavior: _tooltipBehavior,
-                    backgroundColor: Colors.transparent,
-                    zoomPanBehavior: _zoomPanbehavior,
-                    title: ChartTitle(
-                      text: index == 0
-                          ? " กราฟแสดงปริมาณน้ำฝน (มม.) "
-                          : index == 1
-                              ? " กราฟแสดงระดับน้ำ (ม.รทก.) "
-                              : " กราฟแสดงปริมาณน้ำ (ลบม. / วินาที) ",
-                      textStyle: DefaultTitleB(),
-                    ),
-                    primaryYAxis: NumericAxis(
-                      labelFormat: '{value} มม.',
-                      interactiveTooltip: InteractiveTooltip(enable: false),
-                    ),
-                    primaryXAxis: CategoryAxis(
-                      edgeLabelPlacement: EdgeLabelPlacement.shift,
-                    ),
-                    series: [
-                      SplineSeries(
-                        name: 'ปริมาณน้ำฝน',
-                        dataSource: index == 0
-                            ? _chartRainData
-                            : index == 1
-                                ? _chartWaterDData
-                                : _chartWaterFData,
-                        xValueMapper: (RainChartData rains, _) => rains.label,
-                        yValueMapper: (RainChartData rains, _) => rains.rain,
-                        // dataLabelSettings: DataLabelSettings(isVisible: true),
-                        enableTooltip: true,
+          notFound
+              ? Container(
+                  height: size.height * 0.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "ไม่พบข้อมูล",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontFamily: 'Kanit',
+                            fontSize: 30,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black45),
                       ),
                     ],
                   ),
-                );
-              },
-            ),
-          ),
-        ),
-      ],
+                )
+              : GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: 3,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1),
+                  itemBuilder: (BuildContext context, int index) {
+                    return SafeArea(
+                      child: SfCartesianChart(
+                        tooltipBehavior: _tooltipBehavior,
+                        backgroundColor: Colors.transparent,
+                        zoomPanBehavior: _zoomPanbehavior,
+                        title: ChartTitle(
+                          text: index == 0
+                              ? " กราฟแสดงปริมาณน้ำฝน (มม.) "
+                              : index == 1
+                                  ? " กราฟแสดงระดับน้ำ (ม.รทก.) "
+                                  : " กราฟแสดงปริมาณน้ำ (ลบม. / วินาที) ",
+                          textStyle: DefaultTitleB(),
+                        ),
+                        primaryYAxis: NumericAxis(
+                          labelFormat: '{value} มม.',
+                          interactiveTooltip: InteractiveTooltip(enable: false),
+                        ),
+                        primaryXAxis: CategoryAxis(
+                          edgeLabelPlacement: EdgeLabelPlacement.shift,
+                        ),
+                        series: [
+                          SplineSeries(
+                            name: 'ปริมาณน้ำฝน',
+                            dataSource: index == 0
+                                ? _chartRainData
+                                : index == 1
+                                    ? _chartWaterDData
+                                    : _chartWaterFData,
+                            xValueMapper: (RainChartData rains, _) =>
+                                rains.label,
+                            yValueMapper: (RainChartData rains, _) =>
+                                rains.rain,
+                            // dataLabelSettings: DataLabelSettings(isVisible: true),
+                            enableTooltip: true,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+        ],
+      ),
     );
   }
 

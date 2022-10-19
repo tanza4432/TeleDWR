@@ -61,6 +61,11 @@ class TabTwo extends StatelessWidget {
 
   SingleChildScrollView TabTwoDetail(
       BuildContext context, List<DataModelGet> data) {
+    bool notFound = false;
+    if (data.length == 0) {
+      notFound = true;
+    }
+    Size size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
@@ -87,101 +92,119 @@ class TabTwo extends StatelessWidget {
               ],
             ),
           ),
-          DataTable(
-              headingRowColor: MaterialStateProperty.resolveWith<Color>(
-                  (Set<MaterialState> states) {
-                if (states.contains(MaterialState.hovered))
-                  return Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withOpacity(0.08);
-                return null; // Use the default value.
-              }),
-              columnSpacing: 0.0,
-              columns: [
-                DataColumn(
-                    label: Text("วันที่/เวลา",
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontFamily: 'Kanit',
-                            fontWeight: FontWeight.bold)),
-                    numeric: false,
-                    onSort: (i, b) {}),
-                DataColumn(
-                    label: Text("ปริมาณฝน\r\n(มม.)",
+          notFound
+              ? Container(
+                  height: size.height * 0.5,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "ไม่พบข้อมูล",
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.black87,
-                          fontFamily: 'Kanit',
-                          fontWeight: FontWeight.bold,
-                        )),
-                    numeric: false,
-                    onSort: (i, b) {}),
-                DataColumn(
-                    label: Text("ระดับน้ำ\r\n(ม.รทก.)",
-                        style: TextStyle(
-                            color: Colors.black87,
                             fontFamily: 'Kanit',
-                            fontWeight: FontWeight.bold)),
-                    numeric: false,
-                    onSort: (i, b) {}),
-                DataColumn(
-                    label: Text("ปริมาณน้ำ\r\n(ลบ.ม./วิ)",
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontFamily: 'Kanit',
-                            fontWeight: FontWeight.bold)),
-                    numeric: false,
-                    onSort: (i, b) {})
-              ],
-              rows: data
-                  .map((data_) => DataRow(cells: [
-                        DataCell(
-                          Container(
-                              width: 100,
-                              child: Text(
-                                data_.Label.toString(),
-                                style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontFamily: 'Kanit',
-                                    fontWeight: FontWeight.normal),
-                              )),
-                        ),
-                        DataCell(
-                          Container(
-                              width: 50,
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Text(data_.Rain_15_M.toString(),
-                                  style: TextStyle(
-                                      fontSize: 14.0,
-                                      fontFamily: 'Kanit',
-                                      fontWeight: FontWeight.normal),
-                                  textAlign: TextAlign.right)),
-                        ),
-                        DataCell(
-                          Container(
-                              width: 50,
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Text(data_.Water_D.toString(),
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-                                      fontFamily: 'Kanit',
-                                      fontWeight: FontWeight.normal))),
-                        ),
-                        DataCell(
-                          Container(
-                              width: 50,
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Text(
-                                data_.Water_F.toString(),
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    fontFamily: 'Kanit',
-                                    fontWeight: FontWeight.normal),
-                              )),
-                        ),
-                      ]))
-                  .toList()),
+                            fontSize: 30,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black45),
+                      ),
+                    ],
+                  ),
+                )
+              : DataTable(
+                  headingRowColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.hovered))
+                      return Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.08);
+                    return null; // Use the default value.
+                  }),
+                  columnSpacing: 0.0,
+                  columns: [
+                    DataColumn(
+                        label: Text("วันที่/เวลา",
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontFamily: 'Kanit',
+                                fontWeight: FontWeight.bold)),
+                        numeric: false,
+                        onSort: (i, b) {}),
+                    DataColumn(
+                        label: Text("ปริมาณฝน\r\n(มม.)",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontFamily: 'Kanit',
+                              fontWeight: FontWeight.bold,
+                            )),
+                        numeric: false,
+                        onSort: (i, b) {}),
+                    DataColumn(
+                        label: Text("ระดับน้ำ\r\n(ม.รทก.)",
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontFamily: 'Kanit',
+                                fontWeight: FontWeight.bold)),
+                        numeric: false,
+                        onSort: (i, b) {}),
+                    DataColumn(
+                        label: Text("ปริมาณน้ำ\r\n(ลบ.ม./วิ)",
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontFamily: 'Kanit',
+                                fontWeight: FontWeight.bold)),
+                        numeric: false,
+                        onSort: (i, b) {})
+                  ],
+                  rows: data
+                      .map((data_) => DataRow(cells: [
+                            DataCell(
+                              Container(
+                                  width: 100,
+                                  child: Text(
+                                    data_.Label.toString(),
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        fontFamily: 'Kanit',
+                                        fontWeight: FontWeight.normal),
+                                  )),
+                            ),
+                            DataCell(
+                              Container(
+                                  width: 50,
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: Text(data_.Rain_15_M.toString(),
+                                      style: TextStyle(
+                                          fontSize: 14.0,
+                                          fontFamily: 'Kanit',
+                                          fontWeight: FontWeight.normal),
+                                      textAlign: TextAlign.right)),
+                            ),
+                            DataCell(
+                              Container(
+                                  width: 50,
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: Text(data_.Water_D.toString(),
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontFamily: 'Kanit',
+                                          fontWeight: FontWeight.normal))),
+                            ),
+                            DataCell(
+                              Container(
+                                  width: 50,
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: Text(
+                                    data_.Water_F.toString(),
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                        fontFamily: 'Kanit',
+                                        fontWeight: FontWeight.normal),
+                                  )),
+                            ),
+                          ]))
+                      .toList()),
         ],
       ),
     );

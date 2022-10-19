@@ -41,7 +41,7 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
                     : basinId == 5
                         ? "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json"
                         : basinId == 6
-                            ? "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json"
+                            ? "https://tele-bangsaphan.dwr.go.th/webservice/webservice_bsp_Json"
                             : basinId == 7
                                 ? "http://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json"
                                 : "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
@@ -51,32 +51,70 @@ Future<List<StationModel>> getStationListTab(var basinId, var tab) async {
     if (response.statusCode == 200) {
       return parseStation(response.body, tab);
     } else {
-      throw Exception('Unable to fetch products from the REST API');
+      return [];
+      // throw Exception('Unable to fetch products from the REST API');
     }
   } catch (e) {
     print(e);
+    return [];
   }
 }
 
 Future<StationModel> getStation(String stn_id, int basinId) async {
   try {
     String url;
-    basinId == 4
-        ? url =
-            "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_id?stn_id=" +
-                stn_id
-        : basinId == 5
-            ? url =
-                "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json_id?stn_id=" +
-                    stn_id
-            : basinId == 7
-                ? url =
-                    "https://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json_id?stn_id=" +
-                        stn_id
-                : url =
-                    "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
-                        stn_id;
+    switch (basinId) {
+      case 1:
+        {
+          url =
+              "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json_id?stn_id=" +
+                  stn_id;
+        }
+        break;
 
+      case 2:
+        {
+          url =
+              "http://tele-salawin.dwr.go.th/webservice/webservice_sl_json_id?stn_id=" +
+                  stn_id;
+        }
+        break;
+      case 3:
+        {
+          url =
+              "http://tele-kokkhong.dwr.go.th/webservice/webservice_kk_json_id?stn_id=" +
+                  stn_id;
+        }
+        break;
+      case 4:
+        {
+          url =
+              "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_id?stn_id=" +
+                  stn_id;
+        }
+        break;
+      case 5:
+        {
+          url =
+              "http://tele-bangpakong.dwr.go.th/webservice/webservice_bpk_Json_id?stn_id=" +
+                  stn_id;
+        }
+        break;
+      case 6:
+        {
+          url =
+              "https://tele-bangsaphan.dwr.go.th/webservice/webservice_bsp_Json_id?stn_id=" +
+                  stn_id;
+        }
+        break;
+      case 7:
+        {
+          url =
+              "https://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json_id?stn_id=" +
+                  stn_id;
+        }
+        break;
+    }
     //final String url = "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json";
     //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
     //final String url = "https://jsonplaceholder.typicode.com/todos/1";
@@ -90,22 +128,6 @@ Future<StationModel> getStation(String stn_id, int basinId) async {
     }
   } catch (e) {
     print(e);
-  }
-}
-
-Future<StationModel> getStationData(String stn_id) async {
-  //final String url ="http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json?stn_id=" + stn_id;
-  final String url =
-      "http://tele-maeklong.dwr.go.th/webservice/webservice_mk_Data_json?stn_id=" +
-          stn_id;
-  //https://localhost:44303/webservice/webservice_mk_json_id?stn_id=TC140805
-  //final String url = "https://jsonplaceholder.typicode.com/todos/1";
-  final response = await http.get(Uri.parse(url));
-  if (response.statusCode == 200) {
-    final station = jsonDecode(response.body);
-    return StationModel.fromJson(station);
-  } else {
-    throw Exception();
   }
 }
 
@@ -124,21 +146,25 @@ Future<List<DataModelGet>> getStationData24H(String stn_id) async {
   //final String url = "https://jsonplaceholder.typicode.com/todos/1";
   final response = await http.get(Uri.parse(url));
   final parsed = json.decode(response.body);
-  print(parsed.length);
   if (parsed.length == 0) {
-    final String url =
-        // "https://tele-nakhonsri.dwr.go.th/webservice/getdata?station_id=TC140605";
-        "https://tele-songkramhuailuang.dwr.go.th/webservice/getdata?station_id=TC140605";
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final parsed = json.decode(response.body);
-      return parsed
-          .map<DataModelGet>((json) => DataModelGet.fromJson(json))
-          .toList();
-    } else {
-      throw Exception();
-    }
+    return [];
   }
+  // print(parsed);
+  // print(parsed.length);
+  // if (parsed.length == 0) {
+  //   final String url =
+  //       // "https://tele-nakhonsri.dwr.go.th/webservice/getdata?station_id=TC140605";
+  //       "https://tele-songkramhuailuang.dwr.go.th/webservice/getdata?station_id=TC140605";
+  //   final response = await http.get(Uri.parse(url));
+  //   if (response.statusCode == 200) {
+  //     final parsed = json.decode(response.body);
+  //     return parsed
+  //         .map<DataModelGet>((json) => DataModelGet.fromJson(json))
+  //         .toList();
+  //   } else {
+  //     throw Exception();
+  //   }
+  // }
   if (response.statusCode == 200) {
     return parseData_(response.body);
   } else {
