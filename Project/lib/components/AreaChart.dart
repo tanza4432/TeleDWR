@@ -145,7 +145,7 @@ class _AreaChartState extends State<AreaChart> {
       // if(widget.data[i].Rain_15_M ==)
       rain[i] = new RainChartData(
         double.parse(i.toString()),
-        double.parse(widget.data[i].Rain_15_M),
+        double.parse(widget.data[i].Rain),
         widget.data[i].Label,
       );
     }
@@ -159,7 +159,7 @@ class _AreaChartState extends State<AreaChart> {
       // if(widget.data[i].Water_D ==)
       waterD[i] = new RainChartData(
         double.parse(i.toString()),
-        double.parse(widget.data[i].Water_D),
+        double.parse(widget.data[i].Water),
         widget.data[i].Label,
       );
     }
@@ -170,7 +170,7 @@ class _AreaChartState extends State<AreaChart> {
     List<RainChartData> waterF = new List<RainChartData>(widget.data.length);
     for (var i = 0; i < widget.data.length; i++) {
       // print(widget.data[i].Water_F);
-      if (widget.data[i].Water_F == null) {
+      if (widget.data[i].Flow == null) {
         waterF[i] = new RainChartData(
           double.parse(i.toString()),
           0.0,
@@ -179,7 +179,7 @@ class _AreaChartState extends State<AreaChart> {
       } else {
         waterF[i] = new RainChartData(
           double.parse(i.toString()),
-          double.parse(widget.data[i].Water_F),
+          double.parse(widget.data[i].Flow),
           widget.data[i].Label,
         );
       }

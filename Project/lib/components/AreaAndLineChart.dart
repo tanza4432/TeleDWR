@@ -83,7 +83,6 @@ class AreaAndLineChart extends StatelessWidget {
                   ),
                 ),
               ),
-              
             ],
           );
         },
@@ -102,7 +101,7 @@ class AreaAndLineChart extends StatelessWidget {
     List<LinearSales> rain = new List<LinearSales>(data.length);
     for (var i = 0; i < data.length; i++) {
       rain[i] = new LinearSales(
-          double.parse(i.toString()), double.parse(data[i].Rain_15_M));
+          double.parse(i.toString()), double.parse(data[i].Rain));
     }
 
     return [
@@ -126,13 +125,13 @@ class AreaAndLineChart extends StatelessWidget {
     List<LinearSales2> rain_D = new List<LinearSales2>(number);
     for (var i = 0; i < number; i++) {
       rain_D[i] = new LinearSales2(
-          double.parse(i.toString()), double.parse(data[i].Water_D));
+          double.parse(i.toString()), double.parse(data[i].Water));
     }
     // ignore: deprecated_member_use
     List<LinearSales2> rain_F = new List<LinearSales2>(number);
     for (var j = 0; j < number; j++) {
       rain_F[j] = new LinearSales2(double.parse(j.toString()),
-          double.parse(data[j].Water_F == null ? "0.0" : ""));
+          double.parse(data[j].Flow == null ? "0.0" : ""));
     }
 
     return [

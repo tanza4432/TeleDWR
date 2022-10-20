@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 class DataModel {
@@ -34,25 +36,36 @@ class DataModel {
   }
 }
 
-class DataModelGet {
-  final String Label;
-  final String Rain_15_M;
-  final String Water_D;
-  final String Water_F;
+List<DataModelGet> dataModelGetFromJson(String str) => List<DataModelGet>.from(
+    json.decode(str).map((x) => DataModelGet.fromJson(x)));
 
+String dataModelGetToJson(List<DataModelGet> data) =>
+    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class DataModelGet {
   DataModelGet({
     this.Label,
-    this.Rain_15_M,
-    this.Water_D,
-    this.Water_F,
+    this.Rain,
+    this.Water,
+    this.Flow,
   });
 
-  factory DataModelGet.fromJson(final json) {
-    return DataModelGet(
-      Label: json['Label'],
-      Rain_15_M: json['Rain'],
-      Water_D: json['Water'],
-      Water_F: json['FLOW'],
-    );
-  }
+  String Label;
+  String Rain;
+  String Water;
+  String Flow;
+
+  factory DataModelGet.fromJson(Map<String, dynamic> json) => DataModelGet(
+        Label: json["Label"],
+        Rain: json["Rain"],
+        Water: json["Water"],
+        Flow: json["Flow"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "Label": Label,
+        "Rain": Rain,
+        "Water": Water,
+        "Flow": Flow,
+      };
 }

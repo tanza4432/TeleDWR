@@ -122,7 +122,7 @@ class _MapPageState extends State<MapPage> {
               MaterialPageRoute(
                 builder: (context) => StationPage(
                   stn_id: item.STN_ID,
-                  basinID: 7,
+                  basinID: 4,
                   RF: item.RF,
                   WL: item.WL,
                   CCTV: item.CURR_CCTV,

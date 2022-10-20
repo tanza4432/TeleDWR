@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/dataOffline_Model.dart';
 import 'package:dwr0001/Models/data_Model.dart';
@@ -174,7 +176,7 @@ class TabTwo extends StatelessWidget {
                               Container(
                                   width: 50,
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: Text(data_.Rain_15_M.toString(),
+                                  child: Text(data_.Rain.toString(),
                                       style: TextStyle(
                                           fontSize: 14.0,
                                           fontFamily: 'Kanit',
@@ -185,7 +187,7 @@ class TabTwo extends StatelessWidget {
                               Container(
                                   width: 50,
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: Text(data_.Water_D.toString(),
+                                  child: Text(data_.Water.toString(),
                                       textAlign: TextAlign.right,
                                       style: TextStyle(
                                           fontFamily: 'Kanit',
@@ -196,7 +198,7 @@ class TabTwo extends StatelessWidget {
                                   width: 50,
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: Text(
-                                    data_.Water_F.toString(),
+                                    data_.Flow.toString(),
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                         fontFamily: 'Kanit',
