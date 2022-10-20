@@ -19,8 +19,16 @@ class _WelcomeState extends State<Welcome> {
 
   void SetSession() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    await FlutterSession().set('token', androidInfo.androidId);
+    if (deviceInfo.androidInfo != null) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      await FlutterSession().set('token', androidInfo.androidId);
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      await FlutterSession().set('token', iosInfo.isPhysicalDevice);
+    }
+    // if(androidInfo){
+
+    // }
     // await FlutterSession().set('data', '');
   }
 
