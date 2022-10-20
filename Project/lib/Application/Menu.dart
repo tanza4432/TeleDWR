@@ -710,7 +710,10 @@ class MySearchDelegate extends SearchDelegate {
                                                 : "",
                         height: 45,
                       ),
-                      Icon(Icons.arrow_forward_ios),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(Icons.arrow_forward_ios),
+                      ),
                     ],
                   ),
                 )),

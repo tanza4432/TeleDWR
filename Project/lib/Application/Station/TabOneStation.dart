@@ -126,7 +126,11 @@ class TabOneStation extends StatelessWidget {
                   height: 45,
                 ),
                 // icon-1
-                Icon(Icons.arrow_forward_ios), // icon-2
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(Icons.arrow_forward_ios),
+                ), // icon-2
               ],
             ),
             onTap: () {
