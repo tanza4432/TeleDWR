@@ -16,20 +16,24 @@ class Welcome extends StatefulWidget {
 class _WelcomeState extends State<Welcome> {
   List<StationModel> newdata = [];
   int checkCallApi = 0;
+  bool checkDevice = false;
+  // IOS = TRUE
+  // ANDROID = FALSE
 
   void SetSession() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (deviceInfo.androidInfo != null) {
+    await deviceInfo.androidInfo.onError((error, stackTrace) {
+      checkDevice = true;
+    });
+    if (checkDevice == false) {
+      print("Device : Android");
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       await FlutterSession().set('token', androidInfo.androidId);
     } else {
+      print("Device : IOS");
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       await FlutterSession().set('token', iosInfo.isPhysicalDevice);
     }
-    // if(androidInfo){
-
-    // }
-    // await FlutterSession().set('data', '');
   }
 
   void GetData(BuildContext context) async {
