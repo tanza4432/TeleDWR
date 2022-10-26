@@ -108,7 +108,7 @@ class StationModel {
   final String CURR_CCTV;
   final String CURR_STATUS;
   final String LAST_UPDATE;
-  final int BASINID;
+   int BASINID;
   final String LAT;
   final String LON;
 
