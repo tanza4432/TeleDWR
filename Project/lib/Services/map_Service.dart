@@ -36,12 +36,13 @@ Future<List<StationModel>> get_dataMap(int basinId) async {
       break;
     case 6:
       {
-        url = "";
+        url =
+            "https://tele-bangsaphan.dwr.go.th/webservice/webservice_bsp_Json";
       }
       break;
     case 7:
       {
-        url = "";
+        url = "https://tele-nakhonsri.dwr.go.th/webservice/webservice_nst_json";
       }
       break;
   }
