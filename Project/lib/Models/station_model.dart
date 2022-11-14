@@ -86,6 +86,7 @@ class StationModel {
     this.WF,
     this.CURR_CCTV,
     this.CURR_STATUS,
+    this.CURR_STATUS_WL,
     this.LAST_UPDATE,
     this.BASINID,
     this.LAT,
@@ -107,8 +108,9 @@ class StationModel {
   final String WF;
   final String CURR_CCTV;
   final String CURR_STATUS;
+  final String CURR_STATUS_WL;
   final String LAST_UPDATE;
-   int BASINID;
+  int BASINID;
   final String LAT;
   final String LON;
 
@@ -128,6 +130,7 @@ class StationModel {
         WF: json["WF"],
         CURR_CCTV: json["CURR_CCTV"],
         CURR_STATUS: json["CURR_STATUS"],
+        CURR_STATUS_WL: json["CURR_STATUS_WL"],
         LAST_UPDATE: json["LAST_UPDATE"],
         BASINID: json["BASINID"],
         LAT: json["LAT"],
@@ -150,6 +153,7 @@ class StationModel {
         "WF": WF,
         "CURR_CCTV": CURR_CCTV,
         "CURR_STATUS": CURR_STATUS,
+        "CURR_STATUS_WL": CURR_STATUS_WL,
         "LAST_UPDATE": LAST_UPDATE,
         "BASINID": BASINID,
         "LAT": LAT,

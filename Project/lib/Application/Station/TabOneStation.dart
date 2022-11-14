@@ -4,6 +4,7 @@ import 'package:dwr0001/Services/main_Service.dart';
 import 'package:dwr0001/components/loading.dart';
 import 'package:flutter/material.dart';
 import '../StationPage.dart';
+import 'dart:math' as math;
 
 class TabOneStation extends StatelessWidget {
   final List<StationModel> data;
@@ -44,6 +45,15 @@ class TabOneStation extends StatelessWidget {
     );
   }
 
+  var rotate_change_history = Transform(
+    alignment: Alignment.center,
+    transform: Matrix4.rotationY(math.pi),
+    child: Icon(
+      Icons.change_history_rounded,
+      size: 40,
+    ),
+  );
+
   ListView resultData(List<StationModel> station) {
     station.sort((a, b) => b.CURR_STATUS.compareTo(a.CURR_STATUS));
     return ListView.builder(
@@ -60,29 +70,75 @@ class TabOneStation extends StatelessWidget {
                 repeat: true,
                 showTwoGlows: true,
                 repeatPauseDuration: Duration(milliseconds: 200),
-                child: CircleAvatar(
-                  radius: 18.0,
-                  child: CircleAvatar(
-                    radius: 0,
-                    backgroundColor: Colors.greenAccent,
-                  ),
-                  backgroundColor: station[i].CURR_STATUS == "0"
-                      ? Colors.green
-                      : station[i].CURR_STATUS == "1"
-                          ? Colors.yellow
-                          : station[i].CURR_STATUS == "2"
-                              ? Colors.red
-                              : station[i].CURR_STATUS == "3"
-                                  ? Colors.white
-                                  : station[i].CURR_STATUS == "4"
-                                      ? Colors.grey
-                                      : station[i].CURR_STATUS == "5"
-                                          ? Colors.black
-                                          : station[i].CURR_STATUS == "6"
-                                              ? Colors.yellow
-                                              : station[i].CURR_STATUS == "7"
-                                                  ? Colors.red
-                                                  : Colors.black,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 18.0,
+                      child: CircleAvatar(
+                        radius: 0,
+                        backgroundColor: Colors.greenAccent,
+                      ),
+                      backgroundColor: station[i].CURR_STATUS == "0"
+                          ? Colors.green
+                          : station[i].CURR_STATUS == "1"
+                              ? Colors.yellow
+                              : station[i].CURR_STATUS == "2"
+                                  ? Colors.red
+                                  : station[i].CURR_STATUS == "3"
+                                      ? Colors.white
+                                      : station[i].CURR_STATUS == "4"
+                                          ? Colors.grey
+                                          : station[i].CURR_STATUS == "5"
+                                              ? Colors.black
+                                              : station[i].CURR_STATUS == "6"
+                                                  ? Colors.yellow
+                                                  : station[i].CURR_STATUS ==
+                                                          "7"
+                                                      ? Colors.red
+                                                      : Colors.black,
+                    ),
+                    Positioned(
+                      bottom: station[i].CURR_STATUS_WL == "6" ||
+                              station[i].CURR_STATUS_WL == "7"
+                          ? null
+                          : 0,
+                      top: station[i].CURR_STATUS_WL == "6" ||
+                              station[i].CURR_STATUS_WL == "7"
+                          ? 0
+                          : null,
+                      child: Container(
+                        child: station[i].CURR_STATUS_WL == "6" ||
+                                station[i].CURR_STATUS_WL == "7"
+                            ? Transform.rotate(
+                                alignment: Alignment.center,
+                                angle: 180 * math.pi / 180,
+                                child: Icon(
+                                  Icons.change_history_rounded,
+                                  size: 40,
+                                  color: Colors.red.withOpacity(0.8),
+                                ),
+                              )
+                            : Icon(
+                                Icons.change_history_rounded,
+                                size: 40,
+                                color: station[i].CURR_STATUS_WL == "0"
+                                    ? Colors.green.withOpacity(0.8)
+                                    : station[i].CURR_STATUS_WL == "1"
+                                        ? Colors.yellow.withOpacity(0.8)
+                                        : station[i].CURR_STATUS_WL == "2"
+                                            ? Colors.red.withOpacity(0.8)
+                                            : station[i].CURR_STATUS_WL == "3"
+                                                ? Colors.white.withOpacity(0.8)
+                                                : station[i].CURR_STATUS_WL == 4
+                                                    ? Colors.grey
+                                                        .withOpacity(0.8)
+                                                    : Colors.black
+                                                        .withOpacity(0.8),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
