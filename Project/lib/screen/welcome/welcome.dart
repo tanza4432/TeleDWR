@@ -17,21 +17,43 @@ class _WelcomeState extends State<Welcome> {
   List<StationModel> newdata = [];
   int checkCallApi = 0;
   bool checkDevice = false;
+  String _identifier = 'Unknown';
   // IOS = TRUE
   // ANDROID = FALSE
 
   void SetSession() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    await deviceInfo.androidInfo.onError((error, stackTrace) {
+    DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+    await deviceInfoPlugin.androidInfo.onError((error, stackTrace) {
       checkDevice = true;
     });
     if (checkDevice == false) {
       print("Device : Android");
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
+      print("AndroidID : ${androidInfo.androidId}");
+      print("board : ${androidInfo.board}");
+      print("bootloader : ${androidInfo.bootloader}");
+      print("Device : ${androidInfo.device}");
+      print("display : ${androidInfo.display}");
+      print("fingerprint : ${androidInfo.fingerprint}");
+      print("HardWare : ${androidInfo.hardware}");
+      print("host : ${androidInfo.host}");
+      print("ID : ${androidInfo.id}");
+      print("isPhysicalDevice : ${androidInfo.isPhysicalDevice}");
+      print("manufacturer : ${androidInfo.manufacturer}");
+      print("model : ${androidInfo.model}");
+      print("product : ${androidInfo.product}");
+      print("supported32BitAbis : ${androidInfo.supported32BitAbis}");
+      print("supported64BitAbis : ${androidInfo.supported64BitAbis}");
+      print("supportedAbis : ${androidInfo.supportedAbis}");
+      print("systemFeatures : ${androidInfo.systemFeatures}");
+      print("tags : ${androidInfo.tags}");
+      print("type : ${androidInfo.type}");
+      print("version : ${androidInfo.version.baseOS}");
+
       await FlutterSession().set('token', androidInfo.androidId);
     } else {
       print("Device : IOS");
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      IosDeviceInfo iosInfo = await deviceInfoPlugin.iosInfo;
       await FlutterSession().set('token', iosInfo.isPhysicalDevice);
     }
   }
