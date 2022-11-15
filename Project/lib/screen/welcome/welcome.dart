@@ -4,9 +4,11 @@ import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
 import 'package:dwr0001/components/loading.dart';
+import 'package:dwr0001/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:provider/provider.dart';
+import 'package:dwr0001/Application/notification.dart';
 
 class Welcome extends StatefulWidget {
   @override
@@ -88,6 +90,7 @@ class _WelcomeState extends State<Welcome> {
     print("สำเร็จ");
     SetSession();
     super.initState();
+    NotiAlert.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override
@@ -137,6 +140,19 @@ class _WelcomeState extends State<Welcome> {
                         },
                       )
                     : LoadingCubeGrid()),
+            // Positioned(
+            //   top: 50,
+            //   child: TextButton(
+
+            //     onPressed: () {
+            //       NotiAlert.showBigTextNotification(
+            //           title: "Test",
+            //           body: "You long body",
+            //           fln: flutterLocalNotificationsPlugin);
+            //     },
+            //     child: Text("Noti"),
+            //   ),
+            // ),
           ],
         ),
       ),

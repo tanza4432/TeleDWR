@@ -12,6 +12,33 @@ class TabOneStation extends StatelessWidget {
   List<StationModel> newResult = [];
   TabOneStation(this.basinID, this.data);
 
+  Color switchColor(station) {
+    switch (station) {
+      case "0":
+        return Colors.green;
+      case "1":
+        return Colors.yellow;
+
+      case "2":
+        return Colors.red;
+
+      case "3":
+        return Colors.white;
+
+      case "4":
+        return Colors.grey;
+
+      case "5":
+        return Colors.black;
+
+      case "6":
+        return Colors.yellow;
+
+      case "7":
+        return Colors.red;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     print("Tab : " + basinID.toString());
@@ -45,29 +72,22 @@ class TabOneStation extends StatelessWidget {
     );
   }
 
-  var rotate_change_history = Transform(
-    alignment: Alignment.center,
-    transform: Matrix4.rotationY(math.pi),
-    child: Icon(
-      Icons.change_history_rounded,
-      size: 40,
-    ),
-  );
-
   ListView resultData(List<StationModel> station) {
-    station.sort((a, b) => b.CURR_STATUS.compareTo(a.CURR_STATUS));
+    // station.sort((a, b) => b.CURR_STATUS.compareTo(a.CURR_STATUS));
     return ListView.builder(
+      shrinkWrap: true,
       itemCount: station.length,
       itemBuilder: (context, int i) {
-        print(station[i].CURR_STATUS_WL);
+        var lastUpdate = station[i].LAST_UPDATE.split(" ");
+        var time = lastUpdate[1].split(":");
         return Column(
           children: [
-            Ink(
-                child: new ListTile(
+            new ListTile(
+              contentPadding: EdgeInsets.only(right: 0),
               leading: Container(
                 child: AvatarGlow(
                   glowColor: Colors.blue,
-                  endRadius: 40.0,
+                  endRadius: 30.0,
                   duration: Duration(milliseconds: 2000),
                   repeat: true,
                   showTwoGlows: true,
@@ -75,82 +95,130 @@ class TabOneStation extends StatelessWidget {
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 18.0,
-                        child: CircleAvatar(
-                          radius: 0,
-                          backgroundColor: Colors.greenAccent,
-                        ),
-                        backgroundColor: station[i].CURR_STATUS == "0"
-                            ? Colors.green
-                            : station[i].CURR_STATUS == "1"
-                                ? Colors.yellow
-                                : station[i].CURR_STATUS == "2"
-                                    ? Colors.red
-                                    : station[i].CURR_STATUS == "3"
-                                        ? Colors.white
-                                        : station[i].CURR_STATUS == "4"
-                                            ? Colors.grey
-                                            : station[i].CURR_STATUS == "5"
-                                                ? Colors.black.withOpacity(0.8)
-                                                : station[i].CURR_STATUS == "6"
-                                                    ? Colors.yellow
-                                                    : station[i].CURR_STATUS ==
-                                                            "7"
-                                                        ? Colors.red
-                                                        : Colors.black
-                                                            .withOpacity(0.8),
-                      ),
-                      Positioned(
-                        bottom: station[i].CURR_STATUS_WL == "6" ||
-                                station[i].CURR_STATUS_WL == "7"
-                            ? null
-                            : 0,
-                        top: station[i].CURR_STATUS_WL == "6" ||
-                                station[i].CURR_STATUS_WL == "7"
-                            ? 0
-                            : null,
-                        child: Container(
-                          child: station[i].CURR_STATUS_WL == "6" ||
-                                  station[i].CURR_STATUS_WL == "7"
-                              ? Transform.rotate(
-                                  alignment: Alignment.center,
-                                  angle: 180 * math.pi / 180,
-                                  child: Icon(
-                                    Icons.change_history_rounded,
-                                    size: 40,
-                                    shadows: <Shadow>[
-                                      Shadow(
-                                          color: Colors.black, blurRadius: 15.0)
-                                    ],
-                                    color: Colors.red.withOpacity(0.8),
-                                  ),
-                                )
-                              : Icon(
-                                  Icons.change_history_rounded,
-                                  size: 40,
-                                  shadows: <Shadow>[
-                                    Shadow(
-                                        color: Colors.black, blurRadius: 15.0)
-                                  ],
-                                  color: station[i].CURR_STATUS_WL == "0"
-                                      ? Colors.green.withOpacity(0.8)
-                                      : station[i].CURR_STATUS_WL == "1"
-                                          ? Colors.yellow.withOpacity(0.8)
-                                          : station[i].CURR_STATUS_WL == "2"
-                                              ? Colors.red.withOpacity(0.8)
-                                              : station[i].CURR_STATUS_WL == "3"
-                                                  ? Colors.white
-                                                      .withOpacity(0.8)
+                      station[i].RF == "RF"
+                          ? Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                      blurRadius: 1,
+                                      color: Colors.grey,
+                                      spreadRadius: 1)
+                                ],
+                              ),
+                              child: CircleAvatar(
+                                radius: 18.0,
+                                backgroundColor:
+                                    switchColor(station[i].CURR_STATUS),
+                              ),
+                            )
+                          : CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              radius: 18.0,
+                            ),
+                      station[i].WL == "WL"
+                          ? Positioned(
+                              bottom: station[i].CURR_STATUS_WL == "6" ||
+                                      station[i].CURR_STATUS_WL == "7"
+                                  ? null
+                                  : 8,
+                              top: station[i].CURR_STATUS_WL == "6" ||
+                                      station[i].CURR_STATUS_WL == "7"
+                                  ? 8
+                                  : null,
+                              child: Container(
+                                child: station[i].CURR_STATUS_WL == "6" ||
+                                        station[i].CURR_STATUS_WL == "7"
+                                    ? CustomPaint(
+                                        painter: TrianglePainter(
+                                          strokeColor: station[i]
+                                                      .CURR_STATUS_WL ==
+                                                  "6"
+                                              ? Color.fromARGB(
+                                                  255, 240, 220, 40)
+                                              : station[i].CURR_STATUS_WL == "7"
+                                                  ? Color.fromARGB(
+                                                      255, 183, 25, 14)
+                                                  : switchColor(
+                                                      station[i].CURR_STATUS),
+                                          strokeWidth: 10,
+                                          paintingStyle: PaintingStyle.fill,
+                                          angle: 0,
+                                        ),
+                                        child: Container(
+                                          height: 28,
+                                          width: 30,
+                                        ),
+                                      )
+                                    : CustomPaint(
+                                        painter: TrianglePainter(
+                                          strokeColor: station[i]
+                                                      .CURR_STATUS_WL ==
+                                                  "0"
+                                              ? Color.fromARGB(255, 35, 119, 36)
+                                              : station[i].CURR_STATUS_WL == "1"
+                                                  ? Color.fromARGB(
+                                                      255, 240, 220, 40)
                                                   : station[i].CURR_STATUS_WL ==
+                                                          "2"
+                                                      ? Colors.red
+                                                      : station[i].CURR_STATUS_WL ==
+                                                              "3"
+                                                          ? station[i].CURR_STATUS ==
+                                                                  "3"
+                                                              ? Colors.grey
+                                                              : Colors.white
+                                                          : station[i].CURR_STATUS_WL ==
+                                                                  "4"
+                                                              ? station[i].CURR_STATUS ==
+                                                                      "4"
+                                                                  ? Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          200,
+                                                                          200,
+                                                                          200)
+                                                                  : Colors.grey
+                                                              : station[i].CURR_STATUS ==
+                                                                      "5"
+                                                                  ? Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          108,
+                                                                          108,
+                                                                          108)
+                                                                  : Colors
+                                                                      .black,
+                                          strokeWidth: 1,
+                                          paintingStyle: station[i]
+                                                      .CURR_STATUS_WL ==
+                                                  "3"
+                                              ? station[i].CURR_STATUS == "3"
+                                                  ? PaintingStyle.stroke
+                                                  : PaintingStyle.fill
+                                              : station[i].CURR_STATUS_WL == "4"
+                                                  ? station[i].CURR_STATUS ==
                                                           "4"
-                                                      ? Colors.grey
-                                                          .withOpacity(0.8)
-                                                      : Colors.black
-                                                          .withOpacity(0.8),
-                                ),
-                        ),
-                      ),
+                                                      ? PaintingStyle.stroke
+                                                      : PaintingStyle.fill
+                                                  : station[i].CURR_STATUS_WL ==
+                                                          "5"
+                                                      ? station[i].CURR_STATUS ==
+                                                              "5"
+                                                          ? PaintingStyle.stroke
+                                                          : PaintingStyle.fill
+                                                      : PaintingStyle.fill,
+                                          angle: 1,
+                                        ),
+                                        child: Container(
+                                          height: 28,
+                                          width: 30,
+                                        ),
+                                      ),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 ),
@@ -158,46 +226,56 @@ class TabOneStation extends StatelessWidget {
               title: new Text(
                 station[i].STN_ID,
                 style: TextStyle(
-                    color: Colors.black54,
-                    fontFamily: 'Kanit',
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w400),
+                  color: Colors.black54,
+                  fontFamily: 'Kanit',
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w400,
+                ),
               ),
               subtitle: new Text(
                 station[i].STN_Name,
                 style: TextStyle(
-                    color: Colors.black54,
-                    fontFamily: 'Kanit',
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w200),
+                  color: Colors.black54,
+                  fontFamily: 'Kanit',
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w200,
+                ),
               ),
               trailing: Wrap(
-                spacing: 12, // space between two icons
+                spacing: 2, // space between two icons
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: <Widget>[
-                  Image.asset(
-                    station[i].CURR_STATUS == "0"
-                        ? 'assets/banner/bell/green.png'
-                        : station[i].CURR_STATUS == "1"
-                            ? "assets/banner/bell/yellow.png"
-                            : station[i].CURR_STATUS == "2"
-                                ? "assets/banner/bell/red.png"
-                                : station[i].CURR_STATUS == "3"
-                                    ? "assets/banner/bell/gray.png"
-                                    : station[i].CURR_STATUS == "4"
-                                        ? "assets/banner/bell/gray.png"
-                                        : station[i].CURR_STATUS == "5"
-                                            ? "assets/banner/bell/gray.png"
-                                            : station[i].CURR_STATUS == "6"
-                                                ? "assets/banner/bell/yellow.png"
-                                                : station[i].CURR_STATUS == "7"
-                                                    ? "assets/banner/bell/red.png"
-                                                    : "assets/banner/bell/red.png",
-                    height: 45,
-                  ),
-                  // icon-1
-
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.only(right: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2.0),
+                          child: Text(
+                            time[0] + ":" + time[1],
+                            style: TextStyle(
+                              color: Colors.black54,
+                              fontFamily: 'Kanit',
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.w200,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          lastUpdate[0],
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontFamily: 'Kanit',
+                            fontSize: 10.0,
+                            fontWeight: FontWeight.w200,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    // color: Colors.red,
                     child: Icon(Icons.arrow_forward_ios),
                   ), // icon-2
                 ],
@@ -215,13 +293,60 @@ class TabOneStation extends StatelessWidget {
                             CCTV: station[i].CURR_CCTV,
                             data: data)));
               },
-            )),
-            new ListBody(
-              children: <Widget>[],
-            )
+            ),
           ],
         );
       },
     );
+  }
+}
+
+class TrianglePainter extends CustomPainter {
+  final Color strokeColor;
+  final PaintingStyle paintingStyle;
+  final double strokeWidth;
+  final double angle;
+
+  TrianglePainter({
+    this.strokeColor = Colors.black,
+    this.strokeWidth = 3,
+    this.paintingStyle = PaintingStyle.stroke,
+    this.angle = 0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = strokeColor
+      ..strokeWidth = strokeWidth
+      ..style = paintingStyle;
+
+    canvas.drawShadow(
+        getTrianglePath(size.width, size.height, angle), Colors.grey, 1, false);
+
+    canvas.drawPath(getTrianglePath(size.width, size.height, angle), paint);
+  }
+
+  Path getTrianglePath(double x, double y, double angle) {
+    if (angle == 0) {
+      return Path()
+        ..moveTo(0, 0)
+        ..lineTo(x, 0)
+        ..lineTo(x / 2, y)
+        ..lineTo(0, 0);
+    } else {
+      return Path()
+        ..moveTo(0, y)
+        ..lineTo(x / 2, 0)
+        ..lineTo(x, y)
+        ..lineTo(0, y);
+    }
+  }
+
+  @override
+  bool shouldRepaint(TrianglePainter oldDelegate) {
+    return oldDelegate.strokeColor != strokeColor ||
+        oldDelegate.paintingStyle != paintingStyle ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }

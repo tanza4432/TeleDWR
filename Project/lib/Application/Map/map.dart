@@ -150,6 +150,7 @@ class _MapPageState extends State<MapPage> {
                 borderRadius: BorderRadius.circular(5),
               ),
               height: 100,
+              width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(
@@ -194,19 +195,24 @@ class _MapPageState extends State<MapPage> {
                         ],
                       ),
                     ),
-                    Container(
-                      width: size.width * 0.42,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TitleTextBoxMap(
-                              text: "สถานี : ", datamap: item.STN_ID),
-                          DetailTextBoxMap(text: "", datamap: item.STN_Name),
-                          DetailTextBoxMap(text: "", datamap: item.LAST_UPDATE),
-                        ],
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        width: size.width * 0.38,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            TitleTextBoxMap(
+                                text: "สถานี : ", datamap: item.STN_ID),
+                            DetailTextBoxMap(text: "", datamap: item.STN_Name),
+                            DetailTextBoxMap(
+                                text: "", datamap: item.LAST_UPDATE),
+                          ],
+                        ),
                       ),
                     ),
                     Stack(
+                      clipBehavior: Clip.antiAliasWithSaveLayer,
                       alignment: Alignment.center,
                       children: [
                         Transform.rotate(

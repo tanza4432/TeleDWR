@@ -25,7 +25,7 @@ class MenuPage extends StatefulWidget {
   _MenuPageState createState() => _MenuPageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   List<Map<String, dynamic>> items = <Map<String, dynamic>>[
     <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง", 'page': 1},
     <String, dynamic>{'title': "ลุ่มน้ำสาละวิน", 'page': 2},
@@ -59,6 +59,7 @@ class _MenuPageState extends State<MenuPage> {
 
   @override
   Widget build(BuildContext context) {
+    TabController _tabController = TabController(length: 2, vsync: this);
     Size size = MediaQuery.of(context).size;
     return Consumer<FavoriteRiver>(
       builder: (context, Data, _) {
@@ -124,26 +125,32 @@ class _MenuPageState extends State<MenuPage> {
                                 });
                               },
                               child: Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.lightBlue[600],
-                                  boxShadow: [
-                                    BoxShadow(
-                                      spreadRadius: 3,
-                                      color: Colors.lightBlue[600],
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.lightBlue[600],
+                                    boxShadow: [
+                                      BoxShadow(
+                                        spreadRadius: 3,
+                                        color: Colors.lightBlue[600],
+                                      ),
+                                    ],
+                                  ),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        "ติดตามสถานี",
-                                        style: DefaultStyleW(),
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: TabBar(
+                                          labelStyle: DefaultStyleW(),
+                                          isScrollable: true,
+                                          controller: _tabController,
+                                          tabs: [
+                                            Tab(text: "ติดตาม"),
+                                            Tab(text: "แจ้งเตือน"),
+                                          ],
+                                        ),
                                       ),
                                       Icon(
                                         !isVisible
@@ -153,61 +160,98 @@ class _MenuPageState extends State<MenuPage> {
                                         color: Colors.white,
                                       )
                                     ],
+                                  )
+                                  // Padding(
+                                  //   padding: const EdgeInsets.all(5.0),
+                                  //   child: Row(
+                                  //     mainAxisAlignment:
+                                  //         MainAxisAlignment.spaceBetween,
+                                  //     children: [
+                                  //       Text(
+                                  //         "ติดตามสถานี",
+                                  //         style: DefaultStyleW(),
+                                  //       ),
+                                  //       Icon(
+                                  //         !isVisible
+                                  //             ? Icons
+                                  //                 .arrow_drop_down_circle_outlined
+                                  //             : Icons.arrow_drop_up_outlined,
+                                  //         color: Colors.white,
+                                  //       )
+                                  //     ],
+                                  //   ),
+                                  // ),
                                   ),
+                            ),
+                            Visibility(
+                              visible: isVisible,
+                              child: Container(
+                                width: double.infinity,
+                                height: 200,
+                                child: TabBarView(
+                                  controller: _tabController,
+                                  children: [
+                                    FadeInDown(
+                                      from: 0,
+                                      child: Consumer<FavoriteRiver>(
+                                          builder: (context, Data, _) {
+                                        for (var result in widget.data) {
+                                          alreadyFavorite = Data.favorite
+                                              .contains(result.STN_ID);
+                                          if (alreadyFavorite) {
+                                            for (var i = 0;
+                                                i < newResult.length;
+                                                i++) {
+                                              check = newResult[i]
+                                                  .STN_ID
+                                                  .contains(result.STN_ID);
+                                              if (check) {
+                                                break;
+                                              }
+                                            }
+                                            if (check == false) {
+                                              print(result.BASINID);
+                                              newResult.add(
+                                                StationModel(
+                                                  STN_ID: result.STN_ID,
+                                                  STN_Name: result.STN_Name,
+                                                  RF: result.RF,
+                                                  WL: result.WL,
+                                                  BASINID: result.BASINID,
+                                                  CURR_CCTV: result.CURR_CCTV,
+                                                  CURR_STATUS:
+                                                      result.CURR_STATUS,
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        }
+                                        final List<StationModel> station =
+                                            newResult;
+                                        return Visibility(
+                                          visible: isVisible,
+                                          child: Container(
+                                            width: double.infinity,
+                                            color: Colors.black12,
+                                            child: Column(
+                                              children: [
+                                                Container(
+                                                  height: 200,
+                                                  child: resultData(
+                                                      station, widget.data),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                    Container()
+                                  ],
                                 ),
                               ),
                             ),
-                            FadeInDown(
-                              from: 0,
-                              child: Consumer<FavoriteRiver>(
-                                  builder: (context, Data, _) {
-                                for (var result in widget.data) {
-                                  alreadyFavorite =
-                                      Data.favorite.contains(result.STN_ID);
-                                  if (alreadyFavorite) {
-                                    for (var i = 0; i < newResult.length; i++) {
-                                      check = newResult[i]
-                                          .STN_ID
-                                          .contains(result.STN_ID);
-                                      if (check) {
-                                        break;
-                                      }
-                                    }
-                                    if (check == false) {
-                                      print(result.BASINID);
-                                      newResult.add(
-                                        StationModel(
-                                          STN_ID: result.STN_ID,
-                                          STN_Name: result.STN_Name,
-                                          RF: result.RF,
-                                          WL: result.WL,
-                                          BASINID: result.BASINID,
-                                          CURR_CCTV: result.CURR_CCTV,
-                                          CURR_STATUS: result.CURR_STATUS,
-                                        ),
-                                      );
-                                    }
-                                  }
-                                }
-                                final List<StationModel> station = newResult;
-                                return Visibility(
-                                  visible: isVisible,
-                                  child: Container(
-                                    width: double.infinity,
-                                    color: Colors.black12,
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          height: 200,
-                                          child:
-                                              resultData(station, widget.data),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
+
                             // Padding(
                             //   padding:
                             //       const EdgeInsets.only(top: 10, bottom: 10),
@@ -230,10 +274,10 @@ class _MenuPageState extends State<MenuPage> {
                             //   ),
                             // ),
                             Divider(color: Colors.black38),
-                            Text(
-                              "TeleDWR-รายการสถานี",
-                              style: DefaultStyleB(),
-                            ),
+                            // Text(
+                            //   "TeleDWR-รายการสถานี",
+                            //   style: DefaultStyleB(),
+                            // ),
                             SizedBox(height: 10),
                             Container(
                               width: double.infinity,
@@ -272,7 +316,6 @@ class _MenuPageState extends State<MenuPage> {
                             Container(
                               height: size.height * 0.60,
                               width: double.infinity,
-                              color: Colors.white,
                               child: TabOneStation(SelectRiver, widget.data),
                             ),
                           ],
