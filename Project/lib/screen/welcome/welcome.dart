@@ -90,7 +90,7 @@ class _WelcomeState extends State<Welcome> {
     print("สำเร็จ");
     SetSession();
     super.initState();
-    NotiAlert.initialize(flutterLocalNotificationsPlugin);
+    // NotiAlert.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override
