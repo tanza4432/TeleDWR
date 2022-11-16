@@ -7,10 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ForecastPage extends StatefulWidget {
-  var basinID;
-  final List<StationModel> data;
+  String URL;
+  String title;
 
-  ForecastPage({Key key, this.basinID, this.data}) : super(key: key);
+  ForecastPage({
+    Key key,
+    this.URL,
+    this.title,
+  }) : super(key: key);
 
   @override
   State<ForecastPage> createState() => _ForecastPageState();
@@ -25,25 +29,20 @@ class _ForecastPageState extends State<ForecastPage> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           color: Colors.white,
-          onPressed: () => {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => MenuPage(data: widget.data)))
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
         centerTitle: true,
         title: Text(
-          'การคาดการณ์',
+          widget.title,
           style: DefaultTitleW(),
         ),
         backgroundColor: Colors.lightBlue[600],
       ),
       body: WebView(
         javascriptMode: JavascriptMode.unrestricted,
-        initialUrl: widget.basinID == 3
-            ? 'http://49.229.21.201/'
-            : 'http://49.229.21.203/',
+        initialUrl: widget.URL,
       ),
     );
   }

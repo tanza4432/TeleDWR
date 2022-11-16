@@ -102,7 +102,7 @@ class TabTwoStation extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => StationPage(
-                                    stn_id: station[i].STN_ID,
+                                    stnId: station[i].STN_ID,
                                     basinID: basinID,
                                   )));
                     },

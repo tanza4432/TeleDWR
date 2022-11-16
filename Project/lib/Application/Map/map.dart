@@ -120,12 +120,11 @@ class _MapPageState extends State<MapPage> {
       builder: (builder) {
         return InkWell(
           onTap: () {
-            Navigator.pop(context);
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => StationPage(
-                  stn_id: item.STN_ID,
+                  stnId: item.STN_ID,
                   basinID: item.BASINID,
                   RF: item.RF,
                   WL: item.WL,
@@ -260,6 +259,10 @@ class _MapPageState extends State<MapPage> {
   void initState() {
     get_data();
     super.initState();
+  }
+
+  void dispose() {
+    super.dispose();
   }
 
   @override

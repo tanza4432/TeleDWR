@@ -4,23 +4,43 @@ import 'package:flutter/material.dart';
 class BoxDetail extends StatelessWidget {
   String title;
   var path;
+  String checkFound;
 
   BoxDetail({
     Key key,
     @required this.title,
     @required this.path,
+    @required this.checkFound,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => path,
-          ),
-        );
+        if (checkFound != "") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => path,
+            ),
+          );
+        } else {
+          showDialog<String>(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20.0),
+                ),
+              ),
+              title: Column(
+                children: [
+                  Text("ไม่พบข้อมูล", style: DefaultStyleB()),
+                ],
+              ),
+            ),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(

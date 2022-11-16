@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dwr0001/Models/basinInfoModel.dart';
 import 'package:dwr0001/Models/data_Model.dart';
 import 'package:http/http.dart' as http;
 import 'package:dwr0001/Models/station_model.dart';
@@ -167,6 +168,24 @@ Future<List<DataModelGet>> getStationData24H(String stn_id) async {
   // }
   if (response.statusCode == 200) {
     return parseData_(response.body);
+  } else {
+    throw Exception();
+  }
+}
+
+Future<List<BasinsInfoModel>> basinInfoData() async {
+  final String url =
+      "https://tele-songkramhuailuang.dwr.go.th/webservice/basins_info";
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    List jsonResponse = json.decode(response.body);
+    return jsonResponse
+        .map((data) => new BasinsInfoModel.fromJson(data))
+        .toList();
+    // return response.body
+    //     .map<BasinsInfoModel>((json) => BasinsInfoModel.fromJson(json))
+    //     .toList();
   } else {
     throw Exception();
   }

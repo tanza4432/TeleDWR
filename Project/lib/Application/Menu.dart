@@ -6,9 +6,12 @@ import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
 import 'package:dwr0001/Application/forecast/forecast.dart';
 import 'package:dwr0001/Application/pdf/PdfViewer.dart';
 import 'package:dwr0001/Application/providers/river_provider.dart';
+import 'package:dwr0001/Models/basinInfoModel.dart';
 import 'package:dwr0001/Models/station_model.dart';
+import 'package:dwr0001/Services/main_Service.dart';
 import 'package:dwr0001/components/BoxDetail.dart';
 import 'package:dwr0001/components/onwillpop.dart';
+import 'package:dwr0001/components/switchColor.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,16 +48,90 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   bool isVisible = false;
   bool isCheckVisible = false;
   bool check = false;
+  List<BasinsInfoModel> infoBasin = [];
+  String Project_URL = "https://tele-maeklong.dwr.go.th/home/INFO_PROJECT";
+  String Forecast_URL = "https://tele-maeklong.dwr.go.th/fs/forecast.php";
 
   void checkOption(int index) {
     setState(() {
+      selectInfoBasin(index);
       optionSelected = index;
     });
   }
 
+  void getInfobasin() async {
+    infoBasin = await basinInfoData();
+  }
+
+  void selectInfoBasin(int basin) {
+    switch (basin) {
+      case 1:
+        {
+          Project_URL = infoBasin[0].projectUrl;
+          Forecast_URL = infoBasin[0].forecastUrl;
+          setState(() {});
+          break;
+        }
+      case 2:
+        {
+          Project_URL = infoBasin[1].projectUrl;
+          Forecast_URL = infoBasin[1].forecastUrl;
+
+          setState(() {});
+          break;
+        }
+      case 3:
+        {
+          Project_URL = infoBasin[2].projectUrl;
+          Forecast_URL = infoBasin[2].forecastUrl;
+
+          setState(() {});
+          break;
+        }
+      case 4:
+        {
+          Project_URL = infoBasin[3].projectUrl;
+          Forecast_URL = infoBasin[3].forecastUrl;
+
+          setState(() {});
+          break;
+        }
+      case 5:
+        {
+          Project_URL = infoBasin[4].projectUrl;
+          Forecast_URL = infoBasin[4].forecastUrl;
+
+          setState(() {});
+          break;
+        }
+      case 6:
+        {
+          Project_URL = infoBasin[5].projectUrl;
+          Forecast_URL = infoBasin[5].forecastUrl;
+
+          setState(() {});
+          break;
+        }
+      case 7:
+        {
+          Project_URL = infoBasin[6].projectUrl;
+          Forecast_URL = infoBasin[6].forecastUrl;
+
+          setState(() {});
+          break;
+        }
+    }
+  }
+
   @override
   void initState() {
+    getInfobasin();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -210,7 +287,6 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                               }
                                             }
                                             if (check == false) {
-                                              print(result.BASINID);
                                               newResult.add(
                                                 StationModel(
                                                   STN_ID: result.STN_ID,
@@ -246,33 +322,54 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                         );
                                       }),
                                     ),
-                                    Container()
+                                    FadeInDown(
+                                      from: 0,
+                                      child: Container(
+                                        child: ListView.builder(
+                                          itemCount: 1,
+                                          itemBuilder: (context, index) {
+                                            return Container(
+                                                // child: ,
+                                                );
+                                          },
+                                        ),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),
                             ),
-
-                            // Padding(
-                            //   padding:
-                            //       const EdgeInsets.only(top: 10, bottom: 10),
-                            //   child: Row(
-                            //     children: [
-                            //       BoxDetail(
-                            //         title: "เกี่ยวกับโครงการ",
-                            //         path: PdfViewer(
-                            //             basinID: optionSelected,
-                            //             data: widget.data),
-                            //       ),
-                            //       SizedBox(width: 20),
-                            //       BoxDetail(
-                            //         title: "การคาดการณ์",
-                            //         path: ForecastPage(
-                            //             basinID: optionSelected,
-                            //             data: widget.data),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10, bottom: 10),
+                              child: Row(
+                                children: [
+                                  // BoxDetail(
+                                  //   title: "เกี่ยวกับโครงการ",
+                                  //   path: PdfViewer(
+                                  //       basinID: optionSelected,
+                                  //       data: widget.data),
+                                  // ),
+                                  BoxDetail(
+                                    title: "เกี่ยวกับโครงการ",
+                                    checkFound: Project_URL,
+                                    path: ForecastPage(
+                                      title: "เกี่ยวกับโครงการ",
+                                      URL: Project_URL,
+                                    ),
+                                  ),
+                                  SizedBox(width: 20),
+                                  BoxDetail(
+                                    title: "การคาดการณ์",
+                                    checkFound: Forecast_URL,
+                                    path: ForecastPage(
+                                      title: "การคาดการณ์",
+                                      URL: Forecast_URL,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             Divider(color: Colors.black38),
                             // Text(
                             //   "TeleDWR-รายการสถานี",
@@ -414,11 +511,11 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
           ),
           child: InkWell(
             onTap: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => StationPage(
-                      stn_id: station[i].STN_ID,
+                      stnId: station[i].STN_ID,
                       basinID: station[i].BASINID,
                       RF: station[i].RF,
                       WL: station[i].WL,
@@ -464,33 +561,184 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                     Container(
                       child: AvatarGlow(
                         glowColor: Colors.blue,
-                        endRadius: 40.0,
+                        endRadius: 30.0,
                         duration: Duration(milliseconds: 2000),
                         repeat: true,
                         showTwoGlows: true,
                         repeatPauseDuration: Duration(milliseconds: 200),
-                        child: CircleAvatar(
-                          radius: 18.0,
-                          child: CircleAvatar(
-                            radius: 0,
-                            backgroundColor: Colors.greenAccent,
-                          ),
-                          backgroundColor: station[i].CURR_STATUS == "0"
-                              ? Colors.green
-                              : station[i].CURR_STATUS == "1"
-                                  ? Colors.green
-                                  : station[i].CURR_STATUS == "2"
-                                      ? Colors.green
-                                      : station[i].CURR_STATUS == "3"
-                                          ? Colors.white
-                                          : station[i].CURR_STATUS == "4"
-                                              ? Colors.grey
-                                              : station[i].CURR_STATUS == "5"
-                                                  ? Colors.black
-                                                  : Colors.green,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            station[i].RF == "RF"
+                                ? Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 1,
+                                            color: Colors.grey,
+                                            spreadRadius: 1)
+                                      ],
+                                    ),
+                                    child: CircleAvatar(
+                                      radius: 18.0,
+                                      backgroundColor: swColor
+                                          .switchColor(station[i].CURR_STATUS),
+                                    ),
+                                  )
+                                : CircleAvatar(
+                                    backgroundColor: Colors.transparent,
+                                    radius: 18.0,
+                                  ),
+                            station[i].WL == "WL"
+                                ? Positioned(
+                                    bottom: station[i].CURR_STATUS_WL == "6" ||
+                                            station[i].CURR_STATUS_WL == "7"
+                                        ? null
+                                        : 8,
+                                    top: station[i].CURR_STATUS_WL == "6" ||
+                                            station[i].CURR_STATUS_WL == "7"
+                                        ? 8
+                                        : null,
+                                    child: Container(
+                                      child: station[i].CURR_STATUS_WL == "6" ||
+                                              station[i].CURR_STATUS_WL == "7"
+                                          ? CustomPaint(
+                                              painter: TrianglePainter(
+                                                strokeColor: station[i]
+                                                            .CURR_STATUS_WL ==
+                                                        "6"
+                                                    ? Color.fromARGB(
+                                                        255, 240, 220, 40)
+                                                    : station[i].CURR_STATUS_WL ==
+                                                            "7"
+                                                        ? Color.fromARGB(
+                                                            255, 183, 25, 14)
+                                                        : swColor.switchColor(
+                                                            station[i]
+                                                                .CURR_STATUS),
+                                                strokeWidth: 10,
+                                                paintingStyle:
+                                                    PaintingStyle.fill,
+                                                angle: 0,
+                                              ),
+                                              child: Container(
+                                                height: 28,
+                                                width: 30,
+                                              ),
+                                            )
+                                          : CustomPaint(
+                                              painter: TrianglePainter(
+                                                strokeColor: station[i]
+                                                            .CURR_STATUS_WL ==
+                                                        "0"
+                                                    ? Color.fromARGB(
+                                                        255, 35, 119, 36)
+                                                    : station[i].CURR_STATUS_WL ==
+                                                            "1"
+                                                        ? Color.fromARGB(
+                                                            255, 240, 220, 40)
+                                                        : station[i].CURR_STATUS_WL ==
+                                                                "2"
+                                                            ? Colors.red
+                                                            : station[i].CURR_STATUS_WL ==
+                                                                    "3"
+                                                                ? station[i].CURR_STATUS ==
+                                                                        "3"
+                                                                    ? Colors
+                                                                        .grey
+                                                                    : Colors
+                                                                        .white
+                                                                : station[i].CURR_STATUS_WL ==
+                                                                        "4"
+                                                                    ? station[i].CURR_STATUS ==
+                                                                            "4"
+                                                                        ? Color.fromARGB(
+                                                                            255,
+                                                                            200,
+                                                                            200,
+                                                                            200)
+                                                                        : Colors
+                                                                            .grey
+                                                                    : station[i].CURR_STATUS ==
+                                                                            "5"
+                                                                        ? Color.fromARGB(
+                                                                            255,
+                                                                            108,
+                                                                            108,
+                                                                            108)
+                                                                        : Colors
+                                                                            .black,
+                                                strokeWidth: 1,
+                                                paintingStyle: station[i]
+                                                            .CURR_STATUS_WL ==
+                                                        "3"
+                                                    ? station[i].CURR_STATUS ==
+                                                            "3"
+                                                        ? PaintingStyle.stroke
+                                                        : PaintingStyle.fill
+                                                    : station[i].CURR_STATUS_WL ==
+                                                            "4"
+                                                        ? station[i].CURR_STATUS ==
+                                                                "4"
+                                                            ? PaintingStyle
+                                                                .stroke
+                                                            : PaintingStyle.fill
+                                                        : station[i].CURR_STATUS_WL ==
+                                                                "5"
+                                                            ? station[i].CURR_STATUS ==
+                                                                    "5"
+                                                                ? PaintingStyle
+                                                                    .stroke
+                                                                : PaintingStyle
+                                                                    .fill
+                                                            : PaintingStyle
+                                                                .fill,
+                                                angle: 1,
+                                              ),
+                                              child: Container(
+                                                height: 28,
+                                                width: 30,
+                                              ),
+                                            ),
+                                    ),
+                                  )
+                                : Container(),
+                          ],
                         ),
                       ),
                     ),
+                    // Container(
+                    //   child: AvatarGlow(
+                    //     glowColor: Colors.blue,
+                    //     endRadius: 40.0,
+                    //     duration: Duration(milliseconds: 2000),
+                    //     repeat: true,
+                    //     showTwoGlows: true,
+                    //     repeatPauseDuration: Duration(milliseconds: 200),
+                    //     child: CircleAvatar(
+                    //       radius: 18.0,
+                    //       child: CircleAvatar(
+                    //         radius: 0,
+                    //         backgroundColor: Colors.greenAccent,
+                    //       ),
+                    //       backgroundColor: station[i].CURR_STATUS == "0"
+                    //           ? Colors.green
+                    //           : station[i].CURR_STATUS == "1"
+                    //               ? Colors.green
+                    //               : station[i].CURR_STATUS == "2"
+                    //                   ? Colors.green
+                    //                   : station[i].CURR_STATUS == "3"
+                    //                       ? Colors.white
+                    //                       : station[i].CURR_STATUS == "4"
+                    //                           ? Colors.grey
+                    //                           : station[i].CURR_STATUS == "5"
+                    //                               ? Colors.black
+                    //                               : Colors.green,
+                    //     ),
+                    //   ),
+                    // ),
                     Text(
                       station[i].STN_ID,
                       style: FavoriteStyle(),
@@ -560,7 +808,7 @@ class MySearchDelegate extends SearchDelegate {
                   context,
                   MaterialPageRoute(
                     builder: (context) => StationPage(
-                        stn_id: suggestion.STN_ID,
+                        stnId: suggestion.STN_ID,
                         basinID: suggestion.BASINID,
                         RF: suggestion.RF,
                         WL: suggestion.WL,
@@ -674,7 +922,7 @@ class MySearchDelegate extends SearchDelegate {
                 context,
                 MaterialPageRoute(
                   builder: (context) => StationPage(
-                      stn_id: suggestion.STN_ID,
+                      stnId: suggestion.STN_ID,
                       basinID: suggestion.BASINID,
                       RF: suggestion.RF,
                       WL: suggestion.WL,

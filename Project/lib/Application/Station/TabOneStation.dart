@@ -2,6 +2,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
 import 'package:dwr0001/components/loading.dart';
+import 'package:dwr0001/components/switchColor.dart';
 import 'package:flutter/material.dart';
 import '../StationPage.dart';
 import 'dart:math' as math;
@@ -12,32 +13,6 @@ class TabOneStation extends StatelessWidget {
   List<StationModel> newResult = [];
   TabOneStation(this.basinID, this.data);
 
-  Color switchColor(station) {
-    switch (station) {
-      case "0":
-        return Colors.green;
-      case "1":
-        return Colors.yellow;
-
-      case "2":
-        return Colors.red;
-
-      case "3":
-        return Colors.white;
-
-      case "4":
-        return Colors.grey;
-
-      case "5":
-        return Colors.black;
-
-      case "6":
-        return Colors.yellow;
-
-      case "7":
-        return Colors.red;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +85,7 @@ class TabOneStation extends StatelessWidget {
                               child: CircleAvatar(
                                 radius: 18.0,
                                 backgroundColor:
-                                    switchColor(station[i].CURR_STATUS),
+                                    swColor.switchColor(station[i].CURR_STATUS),
                               ),
                             )
                           : CircleAvatar(
@@ -140,7 +115,7 @@ class TabOneStation extends StatelessWidget {
                                               : station[i].CURR_STATUS_WL == "7"
                                                   ? Color.fromARGB(
                                                       255, 183, 25, 14)
-                                                  : switchColor(
+                                                  : swColor.switchColor(
                                                       station[i].CURR_STATUS),
                                           strokeWidth: 10,
                                           paintingStyle: PaintingStyle.fill,
@@ -282,16 +257,19 @@ class TabOneStation extends StatelessWidget {
               ),
               onTap: () {
                 // await FlutterSession().set('river', basinID.toString());
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => StationPage(
-                            stn_id: station[i].STN_ID,
-                            basinID: basinID,
-                            RF: station[i].RF,
-                            WL: station[i].WL,
-                            CCTV: station[i].CURR_CCTV,
-                            data: data)));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StationPage(
+                      stnId: station[i].STN_ID,
+                      basinID: basinID,
+                      RF: station[i].RF,
+                      WL: station[i].WL,
+                      CCTV: station[i].CURR_CCTV,
+                      data: data,
+                    ),
+                  ),
+                );
               },
             ),
           ],

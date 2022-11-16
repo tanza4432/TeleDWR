@@ -15,31 +15,31 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/painting.dart' as painting;
 import 'package:provider/provider.dart';
 
-class StationPage extends StatelessWidget {
-  final List<StationModel> data;
-  final String stn_id;
-  final int basinID;
-  final String RF;
-  final String WL;
-  final String CCTV;
+// class StationPage extends StatelessWidget {
+//   final List<StationModel> data;
+//   final String stn_id;
+//   final int basinID;
+//   final String RF;
+//   final String WL;
+//   final String CCTV;
+//   StationPage(
+//       {this.stn_id, this.basinID, this.RF, this.WL, this.CCTV, this.data});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       home: DefaultTabController(
+//         length: 4,
+//         child: MyDisplayClass(stn_id, basinID, RF, WL, CCTV, data),
+//       ),
+//     );
+//   }
+// }
+
+class StationPage extends StatefulWidget {
   StationPage(
-      {this.stn_id, this.basinID, this.RF, this.WL, this.CCTV, this.data});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 4,
-        child: MyDisplayClass(stn_id, basinID, RF, WL, CCTV, data),
-      ),
-    );
-  }
-}
-
-class MyDisplayClass extends StatefulWidget {
-  MyDisplayClass(
-      this.stnId, this.basinID, this.RF, this.WL, this.CCTV, this.data);
+      {this.stnId, this.basinID, this.RF, this.WL, this.CCTV, this.data});
   List<StationModel> data;
   var stnId;
   var basinID;
@@ -48,15 +48,12 @@ class MyDisplayClass extends StatefulWidget {
   var CCTV;
 
   String _title = 'ข้อมูลตรวจวัด';
-  // ignore: non_constant_identifier_names
-
-  String get family => null;
 
   @override
-  State<MyDisplayClass> createState() => _MyDisplayClassState();
+  State<StationPage> createState() => _StationPageState();
 }
 
-class _MyDisplayClassState extends State<MyDisplayClass> {
+class _StationPageState extends State<StationPage> {
   final _suggestions = <StationModel>[];
 
   Future<void> onPullToRefresh() async {
@@ -68,8 +65,8 @@ class _MyDisplayClassState extends State<MyDisplayClass> {
   Widget build(BuildContext context) {
     StationModel stationData;
     Size size = MediaQuery.of(context).size;
-    return WillPopScope(
-      onWillPop: onWillPop,
+    return DefaultTabController(
+      length: 4,
       child: Consumer<RiverProviderTabOne>(
         builder: (context, Data, _) => FutureBuilder<StationModel>(
           future: getStation(widget.stnId, widget.basinID),
@@ -147,13 +144,14 @@ class _MyDisplayClassState extends State<MyDisplayClass> {
                 automaticallyImplyLeading: true,
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back_ios),
-                  onPressed: () => {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MenuPage(data: widget.data),
-                      ),
-                    ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => MenuPage(data: widget.data),
+                    //   ),
+                    // );
                     // Navigator.pop(context)
                   },
                 ),
@@ -216,8 +214,8 @@ class _MyDisplayClassState extends State<MyDisplayClass> {
                     Container(
                       child: RefreshIndicator(
                         onRefresh: onPullToRefresh,
-                        child: TabFour(widget.stnId, widget.basinID,
-                            widget.CCTV, stationData.STN_Name),
+                        child: TabFour(widget.stnId, widget.basinID, widget.CCTV,
+                            stationData.STN_Name),
                       ),
                     ),
                   ],

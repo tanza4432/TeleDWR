@@ -34,7 +34,6 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'TeleDWR',
-        theme: ThemeData(primarySwatch: Colors.cyan),
         home: Welcome(),
       ),
     );
