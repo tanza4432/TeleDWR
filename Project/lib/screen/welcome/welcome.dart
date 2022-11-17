@@ -5,7 +5,9 @@ import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
 import 'package:dwr0001/components/loading.dart';
 import 'package:dwr0001/main.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_session/flutter_session.dart';
 import 'package:provider/provider.dart';
 import 'package:dwr0001/Application/notification.dart';
@@ -84,13 +86,72 @@ class _WelcomeState extends State<Welcome> {
     setState(() {});
   }
 
+  void showNotification() {
+    flutterLocalNotificationsPlugin.show(
+      0,
+      "Test",
+      "How do",
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          channel.description,
+          importance: Importance.high,
+          color: Colors.blue,
+          playSound: true,
+          icon: '@mipmap/ic_launcher',
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     GetData(context);
     print("สำเร็จ");
     SetSession();
     super.initState();
-    // NotiAlert.initialize(flutterLocalNotificationsPlugin);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channel.description,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher',
+              ),
+            ));
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print("A new onMessageOpenedApp event was published!");
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification?.android;
+      if (notification != null && android != null) {
+        showDialog(
+          context: context,
+          builder: (_) {
+            return AlertDialog(
+              title: Text(notification.title),
+              content: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [Text(notification.body)],
+                ),
+              ),
+            );
+          },
+        );
+      }
+    });
   }
 
   @override
@@ -116,19 +177,21 @@ class _WelcomeState extends State<Welcome> {
                         builder: (context, Data, _) {
                           return GestureDetector(
                             onTap: () async {
-                              var data = await FlutterSession().get('data');
-                              if (data != null) {
-                                for (var i in data) {
-                                  Data.addData(i);
-                                }
-                              }
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => MenuPage(
-                                    data: newdata,
-                                  ),
-                                ),
-                              );
+                              // var data = await FlutterSession().get('data');
+                              // if (data != null) {
+                              //   for (var i in data) {
+                              //     Data.addData(i);
+                              //   }
+                              // }
+                              print("object");
+                              showNotification();
+                              // Navigator.of(context).pushReplacement(
+                              //   MaterialPageRoute(
+                              //     builder: (context) => MenuPage(
+                              //       data: newdata,
+                              //     ),
+                              //   ),
+                              // );
                             },
                             child: Image(
                               image: AssetImage(

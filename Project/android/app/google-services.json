@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1041872728360",
+    "project_id": "fcmnotification-13059",
+    "storage_bucket": "fcmnotification-13059.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1041872728360:android:10490d700eaef07b55a01d",
+        "android_client_info": {
+          "package_name": "com.teledwrapp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1041872728360-a3q5cjbefqmc46equpbrcq1r6sofsthu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5kbl3hZmmxEAyt-dR2lYkD3iY-S_b_Js"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1041872728360-a3q5cjbefqmc46equpbrcq1r6sofsthu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
