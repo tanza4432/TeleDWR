@@ -190,3 +190,16 @@ Future<List<BasinsInfoModel>> basinInfoData() async {
     throw Exception();
   }
 }
+
+Future<List<StationModel>> getNotification() async {
+  final String url =
+      "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_notify";
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    List jsonResponse = json.decode(response.body);
+    return jsonResponse.map((data) => new StationModel.fromJson(data)).toList();
+  } else {
+    throw Exception();
+  }
+}

@@ -8,7 +8,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class SettingPage extends StatefulWidget {
   final List<StationModel> data;
-  SettingPage({Key key, this.data}) : super(key: key);
+  final List<StationModel> notify;
+  SettingPage({Key key, this.data,this.notify}) : super(key: key);
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -27,6 +28,7 @@ class _SettingPageState extends State<SettingPage> {
                 MaterialPageRoute(
                   builder: (context) => MenuPage(
                     data: widget.data,
+                    notify: widget.notify,
                   ),
                 ),
               );

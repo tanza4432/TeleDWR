@@ -8,10 +8,12 @@ import 'package:flutter/material.dart';
 
 class NavigationBurgerMenuWidget extends StatefulWidget {
   final List<StationModel> data;
+  final List<StationModel> notify;
 
   NavigationBurgerMenuWidget({
     Key key,
     @required this.data,
+    @required this.notify,
   }) : super(key: key);
 
   @override
@@ -21,15 +23,6 @@ class NavigationBurgerMenuWidget extends StatefulWidget {
 
 class _NavigationBurgerMenuWidgetState
     extends State<NavigationBurgerMenuWidget> {
-  List<String> items = [
-    'Item1',
-    'Item2',
-    'Item3',
-    'Item4',
-    'Item5',
-    'Item6',
-  ];
-  String selectedItem = 'Item 1';
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -57,19 +50,18 @@ class _NavigationBurgerMenuWidgetState
             buildMenuItem(
               text: "หน้าหลัก",
               icon: Icons.home_filled,
-              Path: MenuPage(data: widget.data),
+              Path: MenuPage(data: widget.data, notify: widget.notify),
             ),
             buildMenuItem(
               text: "แผนที่",
               icon: Icons.map,
-              Path: MapPage(data: widget.data),
+              Path: MapPage(data: widget.data, notify: widget.notify),
             ),
             buildMenuItem(
               text: "ตั้งค่า",
               icon: Icons.settings,
-              Path: SettingPage(data: widget.data),
+              Path: SettingPage(data: widget.data, notify: widget.notify),
             ),
-            
           ],
         ),
       ),

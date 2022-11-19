@@ -20,7 +20,8 @@ import 'package:provider/provider.dart';
 
 class MapPage extends StatefulWidget {
   final List<StationModel> data;
-  MapPage({Key key, this.data}) : super(key: key);
+  final List<StationModel> notify;
+  MapPage({Key key, this.data, this.notify}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -271,7 +272,8 @@ class _MapPageState extends State<MapPage> {
       onWillPop: onWillPop,
       child: Consumer<MapProvider>(
         builder: (context, MapP, _) => Scaffold(
-            drawer: NavigationBurgerMenuWidget(data: widget.data),
+            drawer: NavigationBurgerMenuWidget(
+                data: widget.data, notify: widget.notify),
             appBar: AppBar(
               leading: Builder(
                 builder: (context) => IconButton(

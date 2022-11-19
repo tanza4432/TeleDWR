@@ -4,7 +4,6 @@ import 'package:dwr0001/Application/Station/TabOneStation.dart';
 import 'package:dwr0001/Application/StationPage.dart';
 import 'package:dwr0001/Application/burgerMenu/burgermenu.dart';
 import 'package:dwr0001/Application/forecast/forecast.dart';
-import 'package:dwr0001/Application/pdf/PdfViewer.dart';
 import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/basinInfoModel.dart';
 import 'package:dwr0001/Models/station_model.dart';
@@ -18,10 +17,12 @@ import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
   final List<StationModel> data;
+  final List<StationModel> notify;
 
   MenuPage({
     Key key,
     @required this.data,
+    @required this.notify,
   }) : super(key: key);
 
   @override
@@ -148,7 +149,8 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
         return WillPopScope(
           onWillPop: onWillPop,
           child: Scaffold(
-            drawer: NavigationBurgerMenuWidget(data: widget.data),
+            drawer: NavigationBurgerMenuWidget(
+                data: widget.data, notify: widget.notify),
             appBar: AppBar(
               leading: Builder(
                 builder: (context) => IconButton(
@@ -326,11 +328,25 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                       from: 0,
                                       child: Container(
                                         child: ListView.builder(
-                                          itemCount: 1,
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: widget.notify.length,
                                           itemBuilder: (context, index) {
-                                            return Container(
-                                                // child: ,
-                                                );
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: Container(
+                                                width: 100,
+                                                color: Colors.green,
+                                                child: Column(
+                                                  children: [
+                                                    Icon(Icons
+                                                        .notifications_active),
+                                                    Text(widget
+                                                        .notify[index].STN_ID),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
                                           },
                                         ),
                                       ),
@@ -709,36 +725,6 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    // Container(
-                    //   child: AvatarGlow(
-                    //     glowColor: Colors.blue,
-                    //     endRadius: 40.0,
-                    //     duration: Duration(milliseconds: 2000),
-                    //     repeat: true,
-                    //     showTwoGlows: true,
-                    //     repeatPauseDuration: Duration(milliseconds: 200),
-                    //     child: CircleAvatar(
-                    //       radius: 18.0,
-                    //       child: CircleAvatar(
-                    //         radius: 0,
-                    //         backgroundColor: Colors.greenAccent,
-                    //       ),
-                    //       backgroundColor: station[i].CURR_STATUS == "0"
-                    //           ? Colors.green
-                    //           : station[i].CURR_STATUS == "1"
-                    //               ? Colors.green
-                    //               : station[i].CURR_STATUS == "2"
-                    //                   ? Colors.green
-                    //                   : station[i].CURR_STATUS == "3"
-                    //                       ? Colors.white
-                    //                       : station[i].CURR_STATUS == "4"
-                    //                           ? Colors.grey
-                    //                           : station[i].CURR_STATUS == "5"
-                    //                               ? Colors.black
-                    //                               : Colors.green,
-                    //     ),
-                    //   ),
-                    // ),
                     Text(
                       station[i].STN_ID,
                       style: FavoriteStyle(),
