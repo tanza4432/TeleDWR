@@ -8,12 +8,10 @@ import 'package:flutter/material.dart';
 
 class NavigationBurgerMenuWidget extends StatefulWidget {
   final List<StationModel> data;
-  final List<StationModel> notify;
 
   NavigationBurgerMenuWidget({
     Key key,
     @required this.data,
-    @required this.notify,
   }) : super(key: key);
 
   @override
@@ -50,17 +48,17 @@ class _NavigationBurgerMenuWidgetState
             buildMenuItem(
               text: "หน้าหลัก",
               icon: Icons.home_filled,
-              Path: MenuPage(data: widget.data, notify: widget.notify),
+              Path: MenuPage(data: widget.data),
             ),
             buildMenuItem(
               text: "แผนที่",
               icon: Icons.map,
-              Path: MapPage(data: widget.data, notify: widget.notify),
+              Path: MapPage(data: widget.data),
             ),
             buildMenuItem(
               text: "ตั้งค่า",
               icon: Icons.settings,
-              Path: SettingPage(data: widget.data, notify: widget.notify),
+              Path: SettingPage(data: widget.data),
             ),
           ],
         ),

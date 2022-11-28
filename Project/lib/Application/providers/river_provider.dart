@@ -45,3 +45,13 @@ class FavoriteRiver with ChangeNotifier {
     }
   }
 }
+
+class NotificationRiver with ChangeNotifier {
+  List<StationModel> get Notification => _listData;
+
+  List<StationModel> _listData = [];
+
+  void addData(var Notification) async {
+    _listData = Notification;
+  }
+}

@@ -28,7 +28,7 @@ class _SettingPageState extends State<SettingPage> {
                 MaterialPageRoute(
                   builder: (context) => MenuPage(
                     data: widget.data,
-                    notify: widget.notify,
+                   
                   ),
                 ),
               );

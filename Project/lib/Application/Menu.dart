@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Application/Station/TabOneStation.dart';
@@ -17,12 +19,10 @@ import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
   final List<StationModel> data;
-  final List<StationModel> notify;
 
   MenuPage({
     Key key,
     @required this.data,
-    @required this.notify,
   }) : super(key: key);
 
   @override
@@ -31,13 +31,13 @@ class MenuPage extends StatefulWidget {
 
 class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   List<Map<String, dynamic>> items = <Map<String, dynamic>>[
-    <String, dynamic>{'title': "ลุ่มน้ำแม่กลอง", 'page': 1},
-    <String, dynamic>{'title': "ลุ่มน้ำสาละวิน", 'page': 2},
-    <String, dynamic>{'title': "ลุ่มน้ำกกและโขงเหนือ", 'page': 3},
-    <String, dynamic>{'title': "ลุ่มน้ำสงครามและห้วยหลวง", 'page': 4},
-    <String, dynamic>{'title': "ลุ่มน้ำบางปะกง", 'page': 5},
+    <String, dynamic>{'title': "แม่กลอง", 'page': 1},
+    <String, dynamic>{'title': "สาละวิน", 'page': 2},
+    <String, dynamic>{'title': "กก\nและโขงเหนือ", 'page': 3},
+    <String, dynamic>{'title': "สงคราม\nและห้วยหลวง", 'page': 4},
+    <String, dynamic>{'title': "บางปะกง", 'page': 5},
     <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
-    <String, dynamic>{'title': "จังหวัดนครศรีธรรมราช", 'page': 7},
+    <String, dynamic>{'title': "จังหวัด\nนครศรีธรรมราช", 'page': 7},
   ];
 
   DateTime backbuttonpressedTime;
@@ -49,9 +49,14 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   bool isVisible = false;
   bool isCheckVisible = false;
   bool check = false;
+  List<StationModel> Listnotify = [];
+  List<StationModel> ListnotifyStream = [];
   List<BasinsInfoModel> infoBasin = [];
   String Project_URL = "https://tele-maeklong.dwr.go.th/home/INFO_PROJECT";
   String Forecast_URL = "https://tele-maeklong.dwr.go.th/fs/forecast.php";
+
+  StreamController<StationModel> _streamControllerNoti = StreamController();
+  TabController _tabController;
 
   void checkOption(int index) {
     setState(() {
@@ -124,20 +129,33 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
     }
   }
 
+  void Notification() async {
+    if (!_streamControllerNoti.isClosed) {
+      Listnotify = await getNotification();
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
+    if (!_streamControllerNoti.isClosed) {
+      Timer.periodic(Duration(seconds: 5), (timer) {
+        Notification();
+      });
+    }
+    _tabController = TabController(length: 2, vsync: this);
     getInfobasin();
     super.initState();
   }
 
   @override
   void dispose() {
+    _streamControllerNoti.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    TabController _tabController = TabController(length: 2, vsync: this);
     Size size = MediaQuery.of(context).size;
     return Consumer<FavoriteRiver>(
       builder: (context, Data, _) {
@@ -146,300 +164,595 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
             isVisible = !isVisible;
           }
         }
-        return WillPopScope(
-          onWillPop: onWillPop,
-          child: Scaffold(
-            drawer: NavigationBurgerMenuWidget(
-                data: widget.data, notify: widget.notify),
-            appBar: AppBar(
-              leading: Builder(
-                builder: (context) => IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.white,
+        return Consumer<NotificationRiver>(
+          builder: (context, Noti, _) {
+            if (Noti.Notification.length == 0) {
+              Noti.addData(Listnotify);
+            } else {
+              if (Listnotify.length != 0) {
+                Noti.addData(Listnotify);
+              }
+            }
+            return WillPopScope(
+              onWillPop: onWillPop,
+              child: Scaffold(
+                drawer: NavigationBurgerMenuWidget(data: widget.data),
+                appBar: AppBar(
+                  leading: Builder(
+                    builder: (context) => IconButton(
+                      icon: Icon(
+                        Icons.menu,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => Scaffold.of(context).openDrawer(),
+                      tooltip: MaterialLocalizations.of(context)
+                          .openAppDrawerTooltip,
+                    ),
                   ),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  tooltip:
-                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                  centerTitle: true,
+                  title: Text(
+                    'TeleDWR',
+                    style: DefaultTitleW(),
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.search,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        showSearch(
+                          context: context,
+                          delegate: MySearchDelegate(widget.data),
+                        );
+                      },
+                    )
+                  ],
+                  backgroundColor: Colors.lightBlue[600],
                 ),
-              ),
-              centerTitle: true,
-              title: Text(
-                'หน้าหลัก',
-                style: DefaultTitleW(),
-              ),
-              actions: [
-                IconButton(
-                  icon: Icon(
-                    Icons.search,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    showSearch(
-                      context: context,
-                      delegate: MySearchDelegate(widget.data),
-                    );
-                  },
-                )
-              ],
-              backgroundColor: Colors.lightBlue[600],
-            ),
-            body: SingleChildScrollView(
-              child: Container(
-                child: Column(
-                  children: [
-                    Header(),
-                    Container(
-                      width: double.infinity,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  isVisible = !isVisible;
-                                });
-                              },
-                              child: Container(
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    color: Colors.lightBlue[600],
-                                    boxShadow: [
-                                      BoxShadow(
-                                        spreadRadius: 3,
-                                        color: Colors.lightBlue[600],
-                                      ),
-                                    ],
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: TabBar(
-                                          labelStyle: DefaultStyleW(),
-                                          isScrollable: true,
-                                          controller: _tabController,
-                                          tabs: [
-                                            Tab(text: "ติดตาม"),
-                                            Tab(text: "แจ้งเตือน"),
-                                          ],
+                body: SingleChildScrollView(
+                  child: Container(
+                    child: Column(
+                      children: [
+                        Header(),
+                        Container(
+                          width: double.infinity,
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      isVisible = !isVisible;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.white,
+                                      // color: Colors.lightBlue[600],
+                                      boxShadow: [
+                                        BoxShadow(
+                                          spreadRadius: 1,
+                                          color: Colors.black,
                                         ),
-                                      ),
-                                      Icon(
-                                        !isVisible
-                                            ? Icons
-                                                .arrow_drop_down_circle_outlined
-                                            : Icons.arrow_drop_up_outlined,
-                                        color: Colors.white,
-                                      )
-                                    ],
-                                  )
-                                  // Padding(
-                                  //   padding: const EdgeInsets.all(5.0),
-                                  //   child: Row(
-                                  //     mainAxisAlignment:
-                                  //         MainAxisAlignment.spaceBetween,
-                                  //     children: [
-                                  //       Text(
-                                  //         "ติดตามสถานี",
-                                  //         style: DefaultStyleW(),
-                                  //       ),
-                                  //       Icon(
-                                  //         !isVisible
-                                  //             ? Icons
-                                  //                 .arrow_drop_down_circle_outlined
-                                  //             : Icons.arrow_drop_up_outlined,
-                                  //         color: Colors.white,
-                                  //       )
-                                  //     ],
-                                  //   ),
-                                  // ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: TabBar(
+                                            indicatorPadding: EdgeInsets.all(2),
+                                            indicator: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                5,
+                                              ),
+                                              color:
+                                                  Colors.grey.withOpacity(0.4),
+                                            ),
+                                            indicatorColor: Colors.grey,
+                                            labelColor: Colors.black,
+                                            onTap: (index) {
+                                              if (index == 0) {
+                                                if (newResult.length != 0) {
+                                                  setState(() {
+                                                    isVisible = true;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    isVisible = false;
+                                                  });
+                                                }
+                                              } else {
+                                                if (Noti.Notification.length !=
+                                                    0) {
+                                                  setState(() {
+                                                    isVisible = true;
+                                                  });
+                                                } else {
+                                                  setState(() {
+                                                    isVisible = false;
+                                                  });
+                                                }
+                                              }
+                                            },
+                                            labelStyle: favoriteStyle(),
+                                            isScrollable: true,
+                                            controller: _tabController,
+                                            tabs: [
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.star_outline,
+                                                    size: 18,
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 5,
+                                                    ),
+                                                    child: Tab(
+                                                      text: "ติดตาม",
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons
+                                                        .notifications_active_outlined,
+                                                    size: 18,
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 5,
+                                                    ),
+                                                    child:
+                                                        Tab(text: "แจ้งเตือน"),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 5,
+                                          ),
+                                          child: Icon(
+                                            !isVisible
+                                                ? Icons
+                                                    .arrow_drop_down_circle_outlined
+                                                : Icons.arrow_drop_up_outlined,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                            ),
-                            Visibility(
-                              visible: isVisible,
-                              child: Container(
-                                width: double.infinity,
-                                height: 200,
-                                child: TabBarView(
-                                  controller: _tabController,
-                                  children: [
-                                    FadeInDown(
-                                      from: 0,
-                                      child: Consumer<FavoriteRiver>(
-                                          builder: (context, Data, _) {
-                                        for (var result in widget.data) {
-                                          alreadyFavorite = Data.favorite
-                                              .contains(result.STN_ID);
-                                          if (alreadyFavorite) {
-                                            for (var i = 0;
-                                                i < newResult.length;
-                                                i++) {
-                                              check = newResult[i]
-                                                  .STN_ID
+                                ),
+                                Visibility(
+                                  visible: isVisible,
+                                  child: Container(
+                                    width: double.infinity,
+                                    height: 200,
+                                    child: TabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        FadeInDown(
+                                          from: 0,
+                                          child: Consumer<FavoriteRiver>(
+                                              builder: (context, Data, _) {
+                                            for (var result in widget.data) {
+                                              alreadyFavorite = Data.favorite
                                                   .contains(result.STN_ID);
-                                              if (check) {
-                                                break;
+                                              if (alreadyFavorite) {
+                                                for (var i = 0;
+                                                    i < newResult.length;
+                                                    i++) {
+                                                  check = newResult[i]
+                                                      .STN_ID
+                                                      .contains(result.STN_ID);
+                                                  if (check) {
+                                                    break;
+                                                  }
+                                                }
+                                                if (check == false) {
+                                                  newResult.add(
+                                                    StationModel(
+                                                      STN_ID: result.STN_ID,
+                                                      STN_Name: result.STN_Name,
+                                                      RF: result.RF,
+                                                      WL: result.WL,
+                                                      BASINID: result.BASINID,
+                                                      CURR_CCTV:
+                                                          result.CURR_CCTV,
+                                                      CURR_STATUS:
+                                                          result.CURR_STATUS,
+                                                    ),
+                                                  );
+                                                }
                                               }
                                             }
-                                            if (check == false) {
-                                              newResult.add(
-                                                StationModel(
-                                                  STN_ID: result.STN_ID,
-                                                  STN_Name: result.STN_Name,
-                                                  RF: result.RF,
-                                                  WL: result.WL,
-                                                  BASINID: result.BASINID,
-                                                  CURR_CCTV: result.CURR_CCTV,
-                                                  CURR_STATUS:
-                                                      result.CURR_STATUS,
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        }
-                                        final List<StationModel> station =
-                                            newResult;
-                                        return Visibility(
-                                          visible: isVisible,
-                                          child: Container(
-                                            width: double.infinity,
-                                            color: Colors.black12,
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 200,
-                                                  child: resultData(
-                                                      station, widget.data),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                                    ),
-                                    FadeInDown(
-                                      from: 0,
-                                      child: Container(
-                                        child: ListView.builder(
-                                          scrollDirection: Axis.horizontal,
-                                          itemCount: widget.notify.length,
-                                          itemBuilder: (context, index) {
-                                            return Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
+                                            final List<StationModel> station =
+                                                newResult;
+                                            return Visibility(
+                                              visible: isVisible,
                                               child: Container(
-                                                width: 100,
-                                                color: Colors.green,
+                                                width: double.infinity,
+                                                color: Colors.black12,
                                                 child: Column(
                                                   children: [
-                                                    Icon(Icons
-                                                        .notifications_active),
-                                                    Text(widget
-                                                        .notify[index].STN_ID),
+                                                    Container(
+                                                      height: 200,
+                                                      child: resultData(
+                                                          station, widget.data),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
                                             );
-                                          },
+                                          }),
+                                        ),
+                                        FadeInDown(
+                                          from: 0,
+                                          child: Consumer<NotificationRiver>(
+                                            builder: (context, Noti, _) {
+                                              return Container(
+                                                child: ListView.builder(
+                                                  scrollDirection:
+                                                      Axis.vertical,
+                                                  itemCount:
+                                                      Noti.Notification.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    var lastUpdate = Noti
+                                                        .Notification[index]
+                                                        .LAST_UPDATE
+                                                        .split(" ");
+                                                    var time = lastUpdate[1]
+                                                        .split(":");
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        print(index);
+                                                      },
+                                                      child: ListTile(
+                                                        contentPadding:
+                                                            EdgeInsets.only(
+                                                                right: 0),
+                                                        leading: Container(
+                                                          child: AvatarGlow(
+                                                            glowColor:
+                                                                Colors.blue,
+                                                            endRadius: 30.0,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    2000),
+                                                            repeat: true,
+                                                            showTwoGlows: true,
+                                                            repeatPauseDuration:
+                                                                Duration(
+                                                                    milliseconds:
+                                                                        200),
+                                                            child: Stack(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              children: [
+                                                                Noti.Notification[index]
+                                                                            .RF ==
+                                                                        "RF"
+                                                                    ? Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              Colors.white,
+                                                                          shape:
+                                                                              BoxShape.circle,
+                                                                          boxShadow: [
+                                                                            BoxShadow(
+                                                                                blurRadius: 1,
+                                                                                color: Colors.grey,
+                                                                                spreadRadius: 1)
+                                                                          ],
+                                                                        ),
+                                                                        child:
+                                                                            CircleAvatar(
+                                                                          radius:
+                                                                              18.0,
+                                                                          backgroundColor: swColor.switchColor(Noti
+                                                                              .Notification[index]
+                                                                              .CURR_STATUS),
+                                                                        ),
+                                                                      )
+                                                                    : CircleAvatar(
+                                                                        backgroundColor:
+                                                                            Colors.transparent,
+                                                                        radius:
+                                                                            18.0,
+                                                                      ),
+                                                                Noti.Notification[index]
+                                                                            .WL ==
+                                                                        "WL"
+                                                                    ? Positioned(
+                                                                        bottom: Noti.Notification[index].CURR_STATUS_WL == "6" ||
+                                                                                Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                                            ? null
+                                                                            : 8,
+                                                                        top: Noti.Notification[index].CURR_STATUS_WL == "6" ||
+                                                                                Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                                            ? 8
+                                                                            : null,
+                                                                        child:
+                                                                            Container(
+                                                                          child: Noti.Notification[index].CURR_STATUS_WL == "6" || Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                                              ? CustomPaint(
+                                                                                  painter: TrianglePainter(
+                                                                                    strokeColor: Noti.Notification[index].CURR_STATUS_WL == "6"
+                                                                                        ? Color.fromARGB(255, 240, 220, 40)
+                                                                                        : Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                                                            ? Color.fromARGB(255, 183, 25, 14)
+                                                                                            : swColor.switchColor(Noti.Notification[index].CURR_STATUS),
+                                                                                    strokeWidth: 10,
+                                                                                    paintingStyle: PaintingStyle.fill,
+                                                                                    angle: 0,
+                                                                                  ),
+                                                                                  child: Container(
+                                                                                    height: 28,
+                                                                                    width: 30,
+                                                                                  ),
+                                                                                )
+                                                                              : CustomPaint(
+                                                                                  painter: TrianglePainter(
+                                                                                    strokeColor: Noti.Notification[index].CURR_STATUS_WL == "0"
+                                                                                        ? Color.fromARGB(255, 35, 119, 36)
+                                                                                        : Noti.Notification[index].CURR_STATUS_WL == "1"
+                                                                                            ? Color.fromARGB(255, 240, 220, 40)
+                                                                                            : Noti.Notification[index].CURR_STATUS_WL == "2"
+                                                                                                ? Colors.red
+                                                                                                : Noti.Notification[index].CURR_STATUS_WL == "3"
+                                                                                                    ? Noti.Notification[index].CURR_STATUS == "3"
+                                                                                                        ? Colors.grey
+                                                                                                        : Colors.white
+                                                                                                    : Noti.Notification[index].CURR_STATUS_WL == "4"
+                                                                                                        ? Noti.Notification[index].CURR_STATUS == "4"
+                                                                                                            ? Color.fromARGB(255, 200, 200, 200)
+                                                                                                            : Colors.grey
+                                                                                                        : Noti.Notification[index].CURR_STATUS == "5"
+                                                                                                            ? Color.fromARGB(255, 108, 108, 108)
+                                                                                                            : Colors.black,
+                                                                                    strokeWidth: 1,
+                                                                                    paintingStyle: Noti.Notification[index].CURR_STATUS_WL == "3"
+                                                                                        ? Noti.Notification[index].CURR_STATUS == "3"
+                                                                                            ? PaintingStyle.stroke
+                                                                                            : PaintingStyle.fill
+                                                                                        : Noti.Notification[index].CURR_STATUS_WL == "4"
+                                                                                            ? Noti.Notification[index].CURR_STATUS == "4"
+                                                                                                ? PaintingStyle.stroke
+                                                                                                : PaintingStyle.fill
+                                                                                            : Noti.Notification[index].CURR_STATUS_WL == "5"
+                                                                                                ? Noti.Notification[index].CURR_STATUS == "5"
+                                                                                                    ? PaintingStyle.stroke
+                                                                                                    : PaintingStyle.fill
+                                                                                                : PaintingStyle.fill,
+                                                                                    angle: 1,
+                                                                                  ),
+                                                                                  child: Container(
+                                                                                    height: 28,
+                                                                                    width: 30,
+                                                                                  ),
+                                                                                ),
+                                                                        ),
+                                                                      )
+                                                                    : Container(),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        title: new Text(
+                                                          Noti
+                                                              .Notification[
+                                                                  index]
+                                                              .STN_ID,
+                                                          style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontFamily: 'Kanit',
+                                                            fontSize: 18.0,
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                          ),
+                                                        ),
+                                                        subtitle: new Text(
+                                                          Noti
+                                                              .Notification[
+                                                                  index]
+                                                              .STN_Name,
+                                                          style: TextStyle(
+                                                            color:
+                                                                Colors.black54,
+                                                            fontFamily: 'Kanit',
+                                                            fontSize: 14.0,
+                                                            fontWeight:
+                                                                FontWeight.w200,
+                                                          ),
+                                                        ),
+                                                        trailing: Wrap(
+                                                          spacing:
+                                                              2, // space between two icons
+                                                          crossAxisAlignment:
+                                                              WrapCrossAlignment
+                                                                  .center,
+                                                          children: <Widget>[
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      right:
+                                                                          15.0),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .end,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            2.0),
+                                                                    child: Text(
+                                                                      time[0] +
+                                                                          ":" +
+                                                                          time[
+                                                                              1],
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .black54,
+                                                                        fontFamily:
+                                                                            'Kanit',
+                                                                        fontSize:
+                                                                            12.0,
+                                                                        fontWeight:
+                                                                            FontWeight.w200,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    lastUpdate[
+                                                                        0],
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .black54,
+                                                                      fontFamily:
+                                                                          'Kanit',
+                                                                      fontSize:
+                                                                          10.0,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w200,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              // color: Colors.red,
+                                                              child: Icon(Icons
+                                                                  .arrow_forward_ios),
+                                                            ), // icon-2
+                                                          ],
+                                                        ),
+                                                        onTap: () {
+                                                          // await FlutterSession().set('river', basinID.toString());
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+
+                                Divider(color: Colors.black38),
+                                // Text(
+                                //   "TeleDWR-รายการสถานี",
+                                //   style: DefaultStyleB(),
+                                // ),
+                                SizedBox(height: 10),
+                                Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.white,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        spreadRadius: 1,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      SelectRiver == 1
+                                          ? "ลุ่มแม่น้ำกลอง"
+                                          : SelectRiver == 2
+                                              ? "ลุ่มน้ำสาละวิน"
+                                              : SelectRiver == 3
+                                                  ? "ลุ่มน้ำกกและโขงเหนือ"
+                                                  : SelectRiver == 4
+                                                      ? "ลุ่มน้ำสงครามและห้วยหลวง"
+                                                      : SelectRiver == 5
+                                                          ? "ลุ่มน้ำบางปะกง"
+                                                          : SelectRiver == 6
+                                                              ? "อำเภอบางสะพาน"
+                                                              : SelectRiver == 7
+                                                                  ? "จังหวัดนครศรีธรรมราช"
+                                                                  : "ไม่พบข้อมูล",
+                                      style: DefaultStyleB(),
+                                    ),
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 5, top: 10, bottom: 10),
+                                  child: Row(
+                                    children: [
+                                      BoxDetail(
+                                        title: "เกี่ยวกับโครงการ",
+                                        checkFound: Project_URL,
+                                        path: ForecastPage(
+                                          title: "เกี่ยวกับโครงการ",
+                                          URL: Project_URL,
                                         ),
                                       ),
-                                    )
-                                  ],
+                                      SizedBox(width: 20),
+                                      BoxDetail(
+                                        title: "การคาดการณ์",
+                                        checkFound: Forecast_URL,
+                                        path: ForecastPage(
+                                          title: "การคาดการณ์",
+                                          URL: Forecast_URL,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10, bottom: 10),
-                              child: Row(
-                                children: [
-                                  // BoxDetail(
-                                  //   title: "เกี่ยวกับโครงการ",
-                                  //   path: PdfViewer(
-                                  //       basinID: optionSelected,
-                                  //       data: widget.data),
-                                  // ),
-                                  BoxDetail(
-                                    title: "เกี่ยวกับโครงการ",
-                                    checkFound: Project_URL,
-                                    path: ForecastPage(
-                                      title: "เกี่ยวกับโครงการ",
-                                      URL: Project_URL,
-                                    ),
-                                  ),
-                                  SizedBox(width: 20),
-                                  BoxDetail(
-                                    title: "การคาดการณ์",
-                                    checkFound: Forecast_URL,
-                                    path: ForecastPage(
-                                      title: "การคาดการณ์",
-                                      URL: Forecast_URL,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Divider(color: Colors.black38),
-                            // Text(
-                            //   "TeleDWR-รายการสถานี",
-                            //   style: DefaultStyleB(),
-                            // ),
-                            SizedBox(height: 10),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.lightBlue[600],
-                                boxShadow: [
-                                  BoxShadow(
-                                    spreadRadius: 3,
-                                    color: Colors.lightBlue[600],
-                                  ),
-                                ],
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(
-                                  SelectRiver == 1
-                                      ? "ลุ่มแม่น้ำกลอง"
-                                      : SelectRiver == 2
-                                          ? "ลุ่มน้ำสาละวิน"
-                                          : SelectRiver == 3
-                                              ? "ลุ่มน้ำกกและโขงเหนือ"
-                                              : SelectRiver == 4
-                                                  ? "ลุ่มน้ำสงครามและห้วยหลวง"
-                                                  : SelectRiver == 5
-                                                      ? "ลุ่มน้ำบางปะกง"
-                                                      : SelectRiver == 6
-                                                          ? "อำเภอบางสะพาน"
-                                                          : SelectRiver == 7
-                                                              ? "จังหวัดนครศรีธรรมราช"
-                                                              : "ไม่พบข้อมูล",
-                                  style: DefaultStyleW(),
+                                Container(
+                                  height: size.height * 0.60,
+                                  width: double.infinity,
+                                  child:
+                                      TabOneStation(SelectRiver, widget.data),
                                 ),
-                              ),
+                              ],
                             ),
-                            Container(
-                              height: size.height * 0.60,
-                              width: double.infinity,
-                              child: TabOneStation(SelectRiver, widget.data),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -454,7 +767,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("เลือกลุ่มแม่น้ำ", style: DefaultStyleB()),
+            Text("เลือกลุ่มแม่น้ำ", style: SelectMenuStyle()),
             SizedBox(height: 5),
             Container(
               height: 100,
@@ -468,8 +781,12 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                   for (int i = 0; i < items.length; i++)
                     InkWell(
                       child: Container(
-                        alignment: Alignment.center,
+                        alignment: Alignment.topLeft,
                         decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/river.png"),
+                            fit: BoxFit.cover,
+                          ),
                           color: optionSelected == i + 1
                               ? Colors.lightBlue[600]
                               : Colors.white,
@@ -478,21 +795,71 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                           ),
                         ),
                         width: 50,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            items[i]['title'],
-                            overflow: TextOverflow.fade,
-                            maxLines: 1,
-                            softWrap: false,
-                            style: TextStyle(
-                                fontFamily: 'Kanit',
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w200,
-                                color: optionSelected == i + 1
-                                    ? Colors.white
-                                    : Colors.black54),
-                          ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                items[i]['page'] == 6 || items[i]['page'] == 7
+                                    ? ""
+                                    : "ลุ่มน้ำ",
+                                overflow: TextOverflow.fade,
+                                maxLines: 1,
+                                softWrap: false,
+                                style: TextStyle(
+                                    fontFamily: 'Kanit',
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.w200,
+                                    color: optionSelected == i + 1
+                                        ? Colors.white
+                                        : Colors.grey),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black,
+                                    ],
+                                  ),
+                                ),
+                                child: Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      items[i]['title'],
+                                      textAlign: TextAlign.end,
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 2,
+                                      softWrap: true,
+                                      style: TextStyle(
+                                        shadows: <Shadow>[
+                                          // Shadow(
+                                          //   offset: Offset(1, 2.0),
+                                          //   blurRadius: 3.0,
+                                          //   color: Colors.white,
+                                          // ),
+                                        ],
+                                        fontFamily: 'Kanit',
+                                        fontSize: 12.0,
+                                        fontWeight: FontWeight.w200,
+                                        color: optionSelected == i + 1
+                                            ? Colors.white
+                                            : Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       onTap: () {
@@ -549,7 +916,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.all(5),
                 child: Column(
                   children: [
                     Row(
@@ -577,7 +944,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                     Container(
                       child: AvatarGlow(
                         glowColor: Colors.blue,
-                        endRadius: 30.0,
+                        endRadius: 20.0,
                         duration: Duration(milliseconds: 2000),
                         repeat: true,
                         showTwoGlows: true,
@@ -731,6 +1098,43 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                     ),
                     Text(
                       station[i].STN_Name,
+                      style: FavoriteStyle(),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                    // Divider(
+                    //   color: Colors.black.withOpacity(0.2),
+                    //   thickness: 1,
+                    // ),
+                    // Row(
+                    //   children: [
+                    //     Icon(Icons.water),
+                    //   ],
+                    // ),
+                    Text(
+                      "ปริมาณน้ำฝน",
+                      style: FavoriteStyle(),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                    Text(
+                      "${station[i].CURR_Acc_Rain_15_M == null ? "0.0" : station[i].CURR_Acc_Rain_15_M} มม.",
+                      style: FavoriteStyle(),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                    Text(
+                      "ระดับน้ำ",
+                      style: FavoriteStyle(),
+                      overflow: TextOverflow.fade,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                    Text(
+                      "${station[i].CURR_Water_D_Level_MSL == null ? "0.0" : station[i].CURR_Water_D_Level_MSL} ม.รทก.",
                       style: FavoriteStyle(),
                       overflow: TextOverflow.fade,
                       maxLines: 1,

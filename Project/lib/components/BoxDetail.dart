@@ -43,6 +43,7 @@ class BoxDetail extends StatelessWidget {
         }
       },
       child: Container(
+        alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
           color: Colors.lightBlue[600],
@@ -54,16 +55,20 @@ class BoxDetail extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.only(right: 5, left: 5),
+          padding: const EdgeInsets.all(5),
           child: Row(
             children: [
-              Text(
-                title,
-                style: DefaultStyleW(),
+              Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Text(
+                  title,
+                  style: DetailTitleW(),
+                ),
               ),
               Icon(
                 Icons.arrow_forward_ios,
                 color: Colors.white,
+                size: 14,
               ),
             ],
           ),

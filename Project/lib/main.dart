@@ -27,6 +27,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => MapProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationRiver(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

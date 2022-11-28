@@ -18,9 +18,26 @@ TextStyle DefaultStyleW() {
 
 TextStyle DefaultStyleB() {
   return TextStyle(
+    color: Colors.black,
+    fontFamily: 'Kanit',
+    fontSize: 18.0,
+    fontWeight: FontWeight.w200,
+  );
+}
+
+TextStyle favoriteStyle() {
+  return TextStyle(
       color: Colors.black,
       fontFamily: 'Kanit',
-      fontSize: 18.0,
+      fontSize: 14.0,
+      fontWeight: FontWeight.w200);
+}
+
+TextStyle SelectMenuStyle() {
+  return TextStyle(
+      color: Colors.black,
+      fontFamily: 'Kanit',
+      fontSize: 14.0,
       fontWeight: FontWeight.w200);
 }
 
@@ -29,6 +46,14 @@ TextStyle DefaultTitleW() {
       color: Colors.white,
       fontFamily: 'Kanit',
       fontSize: 22.0,
+      fontWeight: FontWeight.w200);
+}
+
+TextStyle DetailTitleW() {
+  return TextStyle(
+      color: Colors.white,
+      fontFamily: 'Kanit',
+      fontSize: 12.0,
       fontWeight: FontWeight.w200);
 }
 
@@ -48,10 +73,18 @@ TextStyle FavoriteStyle() {
       fontWeight: FontWeight.w200);
 }
 
+TextStyle NotificationStyle() {
+  return TextStyle(
+      color: Colors.black,
+      fontFamily: 'Kanit',
+      fontSize: 14.0,
+      fontWeight: FontWeight.w200);
+}
+
 TextStyle DefaultStyleTextBoxMap() {
   return TextStyle(
       color: Colors.black,
       fontFamily: 'Kanit',
-      fontSize: 15.0,
+      fontSize: 12.0,
       fontWeight: FontWeight.w200);
 }
