@@ -30,16 +30,6 @@ class MenuPage extends StatefulWidget {
 }
 
 class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
-  List<Map<String, dynamic>> items = <Map<String, dynamic>>[
-    <String, dynamic>{'title': "แม่กลอง", 'page': 1},
-    <String, dynamic>{'title': "สาละวิน", 'page': 2},
-    <String, dynamic>{'title': "กก\nและโขงเหนือ", 'page': 3},
-    <String, dynamic>{'title': "สงคราม\nและห้วยหลวง", 'page': 4},
-    <String, dynamic>{'title': "บางปะกง", 'page': 5},
-    <String, dynamic>{'title': "อำเภอบางสะพาน", 'page': 6},
-    <String, dynamic>{'title': "จังหวัด\nนครศรีธรรมราช", 'page': 7},
-  ];
-
   DateTime backbuttonpressedTime;
   int optionSelected = 1;
   int SelectRiver = 1;
@@ -778,7 +768,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 20),
                 children: [
-                  for (int i = 0; i < items.length; i++)
+                  for (int i = 0; i < ListRiver.items.length; i++)
                     InkWell(
                       child: Container(
                         alignment: Alignment.topLeft,
@@ -802,7 +792,8 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                items[i]['page'] == 6 || items[i]['page'] == 7
+                                ListRiver.items[i]['page'] == 6 ||
+                                        ListRiver.items[i]['page'] == 7
                                     ? ""
                                     : "ลุ่มน้ำ",
                                 overflow: TextOverflow.fade,
@@ -834,7 +825,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      items[i]['title'],
+                                      ListRiver.items[i]['title'],
                                       textAlign: TextAlign.end,
                                       overflow: TextOverflow.fade,
                                       maxLines: 2,
@@ -864,7 +855,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                       ),
                       onTap: () {
                         setState(() {
-                          SelectRiver = items[i]['page'];
+                          SelectRiver = ListRiver.items[i]['page'];
                         });
                         checkOption(i + 1);
                       },

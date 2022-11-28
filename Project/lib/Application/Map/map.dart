@@ -16,6 +16,7 @@ import 'package:dwr0001/components/onwillpop.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import "package:latlong/latlong.dart";
 import 'package:provider/provider.dart';
 import 'package:dwr0001/components/switchColor.dart';
@@ -29,16 +30,61 @@ class MapPage extends StatefulWidget {
   State<MapPage> createState() => _MapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
   Set<Marker> _markers = {};
   List mark = [];
-  List result = [];
+  List<StationModel> result = [];
   List<LatLng> polygon = [];
+  List<SpeedDialChild> basinList = [];
+
+  MapController _mapController = new MapController();
+
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    final latTween = Tween<double>(
+        begin: _mapController.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(
+        begin: _mapController.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: _mapController.zoom, end: destZoom);
+
+    final controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    final Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    controller.addListener(() {
+      _mapController.moveAndRotate(
+          LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+          zoomTween.evaluate(animation),
+          0);
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
+  }
 
   Future<void> get_data() async {
     for (var i = 1; i < 8; i++) {
       List<StationModel> snapshots = await get_dataMap(i);
       if (snapshots != null) {
+        basinList.add(
+          SpeedDialChild(
+            child: const Icon(Icons.reply_outlined, color: Colors.white),
+            label: ListRiver.items[i - 1]['title'],
+            labelStyle: DefaultStyleTextBoxMap(),
+            backgroundColor: Colors.blueAccent,
+            onTap: () {
+              _animatedMapMove(ListRiver.items[i - 1]['latlng'], 10);
+            },
+          ),
+        );
+
         for (StationModel data in snapshots) {
           data.BASINID = i;
           result.add(data);
@@ -66,67 +112,142 @@ class _MapPageState extends State<MapPage> {
                             repeat: true,
                             showTwoGlows: true,
                             repeatPauseDuration: Duration(milliseconds: 200),
-                            child: CircleAvatar(
-                              radius: 8.0,
-                              child: CircleAvatar(
-                                radius: 0,
-                                backgroundColor: Colors.greenAccent,
-                              ),
-                              backgroundColor: item.CURR_STATUS == "0"
-                                  ? Color.fromARGB(255, 35, 119, 60)
-                                      .withOpacity(0.8)
-                                  : item.CURR_STATUS == "1"
-                                      ? Color.fromARGB(255, 240, 220, 60)
-                                          .withOpacity(0.8)
-                                      : item.CURR_STATUS == "2"
-                                          ? Colors.red.withOpacity(0.8)
-                                          : item.CURR_STATUS == "3"
-                                              ? Colors.grey.withOpacity(0.8)
-                                              : item.CURR_STATUS == "4"
-                                                  ? Colors.grey.withOpacity(0.8)
-                                                  : item.CURR_STATUS == "5"
-                                                      ? Color.fromARGB(255, 108,
-                                                              108, 108)
-                                                          .withOpacity(0.8)
-                                                      : item.CURR_STATUS == "6"
-                                                          ? Color.fromARGB(255,
-                                                                  240, 220, 40)
-                                                              .withOpacity(0.8)
-                                                          : item.CURR_STATUS ==
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                item.RF == "RF"
+                                    ? Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 1,
+                                                color: Colors.grey,
+                                                spreadRadius: 1)
+                                          ],
+                                        ),
+                                        child: CircleAvatar(
+                                          radius: 18.0,
+                                          backgroundColor: swColor
+                                              .switchColor(item.CURR_STATUS),
+                                        ),
+                                      )
+                                    : CircleAvatar(
+                                        backgroundColor: Colors.transparent,
+                                        radius: 18.0,
+                                      ),
+                                item.WL == "WL"
+                                    ? Container(
+                                        child:
+                                            item.CURR_STATUS_WL == "6" ||
+                                                    item.CURR_STATUS_WL == "7"
+                                                ? CustomPaint(
+                                                    painter: TrianglePainter(
+                                                      strokeColor: item
+                                                                  .CURR_STATUS_WL ==
+                                                              "6"
+                                                          ? Color.fromARGB(
+                                                              255, 240, 220, 40)
+                                                          : item.CURR_STATUS_WL ==
                                                                   "7"
                                                               ? Color.fromARGB(
-                                                                      255,
-                                                                      183,
-                                                                      25,
-                                                                      14)
-                                                                  .withOpacity(
-                                                                      0.8)
-                                                              : Colors.black
-                                                                  .withOpacity(
-                                                                      0.8),
+                                                                  255,
+                                                                  183,
+                                                                  25,
+                                                                  14)
+                                                              : swColor
+                                                                  .switchColor(item
+                                                                      .CURR_STATUS),
+                                                      strokeWidth: 10,
+                                                      paintingStyle:
+                                                          PaintingStyle.fill,
+                                                      angle: 0,
+                                                    ),
+                                                    child: Container(
+                                                      height: 20,
+                                                      width: 18,
+                                                    ),
+                                                  )
+                                                : CustomPaint(
+                                                    painter: TrianglePainter(
+                                                      strokeColor: item
+                                                                  .CURR_STATUS_WL ==
+                                                              "0"
+                                                          ? Color.fromARGB(
+                                                              255, 35, 119, 36)
+                                                          : item.CURR_STATUS_WL ==
+                                                                  "1"
+                                                              ? Color.fromARGB(
+                                                                  255,
+                                                                  240,
+                                                                  220,
+                                                                  40)
+                                                              : item.CURR_STATUS_WL ==
+                                                                      "2"
+                                                                  ? Colors.red
+                                                                  : item.CURR_STATUS_WL ==
+                                                                          "3"
+                                                                      ? item.CURR_STATUS ==
+                                                                              "3"
+                                                                          ? Colors
+                                                                              .grey
+                                                                          : Colors
+                                                                              .white
+                                                                      : item.CURR_STATUS_WL ==
+                                                                              "4"
+                                                                          ? item.CURR_STATUS == "4"
+                                                                              ? Color.fromARGB(255, 200, 200, 200)
+                                                                              : Colors.grey
+                                                                          : item.CURR_STATUS == "5"
+                                                                              ? Color.fromARGB(255, 108, 108, 108)
+                                                                              : Colors.black,
+                                                      strokeWidth: 1,
+                                                      paintingStyle: item
+                                                                  .CURR_STATUS_WL ==
+                                                              "3"
+                                                          ? item.CURR_STATUS ==
+                                                                  "3"
+                                                              ? PaintingStyle
+                                                                  .stroke
+                                                              : PaintingStyle
+                                                                  .fill
+                                                          : item.CURR_STATUS_WL ==
+                                                                  "4"
+                                                              ? item.CURR_STATUS ==
+                                                                      "4"
+                                                                  ? PaintingStyle
+                                                                      .stroke
+                                                                  : PaintingStyle
+                                                                      .fill
+                                                              : item.CURR_STATUS_WL ==
+                                                                      "5"
+                                                                  ? item.CURR_STATUS ==
+                                                                          "5"
+                                                                      ? PaintingStyle
+                                                                          .stroke
+                                                                      : PaintingStyle
+                                                                          .fill
+                                                                  : PaintingStyle
+                                                                      .fill,
+                                                      angle: 1,
+                                                    ),
+                                                    child: Container(
+                                                      height: 20,
+                                                      width: 18,
+                                                    ),
+                                                  ),
+                                      )
+                                    : Container(),
+                              ],
                             ),
                           ),
-                          // Text(
-                          //   item.CURR_Acc_Rain_1_D,
-                          //   style: TextStyle(
-                          //       color: item.CURR_STATUS == "3"
-                          //           ? Colors.black
-                          //           : Colors.white),
-                          // ),
                         ],
                       ),
                       onTap: () {
                         OnpressShow(item);
                       },
                     ),
-                    // IconButton(
-                    //   icon: Icon(Icons.location_on_outlined),
-                    //   color: Color(0xff6200eee),
-                    //   iconSize: 45.0,
-                    //   onPressed: () {
-                    //     OnpressShow(item);
-                    //   },
-                    // ),
                   ),
                 ),
               );
@@ -160,7 +281,7 @@ class _MapPageState extends State<MapPage> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(right: 50, left: 50, bottom: 30),
+            padding: const EdgeInsets.only(right: 30, left: 30, bottom: 30),
             child: Container(
               decoration: BoxDecoration(
                 boxShadow: [
@@ -171,492 +292,235 @@ class _MapPageState extends State<MapPage> {
                   ),
                 ],
                 color: Colors.white.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(10),
               ),
-              // height: 100,
+              height: 270,
               width: double.infinity,
-              child: Column(
+              child: Stack(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(item.STN_ID),
-                      SizedBox(
-                        width: 10,
+                  Positioned(
+                    right: 2,
+                    top: 2,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                        size: 20,
                       ),
-                      Text(item.STN_Name),
-                    ],
+                    ),
                   ),
-                  item.RF == "RF"
-                      ? Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        blurRadius: 1,
-                                        color: Colors.grey,
-                                        spreadRadius: 1)
-                                  ],
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Container(
+                            color: Colors.indigo[300],
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  item.STN_ID,
+                                  style: DefaultTitleStyleTextBoxMap(),
                                 ),
-                                child: CircleAvatar(
-                                  radius: 8.0,
-                                  backgroundColor:
-                                      swColor.switchColor(item.CURR_STATUS),
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              ),
+                                Text(
+                                  item.STN_Name,
+                                  style: DefaultTitleStyleTextBoxMap(),
+                                ),
+                              ],
                             ),
-                            Expanded(
-                              flex: 4,
-                              child: Text(
-                                  "สถานการณ์น้ำฝน : ${item.CURR_STATUS == "0" ? "ปกติ" : item.CURR_STATUS == "1" ? "เฝ้าระวัง" : item.CURR_STATUS == "2" ? "วิกฤต" : "ปกติ"}"),
-                            ),
-                          ],
-                        )
-                      : Container(),
-                  item.WL == "WL"
-                      ? Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                width: 2,
-                                height: 10,
-                                child: item.CURR_STATUS_WL == "6" ||
-                                        item.CURR_STATUS_WL == "7"
-                                    ? CustomPaint(
-                                        painter: TrianglePainter(
-                                          strokeColor:
-                                              item.CURR_STATUS_WL == "6"
-                                                  ? Color.fromARGB(
-                                                      255, 240, 220, 40)
-                                                  : item.CURR_STATUS_WL == "7"
-                                                      ? Color.fromARGB(
-                                                          255, 183, 25, 14)
-                                                      : swColor.switchColor(
-                                                          item.CURR_STATUS),
-                                          strokeWidth: 2,
-                                          paintingStyle: PaintingStyle.fill,
-                                          angle: 0,
+                          ),
+                        ),
+                        item.RF == "RF"
+                            ? Expanded(
+                                flex: 2,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 10.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                                blurRadius: 1,
+                                                color: Colors.grey,
+                                                spreadRadius: 1)
+                                          ],
                                         ),
-                                        child: Container(
-                                          height: 10,
-                                          width: 2,
-                                        ),
-                                      )
-                                    : CustomPaint(
-                                        painter: TrianglePainter(
-                                          strokeColor: item.CURR_STATUS_WL ==
-                                                  "0"
-                                              ? Color.fromARGB(255, 35, 119, 36)
-                                              : item.CURR_STATUS_WL == "1"
-                                                  ? Color.fromARGB(
-                                                      255, 240, 220, 40)
-                                                  : item.CURR_STATUS_WL == "2"
-                                                      ? Colors.red
-                                                      : item.CURR_STATUS_WL ==
-                                                              "3"
-                                                          ? item.CURR_STATUS ==
-                                                                  "3"
-                                                              ? Colors.grey
-                                                              : Colors.white
-                                                          : item.CURR_STATUS_WL ==
-                                                                  "4"
-                                                              ? item.CURR_STATUS ==
-                                                                      "4"
-                                                                  ? Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          200,
-                                                                          200,
-                                                                          200)
-                                                                  : Colors.grey
-                                                              : item.CURR_STATUS ==
-                                                                      "5"
-                                                                  ? Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          108,
-                                                                          108,
-                                                                          108)
-                                                                  : Colors
-                                                                      .black,
-                                          strokeWidth: 1,
-                                          paintingStyle: item.CURR_STATUS_WL ==
-                                                  "3"
-                                              ? item.CURR_STATUS == "3"
-                                                  ? PaintingStyle.stroke
-                                                  : PaintingStyle.fill
-                                              : item.CURR_STATUS_WL == "4"
-                                                  ? item.CURR_STATUS == "4"
-                                                      ? PaintingStyle.stroke
-                                                      : PaintingStyle.fill
-                                                  : item.CURR_STATUS_WL == "5"
-                                                      ? item.CURR_STATUS == "5"
-                                                          ? PaintingStyle.stroke
-                                                          : PaintingStyle.fill
-                                                      : PaintingStyle.fill,
-                                          angle: 1,
-                                        ),
-                                        child: Container(
-                                          height: 10,
-                                          width: 2,
+                                        child: CircleAvatar(
+                                          radius: 8.0,
+                                          backgroundColor: swColor
+                                              .switchColor(item.CURR_STATUS),
                                         ),
                                       ),
-                              ),
-                            ),
-                            Expanded(
-                                flex: 4,
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        color: swColor
+                                            .switchColor(item.CURR_STATUS),
+                                        child: Text(
+                                          "สถานการณ์น้ำฝน : ${item.CURR_STATUS == "0" ? "ปกติ" : item.CURR_STATUS == "1" ? "เฝ้าระวัง" : item.CURR_STATUS == "2" ? "วิกฤต" : "ปกติ"}",
+                                          style: TextStyle(
+                                            color: item.CURR_STATUS == "5"
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontFamily: 'Kanit',
+                                            fontSize: 12.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        item.WL == "WL"
+                            ? Expanded(
+                                flex: 2,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 10.0),
+                                      child: Container(
+                                        width: 15,
+                                        height: 10,
+                                        child: item.CURR_STATUS_WL == "6" ||
+                                                item.CURR_STATUS_WL == "7"
+                                            ? CustomPaint(
+                                                painter: TrianglePainter(
+                                                  strokeColor: item
+                                                              .CURR_STATUS_WL ==
+                                                          "6"
+                                                      ? Color.fromARGB(
+                                                          255, 240, 220, 40)
+                                                      : item.CURR_STATUS_WL ==
+                                                              "7"
+                                                          ? Color.fromARGB(
+                                                              255, 183, 25, 14)
+                                                          : swColor.switchColor(
+                                                              item.CURR_STATUS),
+                                                  strokeWidth: 2,
+                                                  paintingStyle:
+                                                      PaintingStyle.fill,
+                                                  angle: 0,
+                                                ),
+                                                child: Container(
+                                                  height: 10,
+                                                  width: 2,
+                                                ),
+                                              )
+                                            : CustomPaint(
+                                                painter: TrianglePainter(
+                                                  strokeColor:
+                                                      swColor.switchColor(
+                                                          item.CURR_STATUS_WL),
+                                                  strokeWidth: 1,
+                                                  paintingStyle: item
+                                                              .CURR_STATUS_WL ==
+                                                          "3"
+                                                      ? item.CURR_STATUS == "3"
+                                                          ? PaintingStyle.stroke
+                                                          : PaintingStyle.fill
+                                                      : item.CURR_STATUS_WL ==
+                                                              "4"
+                                                          ? item.CURR_STATUS ==
+                                                                  "4"
+                                                              ? PaintingStyle
+                                                                  .stroke
+                                                              : PaintingStyle
+                                                                  .fill
+                                                          : item.CURR_STATUS_WL ==
+                                                                  "5"
+                                                              ? item.CURR_STATUS ==
+                                                                      "5"
+                                                                  ? PaintingStyle
+                                                                      .stroke
+                                                                  : PaintingStyle
+                                                                      .fill
+                                                              : PaintingStyle
+                                                                  .fill,
+                                                  angle: 1,
+                                                ),
+                                                child: Container(
+                                                  height: 10,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: Container(
+                                        padding: EdgeInsets.all(5),
+                                        color: swColor
+                                            .switchColor(item.CURR_STATUS_WL),
+                                        child: Text(
+                                          "สถานการณ์น้ำ : ${item.CURR_STATUS_WL == "0" ? "ปกติ" : item.CURR_STATUS_WL == "1" ? "เฝ้าระวังน้ำท่วม" : item.CURR_STATUS_WL == "2" ? "เตือนภัยน้ำท่วม" : item.CURR_STATUS_WL == "6" ? "เฝ้าระวังน้ำแล้ง" : item.CURR_STATUS_WL == "7" ? "เตือนภัยน้ำแล้ง" : "ปกติ"}",
+                                          style: TextStyle(
+                                            color: item.CURR_STATUS == "5"
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontFamily: 'Kanit',
+                                            fontSize: 12.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+                        Expanded(
+                          flex: 1,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                flex: 3,
                                 child: Text(
-                                    "สถานการณ์น้ำ : ${item.CURR_STATUS_WL == "0" ? "ปกติ" : item.CURR_STATUS_WL == "1" ? "เฝ้าระวังน้ำท่วม" : item.CURR_STATUS_WL == "2" ? "เตือนภัยน้ำท่วม" : item.CURR_STATUS_WL == "6" ? "เฝ้าระวังน้ำแล้ง" : item.CURR_STATUS_WL == "7" ? "เตือนภัยน้ำแล้ง" : "ปกติ"}"))
-                          ],
-                        )
-                      : Container(),
-                  DetailSheet("วันเวลาของข้อมูลล่าสุด", item.LAST_UPDATE, ""),
-                  DetailSheet("ปริมาณน้ำฝน สะสม 15 นาที",
-                      item.CURR_Acc_Rain_15_M, "มม"),
-                  DetailSheet(
-                      "ปริมาณน้ำฝน สะสม 1 ชม", item.CURR_Acc_Rain_60_M, "มม"),
-                  DetailSheet(
-                      "ปริมาณน้ำฝน สะสม 12 ขม", item.CURR_Acc_Rain_12_H, "มม"),
-                  DetailSheet(
-                      "ปริมาณน้ำฝน สะสม 1 วัน", item.CURR_Acc_Rain_1_D, "มม"),
-                  DetailSheet(
-                      "ระดับน้ำ", item.CURR_Water_D_Level_MSL, "ม.รทก."),
-                  DetailSheet(
-                      "ปริมาณน้ำ", item.CURR_Water_U_Level_MSL, "ลบ.ม./วิ"),
-                  DetailSheet("ปริมาณความจุลำน้ำ", "0.0", "(น้ำน้อย)"),
-
-                  // Padding(
-                  //   padding: const EdgeInsets.all(10.0),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     children: [
-                  //       Column(
-                  //         children: [
-                  //           item.RF == "RF"
-                  //               ? Container(
-                  //                   decoration: BoxDecoration(
-                  //                     color: Colors.white,
-                  //                     shape: BoxShape.circle,
-                  //                     boxShadow: [
-                  //                       BoxShadow(
-                  //                           blurRadius: 1,
-                  //                           color: Colors.grey,
-                  //                           spreadRadius: 1)
-                  //                     ],
-                  //                   ),
-                  //                   child: CircleAvatar(
-                  //                     radius: 18.0,
-                  //                     backgroundColor:
-                  //                         swColor.switchColor(item.CURR_STATUS),
-                  //                   ),
-                  //                 )
-                  //               : CircleAvatar(
-                  //                   backgroundColor: Colors.transparent,
-                  //                   radius: 18.0,
-                  //                 ),
-                  //           item.WL == "WL"
-                  //               ? Positioned(
-                  //                   bottom: item.CURR_STATUS_WL == "6" ||
-                  //                           item.CURR_STATUS_WL == "7"
-                  //                       ? null
-                  //                       : 8,
-                  //                   top: item.CURR_STATUS_WL == "6" ||
-                  //                           item.CURR_STATUS_WL == "7"
-                  //                       ? 8
-                  //                       : null,
-                  //                   child: Container(
-                  //                     child: item.CURR_STATUS_WL == "6" ||
-                  //                             item.CURR_STATUS_WL == "7"
-                  //                         ? CustomPaint(
-                  //                             painter: TrianglePainter(
-                  //                               strokeColor: item
-                  //                                           .CURR_STATUS_WL ==
-                  //                                       "6"
-                  //                                   ? Color.fromARGB(
-                  //                                       255, 240, 220, 40)
-                  //                                   : item.CURR_STATUS_WL == "7"
-                  //                                       ? Color.fromARGB(
-                  //                                           255, 183, 25, 14)
-                  //                                       : swColor.switchColor(
-                  //                                           item.CURR_STATUS),
-                  //                               strokeWidth: 10,
-                  //                               paintingStyle:
-                  //                                   PaintingStyle.fill,
-                  //                               angle: 0,
-                  //                             ),
-                  //                             child: Container(
-                  //                               height: 28,
-                  //                               width: 30,
-                  //                             ),
-                  //                           )
-                  //                         : CustomPaint(
-                  //                             painter: TrianglePainter(
-                  //                               strokeColor: item
-                  //                                           .CURR_STATUS_WL ==
-                  //                                       "0"
-                  //                                   ? Color.fromARGB(
-                  //                                       255, 35, 119, 36)
-                  //                                   : item.CURR_STATUS_WL == "1"
-                  //                                       ? Color.fromARGB(
-                  //                                           255, 240, 220, 40)
-                  //                                       : item.CURR_STATUS_WL ==
-                  //                                               "2"
-                  //                                           ? Colors.red
-                  //                                           : item.CURR_STATUS_WL ==
-                  //                                                   "3"
-                  //                                               ? item.CURR_STATUS ==
-                  //                                                       "3"
-                  //                                                   ? Colors
-                  //                                                       .grey
-                  //                                                   : Colors
-                  //                                                       .white
-                  //                                               : item.CURR_STATUS_WL ==
-                  //                                                       "4"
-                  //                                                   ? item.CURR_STATUS ==
-                  //                                                           "4"
-                  //                                                       ? Color.fromARGB(
-                  //                                                           255,
-                  //                                                           200,
-                  //                                                           200,
-                  //                                                           200)
-                  //                                                       : Colors
-                  //                                                           .grey
-                  //                                                   : item.CURR_STATUS ==
-                  //                                                           "5"
-                  //                                                       ? Color.fromARGB(
-                  //                                                           255,
-                  //                                                           108,
-                  //                                                           108,
-                  //                                                           108)
-                  //                                                       : Colors
-                  //                                                           .black,
-                  //                               strokeWidth: 1,
-                  //                               paintingStyle: item
-                  //                                           .CURR_STATUS_WL ==
-                  //                                       "3"
-                  //                                   ? item.CURR_STATUS == "3"
-                  //                                       ? PaintingStyle.stroke
-                  //                                       : PaintingStyle.fill
-                  //                                   : item.CURR_STATUS_WL == "4"
-                  //                                       ? item.CURR_STATUS ==
-                  //                                               "4"
-                  //                                           ? PaintingStyle
-                  //                                               .stroke
-                  //                                           : PaintingStyle.fill
-                  //                                       : item.CURR_STATUS_WL ==
-                  //                                               "5"
-                  //                                           ? item.CURR_STATUS ==
-                  //                                                   "5"
-                  //                                               ? PaintingStyle
-                  //                                                   .stroke
-                  //                                               : PaintingStyle
-                  //                                                   .fill
-                  //                                           : PaintingStyle
-                  //                                               .fill,
-                  //                               angle: 1,
-                  //                             ),
-                  //                             child: Container(
-                  //                               height: 28,
-                  //                               width: 30,
-                  //                             ),
-                  //                           ),
-                  //                   ),
-                  //                 )
-                  //               : Container(),
-                  //           Container(
-                  //             child: Stack(
-                  //               alignment: Alignment.center,
-                  //               children: [
-                  //                 AvatarGlow(
-                  //                   glowColor: Colors.blue,
-                  //                   endRadius: 40.0,
-                  //                   duration: Duration(milliseconds: 2000),
-                  //                   repeat: true,
-                  //                   showTwoGlows: true,
-                  //                   repeatPauseDuration:
-                  //                       Duration(milliseconds: 200),
-                  //                   child: CircleAvatar(
-                  //                     radius: 18.0,
-                  //                     child: CircleAvatar(
-                  //                       radius: 0,
-                  //                       backgroundColor: Colors.greenAccent,
-                  //                     ),
-                  //                     backgroundColor: item.CURR_STATUS == "0"
-                  //                         ? Color.fromARGB(255, 35, 119, 36)
-                  //                         : item.CURR_STATUS == "1"
-                  //                             ? Color.fromARGB(
-                  //                                 255, 240, 220, 40)
-                  //                             : item.CURR_STATUS == "2"
-                  //                                 ? Colors.red
-                  //                                 : item.CURR_STATUS == "3"
-                  //                                     ? Colors.grey
-                  //                                     : item.CURR_STATUS == "4"
-                  //                                         ? Colors.grey
-                  //                                         : item.CURR_STATUS ==
-                  //                                                 "5"
-                  //                                             ? Color.fromARGB(
-                  //                                                 255,
-                  //                                                 108,
-                  //                                                 108,
-                  //                                                 108)
-                  //                                             : item.CURR_STATUS ==
-                  //                                                     "6"
-                  //                                                 ? Color
-                  //                                                     .fromARGB(
-                  //                                                         255,
-                  //                                                         240,
-                  //                                                         220,
-                  //                                                         40)
-                  //                                                 : item.CURR_STATUS ==
-                  //                                                         "7"
-                  //                                                     ? Color.fromARGB(
-                  //                                                         255,
-                  //                                                         183,
-                  //                                                         25,
-                  //                                                         14)
-                  //                                                     : Colors
-                  //                                                         .black,
-                  //                   ),
-                  //                 ),
-                  //                 Text(
-                  //                   item.CURR_Acc_Rain_1_D,
-                  //                   style: TextStyle(
-                  //                       color: item.CURR_STATUS == "3"
-                  //                           ? Colors.black
-                  //                           : Colors.white),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //           Container(
-                  //             child: Stack(
-                  //               alignment: Alignment.center,
-                  //               children: [
-                  //                 AvatarGlow(
-                  //                   glowColor: Colors.blue,
-                  //                   endRadius: 40.0,
-                  //                   duration: Duration(milliseconds: 2000),
-                  //                   repeat: true,
-                  //                   showTwoGlows: true,
-                  //                   repeatPauseDuration:
-                  //                       Duration(milliseconds: 200),
-                  //                   child: CircleAvatar(
-                  //                     radius: 18.0,
-                  //                     child: CircleAvatar(
-                  //                       radius: 0,
-                  //                       backgroundColor: Colors.greenAccent,
-                  //                     ),
-                  //                     backgroundColor: item.CURR_STATUS == "0"
-                  //                         ? Color.fromARGB(255, 35, 119, 36)
-                  //                         : item.CURR_STATUS == "1"
-                  //                             ? Color.fromARGB(
-                  //                                 255, 240, 220, 40)
-                  //                             : item.CURR_STATUS == "2"
-                  //                                 ? Colors.red
-                  //                                 : item.CURR_STATUS == "3"
-                  //                                     ? Colors.grey
-                  //                                     : item.CURR_STATUS == "4"
-                  //                                         ? Colors.grey
-                  //                                         : item.CURR_STATUS ==
-                  //                                                 "5"
-                  //                                             ? Color.fromARGB(
-                  //                                                 255,
-                  //                                                 108,
-                  //                                                 108,
-                  //                                                 108)
-                  //                                             : item.CURR_STATUS ==
-                  //                                                     "6"
-                  //                                                 ? Color
-                  //                                                     .fromARGB(
-                  //                                                         255,
-                  //                                                         240,
-                  //                                                         220,
-                  //                                                         40)
-                  //                                                 : item.CURR_STATUS ==
-                  //                                                         "7"
-                  //                                                     ? Color.fromARGB(
-                  //                                                         255,
-                  //                                                         183,
-                  //                                                         25,
-                  //                                                         14)
-                  //                                                     : Colors
-                  //                                                         .black,
-                  //                   ),
-                  //                 ),
-                  //                 Text(
-                  //                   item.CURR_Acc_Rain_1_D,
-                  //                   style: TextStyle(
-                  //                       color: item.CURR_STATUS == "3"
-                  //                           ? Colors.black
-                  //                           : Colors.white),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //       Expanded(
-                  //         flex: 2,
-                  //         child: Container(
-                  //           width: size.width * 0.38,
-                  //           child: Column(
-                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                  //             children: [
-                  //               TitleTextBoxMap(
-                  //                   text: "สถานี : ", datamap: item.STN_ID),
-                  //               DetailTextBoxMap(
-                  //                   text: "", datamap: item.STN_Name),
-                  //               DetailTextBoxMap(
-                  //                   text: "", datamap: item.LAST_UPDATE),
-                  //             ],
-                  //           ),
-                  //         ),
-                  //       ),
-                  //       Stack(
-                  //         clipBehavior: Clip.antiAliasWithSaveLayer,
-                  //         alignment: Alignment.center,
-                  //         children: [
-                  //           Transform.rotate(
-                  //             angle: 45 * pi / 180,
-                  //             child: Container(
-                  //               clipBehavior: Clip.antiAlias,
-                  //               height: 30,
-                  //               width: 30,
-                  //               decoration: BoxDecoration(
-                  //                 border: Border.all(
-                  //                   width: 3,
-                  //                   color: Colors.blue[800],
-                  //                 ),
-                  //                 borderRadius: BorderRadius.all(
-                  //                   Radius.circular(6),
-                  //                 ),
-                  //                 color: Colors.blue[800],
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           ClipPath(
-                  //             clipBehavior: Clip.antiAlias,
-                  //             child: Container(
-                  //               height: 30 * sqrt2,
-                  //               width: 30 * sqrt2,
-                  //               child: Icon(
-                  //                 Icons.turn_right,
-                  //                 color: Colors.white,
-                  //                 size: 20,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                                  "วันเวลาของข้อมูลล่าสุด",
+                                  style: DefaultStyleTextBoxMap(),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  item.LAST_UPDATE,
+                                  style: DefaultStyleTextBoxMap(),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        DetailSheet("ปริมาณน้ำฝน สะสม 15 นาที",
+                            item.CURR_Acc_Rain_15_M, "มม"),
+                        DetailSheet("ปริมาณน้ำฝน สะสม 1 ชม",
+                            item.CURR_Acc_Rain_60_M, "มม"),
+                        DetailSheet("ปริมาณน้ำฝน สะสม 12 ขม",
+                            item.CURR_Acc_Rain_12_H, "มม"),
+                        DetailSheet("ปริมาณน้ำฝน สะสม 1 วัน",
+                            item.CURR_Acc_Rain_1_D, "มม"),
+                        DetailSheet(
+                            "ระดับน้ำ", item.CURR_Water_D_Level_MSL, "ม.รทก."),
+                        DetailSheet("ปริมาณน้ำ", item.CURR_Water_U_Level_MSL,
+                            "ลบ.ม./วิ"),
+                        DetailSheet("ปริมาณความจุลำน้ำ", "0.0", "(น้ำน้อย)"),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -666,20 +530,34 @@ class _MapPageState extends State<MapPage> {
     );
   }
 
-  Row DetailSheet(String title, String data, String unit) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Expanded(
-          flex: 4,
-          child: Text(title),
-        ),
-        Expanded(
-          flex: 2,
-          child: Text(data),
-        ),
-        Expanded(flex: 1, child: Text(unit)),
-      ],
+  Expanded DetailSheet(String title, String data, String unit) {
+    return Expanded(
+      flex: 1,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            flex: 5,
+            child: Text(
+              title,
+              style: DefaultStyleTextBoxMap(),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              data,
+              style: DefaultStyleTextBoxMap(),
+            ),
+          ),
+          Expanded(
+              flex: 2,
+              child: Text(
+                unit,
+                style: DefaultStyleTextBoxMap(),
+              )),
+        ],
+      ),
     );
   }
 
@@ -699,59 +577,96 @@ class _MapPageState extends State<MapPage> {
       onWillPop: onWillPop,
       child: Consumer<MapProvider>(
         builder: (context, MapP, _) => Scaffold(
-            drawer: NavigationBurgerMenuWidget(data: widget.data),
-            appBar: AppBar(
-              leading: Builder(
-                builder: (context) => IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                  tooltip:
-                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+          drawer: NavigationBurgerMenuWidget(data: widget.data),
+          appBar: AppBar(
+            leading: Builder(
+              builder: (context) => IconButton(
+                icon: Icon(
+                  Icons.menu,
+                  color: Colors.white,
                 ),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
               ),
-              centerTitle: true,
-              title: Text(
-                'แผนที่',
-                style: DefaultTitleW(),
+            ),
+            centerTitle: true,
+            title: Text(
+              'แผนที่',
+              style: DefaultTitleW(),
+            ),
+            backgroundColor: Colors.lightBlue[600],
+          ),
+          body: FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              center:
+                  // LatLng(17.1408165, 103.4063071),
+                  // กรุงเทพ
+                  LatLng(13.5654281, 101.4886013),
+              zoom: 6,
+            ),
+            layers: [
+              TileLayerOptions(
+                urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
               ),
-              backgroundColor: Colors.lightBlue[600],
-            ),
-            body: WidgetMap(markers: _markers)
-            // MapP.dataPolygon.length == 0
-            //     ? FutureBuilder(
-            //         future: get_polygon(),
-            //         builder: (context, AsyncSnapshot snapshot) {
-            //           MapModel result;
-            //           if (snapshot?.connectionState != ConnectionState.done) {
-            //             return LoadingSquareCircle();
-            //           } else {
-            //             result = snapshot.data;
-            //             for (var a in result.features) {
-            //               for (var i in a.geometry.coordinates[0][0]) {
-            //                 MapP.addData(LatLng(i[1], i[0]));
-            //                 polygon.add(
-            //                   LatLng(i[1], i[0]),
-            //                 );
-            //               }
-            //             }
-            //           }
-            //           return WidgetMap(polygon: polygon, markers: _markers);
-            //         },
-            //       )
-            //     : Consumer<MapProvider>(
-            //         builder: (context, MapS, _) {
-            //           for (var i in MapS.dataPolygon) {
-            //             polygon.add(
-            //               LatLng(i.latitude, i.longitude),
-            //             );
-            //           }
-            //           return WidgetMap(polygon: polygon, markers: _markers);
-            //         },
-            //       ),
-            ),
+              // PolygonLayerOptions(
+              //   polygonCulling: true,
+              //   polygons: [
+              //     Polygon(
+              //       points: polygon,
+              //       color: Colors.yellow[600].withOpacity(0.4),
+              //       borderStrokeWidth: 2,
+              //       borderColor: Colors.brown,
+              //     ),
+              //   ],
+              // ),
+              MarkerLayerOptions(markers: _markers.toList()),
+            ],
+          ),
+
+          // WidgetMap(markers: _markers, mapController: _mapController),
+          floatingActionButton: SpeedDial(
+            icon: Icons.water,
+            backgroundColor: Colors.blue,
+            children: basinList.map(
+              (data) {
+                return data;
+              },
+            ).toList(),
+          ),
+
+          // MapP.dataPolygon.length == 0
+          //     ? FutureBuilder(
+          //         future: get_polygon(),
+          //         builder: (context, AsyncSnapshot snapshot) {
+          //           MapModel result;
+          //           if (snapshot?.connectionState != ConnectionState.done) {
+          //             return LoadingSquareCircle();
+          //           } else {
+          //             result = snapshot.data;
+          //             for (var a in result.features) {
+          //               for (var i in a.geometry.coordinates[0][0]) {
+          //                 MapP.addData(LatLng(i[1], i[0]));
+          //                 polygon.add(
+          //                   LatLng(i[1], i[0]),
+          //                 );
+          //               }
+          //             }
+          //           }
+          //           return WidgetMap(polygon: polygon, markers: _markers);
+          //         },
+          //       )
+          //     : Consumer<MapProvider>(
+          //         builder: (context, MapS, _) {
+          //           for (var i in MapS.dataPolygon) {
+          //             polygon.add(
+          //               LatLng(i.latitude, i.longitude),
+          //             );
+          //           }
+          //           return WidgetMap(polygon: polygon, markers: _markers);
+          //         },
+          //       ),
+        ),
       ),
     );
   }

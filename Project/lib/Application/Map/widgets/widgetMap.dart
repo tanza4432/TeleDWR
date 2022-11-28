@@ -3,19 +3,22 @@ import 'package:flutter_map/flutter_map.dart';
 import "package:latlong/latlong.dart";
 
 class WidgetMap extends StatelessWidget {
-  const WidgetMap({
+  WidgetMap({
     Key key,
     // @required this.polygon,
     @required Set<Marker> markers,
+    MapController mapController,
   })  : _markers = markers,
         super(key: key);
 
   // final List<LatLng> polygon;
   final Set<Marker> _markers;
+  MapController mapController;
 
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
+      mapController: mapController,
       options: MapOptions(
         center:
             // LatLng(17.1408165, 103.4063071),

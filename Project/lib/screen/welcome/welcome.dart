@@ -85,15 +85,9 @@ class _WelcomeState extends State<Welcome> {
     setState(() {});
   }
 
-  void getNotify() async {
-    Listnotify = await getNotification();
-    setState(() {});
-  }
-
   @override
   void initState() {
     GetData(context);
-    getNotify();
     print("สำเร็จ");
     SetSession();
     super.initState();
