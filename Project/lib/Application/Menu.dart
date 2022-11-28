@@ -792,10 +792,10 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                ListRiver.items[i]['page'] == 6 ||
-                                        ListRiver.items[i]['page'] == 7
-                                    ? ""
-                                    : "ลุ่มน้ำ",
+                                ListRiver.items[i]['page'] == 6 
+                                        
+                                    ? "อำเภอ"
+                                    : ListRiver.items[i]['page'] == 7 ? "จังหวัด" : "ลุ่มน้ำ",
                                 overflow: TextOverflow.fade,
                                 maxLines: 1,
                                 softWrap: false,

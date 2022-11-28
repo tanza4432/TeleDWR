@@ -37,12 +37,12 @@ class ListRiver {
       'latlng': LatLng(0.0, 0.0)
     },
     <String, dynamic>{
-      'title': "อำเภอบางสะพาน",
+      'title': "บางสะพาน",
       'page': 6,
       'latlng': LatLng(0.0, 0.0)
     },
     <String, dynamic>{
-      'title': "จังหวัด\nนครศรีธรรมราช",
+      'title': "นครศรีธรรมราช",
       'page': 7,
       'latlng': LatLng(0.0, 0.0)
     },
