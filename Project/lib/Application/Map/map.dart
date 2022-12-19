@@ -80,7 +80,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             labelStyle: DefaultStyleTextBoxMap(),
             backgroundColor: Colors.blueAccent,
             onTap: () {
-              _animatedMapMove(ListRiver.items[i - 1]['latlng'], 10);
+              _animatedMapMove(ListRiver.items[i - 1]['latlng'], 8.5);
             },
           ),
         );

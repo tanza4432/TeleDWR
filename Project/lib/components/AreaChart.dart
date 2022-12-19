@@ -114,20 +114,31 @@ class _AreaChartState extends State<AreaChart> {
                           edgeLabelPlacement: EdgeLabelPlacement.shift,
                         ),
                         series: [
-                          SplineSeries(
-                            name: 'ปริมาณน้ำฝน',
-                            dataSource: index == 0
-                                ? _chartRainData
-                                : index == 1
-                                    ? _chartWaterDData
-                                    : _chartWaterFData,
-                            xValueMapper: (RainChartData rains, _) =>
-                                rains.label,
-                            yValueMapper: (RainChartData rains, _) =>
-                                rains.rain,
-                            // dataLabelSettings: DataLabelSettings(isVisible: true),
-                            enableTooltip: true,
-                          ),
+                          index == 0
+                              ? ColumnSeries(
+                                  name: 'ปริมาณน้ำฝน',
+                                  dataSource: _chartRainData,
+                                  xValueMapper: (RainChartData rains, _) =>
+                                      rains.label,
+                                  yValueMapper: (RainChartData rains, _) =>
+                                      rains.rain,
+                                  // dataLabelSettings: DataLabelSettings(
+                                  //   isVisible: true,
+                                  //   // labelPosition: CartesianChartPoint.middle
+                                  // ),
+                                )
+                              : SplineSeries(
+                                  name: index == 1 ? 'ระดับน้ำ' : 'ปริมาณน้ำ',
+                                  dataSource: index == 1
+                                      ? _chartWaterDData
+                                      : _chartWaterFData,
+                                  xValueMapper: (RainChartData rains, _) =>
+                                      rains.label,
+                                  yValueMapper: (RainChartData rains, _) =>
+                                      rains.rain,
+                                  // dataLabelSettings: DataLabelSettings(isVisible: true),
+                                  enableTooltip: true,
+                                ),
                         ],
                       ),
                     );

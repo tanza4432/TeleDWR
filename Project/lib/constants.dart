@@ -14,37 +14,37 @@ class ListRiver {
     <String, dynamic>{
       'title': "แม่กลอง",
       'page': 1,
-      'latlng': LatLng(0.0, 0.0)
+      'latlng': LatLng(18.81356, 99.5735)
     },
     <String, dynamic>{
       'title': "สาละวิน",
       'page': 2,
-      'latlng': LatLng(0.0, 0.0)
+      'latlng': LatLng(18.01885, 98.26535)
     },
     <String, dynamic>{
       'title': "กก\nและโขงเหนือ",
       'page': 3,
-      'latlng': LatLng(0.0, 0.0)
+      'latlng': LatLng(19.61885, 99.76535)
     },
     <String, dynamic>{
       'title': "สงคราม\nและห้วยหลวง",
       'page': 4,
-      'latlng': LatLng(0.0, 0.0)
+      'latlng': LatLng(17.9333616361, 103.306040861)
     },
     <String, dynamic>{
       'title': "บางปะกง",
       'page': 5,
-      'latlng': LatLng(0.0, 0.0)
+      'latlng': LatLng(13.760186, 101.585212)
     },
     <String, dynamic>{
       'title': "บางสะพาน",
       'page': 6,
-      'latlng': LatLng(0.0, 0.0)
+      'latlng': LatLng(11.300223, 99.452512)
     },
     <String, dynamic>{
       'title': "นครศรีธรรมราช",
       'page': 7,
-      'latlng': LatLng(0.0, 0.0)
+      'latlng': LatLng(8.5530059, 99.8354578)
     },
   ];
 }
