@@ -260,6 +260,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
   Future<dynamic> OnpressShow(StationModel item) {
     Size size = MediaQuery.of(context).size;
+    // print(jsonEncode(item));
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
@@ -470,7 +471,8 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                         child: Text(
                                           "สถานการณ์น้ำ : ${item.CURR_STATUS_WL == "0" ? "ปกติ" : item.CURR_STATUS_WL == "1" ? "เฝ้าระวังน้ำท่วม" : item.CURR_STATUS_WL == "2" ? "เตือนภัยน้ำท่วม" : item.CURR_STATUS_WL == "6" ? "เฝ้าระวังน้ำแล้ง" : item.CURR_STATUS_WL == "7" ? "เตือนภัยน้ำแล้ง" : "ปกติ"}",
                                           style: TextStyle(
-                                            color: item.CURR_STATUS == "5"
+                                            color: item.CURR_STATUS == "5" ||
+                                                    item.CURR_STATUS_WL == "5"
                                                 ? Colors.white
                                                 : Colors.black,
                                             fontFamily: 'Kanit',

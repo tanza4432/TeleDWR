@@ -203,19 +203,34 @@ class _StationPageState extends State<StationPage> {
                 child: TabBarView(
                   children: [
                     Container(
-                      child: TabOne(widget.stnId, widget.basinID),
+                      child: TabOne(
+                        widget.stnId,
+                        widget.basinID,
+                        widget.WL,
+                        widget.RF,
+                      ),
                     ),
                     Container(
-                      child: TabTwo(widget.stnId, stationData.STN_Name),
+                      child: TabTwo(
+                        widget.stnId,
+                        stationData.STN_Name,
+                        widget.WL,
+                        widget.RF,
+                      ),
                     ),
                     Container(
-                      child: TabThree(widget.stnId, stationData.STN_Name),
+                      child: TabThree(
+                        widget.stnId,
+                        stationData.STN_Name,
+                        widget.WL,
+                        widget.RF,
+                      ),
                     ),
                     Container(
                       child: RefreshIndicator(
                         onRefresh: onPullToRefresh,
-                        child: TabFour(widget.stnId, widget.basinID, widget.CCTV,
-                            stationData.STN_Name),
+                        child: TabFour(widget.stnId, widget.basinID,
+                            widget.CCTV, stationData.STN_Name),
                       ),
                     ),
                   ],

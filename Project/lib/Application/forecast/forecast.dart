@@ -24,6 +24,7 @@ class _ForecastPageState extends State<ForecastPage> {
   WebViewController controller;
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -44,6 +45,17 @@ class _ForecastPageState extends State<ForecastPage> {
         javascriptMode: JavascriptMode.unrestricted,
         initialUrl: widget.URL,
       ),
+      // Padding(
+      //   padding: const EdgeInsets.all(8.0),
+      //   child: Container(
+      //     width: double.infinity,
+      //     height: size.width * 9 / 16,
+      //     child: WebView(
+      //       javascriptMode: JavascriptMode.unrestricted,
+      //       initialUrl: widget.URL,
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

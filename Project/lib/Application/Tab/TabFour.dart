@@ -1,8 +1,11 @@
+import 'package:dwr0001/Services/main_Service.dart';
+import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:image_downloader/image_downloader.dart';
 // import 'package:gallery_saver/gallery_saver.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 
 class TabFour extends StatefulWidget {
@@ -53,10 +56,11 @@ class _TabFourState extends State<TabFour> {
                   "สถานีนี้ไม่มีข้อมูล CCTV",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      fontFamily: 'Kanit',
-                      fontSize: 30,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black45),
+                    fontFamily: 'Kanit',
+                    fontSize: 30,
+                    fontWeight: FontWeight.normal,
+                    color: Colors.black45,
+                  ),
                 ),
               ],
             ),
@@ -74,145 +78,188 @@ class _TabFourState extends State<TabFour> {
             height: size.height * 0.75,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView(children: <Widget>[
-                Text(
-                  "ข้อมูลภาพ CCTV: " + widget.stnId,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontFamily: 'Kanit', fontWeight: FontWeight.normal),
-                ),
-                check
-                    ? Container()
-                    : Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Padding(
+              child: ListView(
+                children: <Widget>[
+                  Text(
+                    "ข้อมูลภาพ CCTV: " + widget.stnId,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Kanit',
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      var streamCCTV = await getCCTVStream(widget.stnId);
+                      showDialog<String>(
+                        context: context,
+                        builder: (BuildContext context) => AlertDialog(
+                          content: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        HeroPhotoViewRouteWrapper(
-                                      imageProvider: NetworkImage(
-                                        'http://tele-' +
+                            child: Container(
+                              width: 500,
+                              height: size.width * 9 / 16,
+                              child: WebView(
+                                javascriptMode: JavascriptMode.unrestricted,
+                                initialUrl: streamCCTV,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "View CCTV",
+                          style: TextStyle(
+                            fontFamily: 'Kanit',
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        Icon(
+                          Icons.videocam,
+                          color: Colors.blue,
+                        ),
+                      ],
+                    ),
+                  ),
+                  check
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          HeroPhotoViewRouteWrapper(
+                                        imageProvider: NetworkImage(
+                                          'http://tele-' +
+                                              widget.basinName +
+                                              '.dwr.go.th/image/' +
+                                              widget.stnId +
+                                              '/CCTV_image/Overview_1.jpg',
+                                        ),
+                                        path: 'http://tele-' +
                                             widget.basinName +
                                             '.dwr.go.th/image/' +
                                             widget.stnId +
                                             '/CCTV_image/Overview_1.jpg',
                                       ),
-                                      path: 'http://tele-' +
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  child: Hero(
+                                    tag: "1",
+                                    child: Image.network(
+                                      'http://tele-' +
                                           widget.basinName +
                                           '.dwr.go.th/image/' +
                                           widget.stnId +
                                           '/CCTV_image/Overview_1.jpg',
+                                      loadingBuilder: (context, child, chunk) =>
+                                          chunk != null
+                                              ? Text("loading")
+                                              : child,
                                     ),
                                   ),
-                                );
-                              },
-                              child: Container(
-                                child: Hero(
-                                  tag: "1",
-                                  child: Image.network(
+                                ),
+                              ),
+                              // ZoomOverlay(
+                              //   minScale: 0.5,
+                              //   maxScale: 3.0,
+                              //   twoTouchOnly: true,
+                              //   child: ClipRRect(
+                              //     child: FadeInImage.assetNetwork(
+                              //       placeholder: 'assets/images/loading1.gif',
+                              //       image: ('http://tele-' +
+                              //           widget.basinName +
+                              //           '.dwr.go.th/image/' +
+                              //           widget.stnId +
+                              //           '/CCTV_image/Overview_1.jpg'),
+                              //     ),
+                              //   ),
+                              // ),
+                            ),
+                          ),
+                        ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => HeroPhotoViewRouteWrapper(
+                                  imageProvider: NetworkImage(
                                     'http://tele-' +
                                         widget.basinName +
                                         '.dwr.go.th/image/' +
                                         widget.stnId +
-                                        '/CCTV_image/Overview_1.jpg',
-                                    loadingBuilder: (context, child, chunk) =>
-                                        chunk != null ? Text("loading") : child,
+                                        '/CCTV_image/Staff_1.jpg',
                                   ),
-                                ),
-                              ),
-                            ),
-                            // ZoomOverlay(
-                            //   minScale: 0.5,
-                            //   maxScale: 3.0,
-                            //   twoTouchOnly: true,
-                            //   child: ClipRRect(
-                            //     child: FadeInImage.assetNetwork(
-                            //       placeholder: 'assets/images/loading1.gif',
-                            //       image: ('http://tele-' +
-                            //           widget.basinName +
-                            //           '.dwr.go.th/image/' +
-                            //           widget.stnId +
-                            //           '/CCTV_image/Overview_1.jpg'),
-                            //     ),
-                            //   ),
-                            // ),
-                          ),
-                        ),
-                      ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HeroPhotoViewRouteWrapper(
-                                imageProvider: NetworkImage(
-                                  'http://tele-' +
+                                  path: 'http://tele-' +
                                       widget.basinName +
                                       '.dwr.go.th/image/' +
                                       widget.stnId +
                                       '/CCTV_image/Staff_1.jpg',
                                 ),
-                                path: 'http://tele-' +
+                              ),
+                            );
+                          },
+                          child: Container(
+                            child: Hero(
+                              tag: "2",
+                              child: Image.network(
+                                'http://tele-' +
                                     widget.basinName +
                                     '.dwr.go.th/image/' +
                                     widget.stnId +
                                     '/CCTV_image/Staff_1.jpg',
+                                loadingBuilder: (context, child, chunk) =>
+                                    chunk != null ? Text("loading") : child,
                               ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          child: Hero(
-                            tag: "2",
-                            child: Image.network(
-                              'http://tele-' +
-                                  widget.basinName +
-                                  '.dwr.go.th/image/' +
-                                  widget.stnId +
-                                  '/CCTV_image/Staff_1.jpg',
-                              loadingBuilder: (context, child, chunk) =>
-                                  chunk != null ? Text("loading") : child,
                             ),
                           ),
                         ),
+                        // ZoomOverlay(
+                        //   minScale: 0.5,
+                        //   maxScale: 3.0,
+                        //   child: ClipRRect(
+                        //     child: FadeInImage.assetNetwork(
+                        //       placeholder: 'assets/images/loading1.gif',
+                        //       image: ('http://tele-' +
+                        //           widget.basinName +
+                        //           '.dwr.go.th/image/' +
+                        //           widget.stnId +
+                        //           '/CCTV_image/Staff_1.jpg'),
+                        //       fit: BoxFit.cover,
+                        //     ),
+                        //   ),
+                        // ),
                       ),
-                      // ZoomOverlay(
-                      //   minScale: 0.5,
-                      //   maxScale: 3.0,
-                      //   child: ClipRRect(
-                      //     child: FadeInImage.assetNetwork(
-                      //       placeholder: 'assets/images/loading1.gif',
-                      //       image: ('http://tele-' +
-                      //           widget.basinName +
-                      //           '.dwr.go.th/image/' +
-                      //           widget.stnId +
-                      //           '/CCTV_image/Staff_1.jpg'),
-                      //       fit: BoxFit.cover,
-                      //     ),
-                      //   ),
-                      // ),
                     ),
-                  ),
-                )
-              ]),
+                  )
+                ],
+              ),
             ),
           ),
         ],

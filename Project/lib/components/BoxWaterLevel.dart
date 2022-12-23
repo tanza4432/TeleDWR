@@ -63,7 +63,7 @@ class BoxWaterLevel extends StatelessWidget {
                         padding: EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: Colors.white.withOpacity(0.3),
+                          color: Colors.black.withOpacity(0.2),
                         ),
                         child: Column(
                           children: [
@@ -73,7 +73,9 @@ class BoxWaterLevel extends StatelessWidget {
                                       ? "-"
                                       : station.CURR_Water_D_Level_MSL
                                   : text == "ลบ.ม./วินาที"
-                                      ? station.CURR_FLOW
+                                      ? station.WL == ""
+                                          ? "-"
+                                          : station.CURR_FLOW
                                       : "-",
                               style: TextStyle(
                                   shadows: [

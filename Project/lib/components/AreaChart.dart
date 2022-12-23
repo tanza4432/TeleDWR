@@ -2,30 +2,38 @@ import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'dart:math';
 
 class AreaChart extends StatefulWidget {
   var data;
   String stnid;
   String title;
-  AreaChart({Key key, this.data, this.stnid, this.title}) : super(key: key);
+  String wl;
+  String rf;
+  AreaChart({
+    Key key,
+    this.data,
+    this.stnid,
+    this.title,
+    this.wl,
+    this.rf,
+  }) : super(key: key);
 
   @override
   State<AreaChart> createState() => _AreaChartState();
 }
 
 class _AreaChartState extends State<AreaChart> {
-  List<RainChartData> _chartRainData;
-  List<RainChartData> _chartWaterDData;
-  List<RainChartData> _chartWaterFData;
   TooltipBehavior _tooltipBehavior;
   ZoomPanBehavior _zoomPanbehavior;
   bool notFound = false;
+  List<RainFieldTitleData> resultChart = [];
 
   @override
   void initState() {
-    _chartRainData = getChartRainData();
-    _chartWaterDData = getChartWaterDData();
-    _chartWaterFData = getChartWaterFData();
+    getChartRainData();
+    getChartWaterDData();
+    getChartWaterFData();
     _tooltipBehavior = TooltipBehavior(enable: true);
     _zoomPanbehavior = ZoomPanBehavior(
       enablePinching: true,
@@ -89,7 +97,7 @@ class _AreaChartState extends State<AreaChart> {
               : GridView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: 3,
+                  itemCount: resultChart.length,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1),
                   itemBuilder: (BuildContext context, int index) {
@@ -99,14 +107,20 @@ class _AreaChartState extends State<AreaChart> {
                         backgroundColor: Colors.transparent,
                         zoomPanBehavior: _zoomPanbehavior,
                         title: ChartTitle(
-                          text: index == 0
-                              ? " กราฟแสดงปริมาณน้ำฝน (มม.) "
-                              : index == 1
-                                  ? " กราฟแสดงระดับน้ำ (ม.รทก.) "
-                                  : " กราฟแสดงปริมาณน้ำ (ลบม. / วินาที) ",
+                          text: resultChart[index].title,
                           textStyle: DefaultTitleB(),
                         ),
                         primaryYAxis: NumericAxis(
+                          minimum: double.parse((resultChart[index].min -
+                                  (resultChart[index].max -
+                                          resultChart[index].min) /
+                                      5)
+                              .toStringAsFixed(2)),
+                          maximum: double.parse((resultChart[index].max +
+                                  (resultChart[index].max -
+                                          resultChart[index].min) /
+                                      10)
+                              .toStringAsFixed(2)),
                           labelFormat: '{value} มม.',
                           interactiveTooltip: InteractiveTooltip(enable: false),
                         ),
@@ -114,10 +128,10 @@ class _AreaChartState extends State<AreaChart> {
                           edgeLabelPlacement: EdgeLabelPlacement.shift,
                         ),
                         series: [
-                          index == 0
+                          resultChart[index].columnName == "ปริมาณน้ำฝน"
                               ? ColumnSeries(
                                   name: 'ปริมาณน้ำฝน',
-                                  dataSource: _chartRainData,
+                                  dataSource: resultChart[index].data,
                                   xValueMapper: (RainChartData rains, _) =>
                                       rains.label,
                                   yValueMapper: (RainChartData rains, _) =>
@@ -127,11 +141,24 @@ class _AreaChartState extends State<AreaChart> {
                                   //   // labelPosition: CartesianChartPoint.middle
                                   // ),
                                 )
-                              : SplineSeries(
-                                  name: index == 1 ? 'ระดับน้ำ' : 'ปริมาณน้ำ',
-                                  dataSource: index == 1
-                                      ? _chartWaterDData
-                                      : _chartWaterFData,
+                              : SplineAreaSeries(
+                                  borderColor: Colors.blue,
+                                  borderWidth: 2,
+
+                                  gradient: LinearGradient(
+                                      colors: <Color>[
+                                        Colors.blue.withOpacity(0.6),
+                                        Color.fromARGB(120, 60, 180, 209)
+                                      ],
+                                      stops: const <double>[
+                                        0.4,
+                                        0.8,
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter),
+
+                                  name: resultChart[index].columnName,
+                                  dataSource: resultChart[index].data,
                                   xValueMapper: (RainChartData rains, _) =>
                                       rains.label,
                                   yValueMapper: (RainChartData rains, _) =>
@@ -160,7 +187,20 @@ class _AreaChartState extends State<AreaChart> {
         widget.data[i].Label,
       );
     }
-    return rain;
+    RainChartData max =
+        rain.reduce((curr, next) => curr.rain > next.rain ? curr : next);
+    RainChartData min =
+        rain.reduce((curr, next) => curr.rain < next.rain ? curr : next);
+    if (widget.rf != "") {
+      RainFieldTitleData result = RainFieldTitleData(
+        rain,
+        "กราฟแสดงปริมาณน้ำฝน (มม.)",
+        "ปริมาณน้ำฝน",
+        min.rain,
+        max.rain,
+      );
+      resultChart.add(result);
+    }
   }
 
   List<RainChartData> getChartWaterDData() {
@@ -173,6 +213,20 @@ class _AreaChartState extends State<AreaChart> {
         double.parse(widget.data[i].Water),
         widget.data[i].Label,
       );
+    }
+    RainChartData max =
+        waterD.reduce((curr, next) => curr.rain > next.rain ? curr : next);
+    RainChartData min =
+        waterD.reduce((curr, next) => curr.rain < next.rain ? curr : next);
+    if (widget.wl != "") {
+      RainFieldTitleData result = RainFieldTitleData(
+        waterD,
+        "กราฟแสดงระดับน้ำ (ม.รทก.)",
+        "ระดับน้ำ",
+        min.rain,
+        max.rain,
+      );
+      resultChart.add(result);
     }
     return waterD;
   }
@@ -194,15 +248,38 @@ class _AreaChartState extends State<AreaChart> {
           widget.data[i].Label,
         );
       }
-      // // if(widget.data[i].Water_F ==)
+    }
+    RainChartData max =
+        waterF.reduce((curr, next) => curr.rain > next.rain ? curr : next);
+    RainChartData min =
+        waterF.reduce((curr, next) => curr.rain < next.rain ? curr : next);
+    if (widget.wl != "") {
+      RainFieldTitleData result = RainFieldTitleData(
+        waterF,
+        "กราฟแสดงปริมาณน้ำ (ลบม. / วินาที)",
+        "ปริมาณน้ำ",
+        min.rain,
+        max.rain,
+      );
+      resultChart.add(result);
     }
     return waterF;
   }
 }
 
+class RainFieldTitleData {
+  RainFieldTitleData(
+      this.data, this.title, this.columnName, this.min, this.max);
+  List<RainChartData> data;
+  String title;
+  String columnName;
+  double min;
+  double max;
+}
+
 class RainChartData {
-  RainChartData(this.day, this.rain, this.label);
-  double day;
+  RainChartData(this.number, this.rain, this.label);
+  double number;
   double rain;
   String label;
 }

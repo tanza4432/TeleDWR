@@ -727,7 +727,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                   ),
                                 ),
                                 Container(
-                                  height: size.height * 0.60,
+                                  height: size.height * 0.55,
                                   width: double.infinity,
                                   child:
                                       TabOneStation(SelectRiver, widget.data),

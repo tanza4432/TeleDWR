@@ -139,6 +139,14 @@ List<DataModelGet> parseData_(String responseBody) {
       .toList();
 }
 
+Future<String> getCCTVStream(String stn_id) async {
+  final String url =
+      "https://tele-bangpakong.dwr.go.th/webservice/webservice_CCTV_Json_id?stn_id=${stn_id}";
+  final response = await http.get(Uri.parse(url));
+  // final parsed = json.decode(response.body);
+  return response.body;
+}
+
 Future<List<DataModelGet>> getStationData24H(String stn_id) async {
   //final String url ="http://tele-maeklong.dwr.go.th/webservice/webservice_mk_json?stn_id=" + stn_id;
   final String url =
@@ -192,14 +200,20 @@ Future<List<BasinsInfoModel>> basinInfoData() async {
 }
 
 Future<List<StationModel>> getNotification() async {
-  final String url =
-      "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_notify";
-  final response = await http.get(Uri.parse(url));
+  try {
+    final String url =
+        "https://tele-songkramhuailuang.dwr.go.th/webservice/webservice_skh_Json_notify";
+    final response = await http.get(Uri.parse(url));
 
-  if (response.statusCode == 200) {
-    List jsonResponse = json.decode(response.body);
-    return jsonResponse.map((data) => new StationModel.fromJson(data)).toList();
-  } else {
-    throw Exception();
+    if (response.statusCode == 200) {
+      List jsonResponse = json.decode(response.body);
+      return jsonResponse
+          .map((data) => new StationModel.fromJson(data))
+          .toList();
+    } else {
+      throw Exception();
+    }
+  } catch (e) {
+    print(e);
   }
 }

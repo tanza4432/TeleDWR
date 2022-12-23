@@ -9,12 +9,14 @@ class BoxRainDetail extends StatelessWidget {
     @required this.size,
     @required this.station,
     @required this.minute,
+    @required this.color,
   }) : super(key: key);
 
   final double deviceWidth;
   final Size size;
-  final StationModel station;
+  final String station;
   final String minute;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -67,13 +69,7 @@ class BoxRainDetail extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    minute == "30 นาที"
-                        ? station.CURR_Acc_Rain_30_M
-                        : minute == "60 นาที"
-                            ? station.CURR_Acc_Rain_60_M
-                            : minute == "12 ชม."
-                                ? station.CURR_Acc_Rain_12_H
-                                : 0.0,
+                    station,
                     style: TextStyle(
                         shadows: [
                           Shadow(
@@ -83,7 +79,8 @@ class BoxRainDetail extends StatelessWidget {
                           ),
                         ],
                         fontSize: ResponsiveFlutter.of(context).fontSize(3),
-                        color: Colors.white,
+                        // color: Color.fromARGB(255, 190, 190, 190),
+                        color: color,
                         fontWeight: FontWeight.normal,
                         fontFamily: 'Kanit',
                         decoration: TextDecoration.none),

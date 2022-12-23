@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
 
 class BoxRain15M extends StatelessWidget {
-  const BoxRain15M({
-    Key key,
-    @required this.size,
-    @required this.deviceWidth,
-    @required this.station,
-  }) : super(key: key);
+  const BoxRain15M(
+      {Key key,
+      @required this.size,
+      @required this.deviceWidth,
+      @required this.station,
+      @required this.color})
+      : super(key: key);
 
   final Size size;
   final double deviceWidth;
-  final StationModel station;
+  final String station;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +78,7 @@ class BoxRain15M extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          station.CURR_Acc_Rain_15_M,
+                          station,
                           style: TextStyle(
                               shadows: [
                                 Shadow(
@@ -87,7 +89,7 @@ class BoxRain15M extends StatelessWidget {
                               ],
                               fontSize:
                                   ResponsiveFlutter.of(context).fontSize(5),
-                              color: Colors.white,
+                              color: color,
                               fontWeight: FontWeight.normal,
                               fontFamily: 'Kanit',
                               decoration: TextDecoration.none),

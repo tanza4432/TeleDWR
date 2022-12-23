@@ -8,8 +8,10 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class TabThree extends StatelessWidget {
-  TabThree(this.stnId, this.title);
+  TabThree(this.stnId, this.title, this.wl, this.rf);
   String title;
+  String wl;
+  String rf;
   List<DataModelGet> resultOffline = [];
   bool check = false;
   var stnId;
@@ -27,6 +29,8 @@ class TabThree extends StatelessWidget {
               data: data,
               stnid: stnId,
               title: title,
+              wl: wl,
+              rf: rf,
             );
           } else if (snapshot.hasError) {
             for (var i in Data.dataRiver) {
@@ -37,6 +41,8 @@ class TabThree extends StatelessWidget {
                   data: data,
                   stnid: stnId,
                   title: title,
+                  wl: wl,
+                  rf: rf,
                 );
               }
             }

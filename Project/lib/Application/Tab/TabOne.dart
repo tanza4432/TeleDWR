@@ -12,9 +12,11 @@ import 'package:responsive_flutter/responsive_flutter.dart';
 
 // ignore: must_be_immutable
 class TabOne extends StatelessWidget {
-  TabOne(this.stnId, this.basinID);
+  TabOne(this.stnId, this.basinID, this.wl, this.rf);
   var stnId;
   int basinID;
+  String wl;
+  String rf;
   List<StationModel> resultOffline = [];
   bool check = false;
   var CURR_Acc_Rain_15_M_ = "";
@@ -142,7 +144,7 @@ class TabOne extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: size.height * 0.04),
+                          SizedBox(height: size.height * 0.01),
                           Container(
                             width: c_width,
                             padding: EdgeInsets.all(3.0),
@@ -183,9 +185,15 @@ class TabOne extends StatelessWidget {
                                   width: size.width * 0.05,
                                 ),
                                 BoxRain15M(
-                                    size: size,
-                                    deviceWidth: deviceWidth,
-                                    station: station),
+                                  size: size,
+                                  deviceWidth: deviceWidth,
+                                  station: rf == ""
+                                      ? "n/a"
+                                      : station.CURR_Acc_Rain_15_M,
+                                  color: rf == ""
+                                      ? Color.fromARGB(255, 190, 190, 190)
+                                      : Colors.white,
+                                ),
                               ],
                             ),
                           ),
@@ -197,22 +205,37 @@ class TabOne extends StatelessWidget {
                                 BoxRainDetail(
                                   deviceWidth: deviceWidth,
                                   size: size,
-                                  station: station,
-                                  minute: "30 นาที",
+                                  station: rf == ""
+                                      ? "n/a"
+                                      : station.CURR_Acc_Rain_60_M,
+                                  minute: "1 ชม.",
+                                  color: rf == ""
+                                      ? Color.fromARGB(255, 190, 190, 190)
+                                      : Colors.white,
                                 ),
                                 SizedBox(width: size.width * 0.05),
                                 BoxRainDetail(
                                   deviceWidth: deviceWidth,
                                   size: size,
-                                  station: station,
-                                  minute: "60 นาที",
-                                ),
-                                SizedBox(width: size.width * 0.05),
-                                BoxRainDetail(
-                                  deviceWidth: deviceWidth,
-                                  size: size,
-                                  station: station,
+                                  station: rf == ""
+                                      ? "n/a"
+                                      : station.CURR_Acc_Rain_12_H,
                                   minute: "12 ชม.",
+                                  color: rf == ""
+                                      ? Color.fromARGB(255, 190, 190, 190)
+                                      : Colors.white,
+                                ),
+                                SizedBox(width: size.width * 0.05),
+                                BoxRainDetail(
+                                  deviceWidth: deviceWidth,
+                                  size: size,
+                                  station: rf == ""
+                                      ? "n/a"
+                                      : station.CURR_Acc_Rain_1_D,
+                                  minute: "24 ชม.",
+                                  color: rf == ""
+                                      ? Color.fromARGB(255, 190, 190, 190)
+                                      : Colors.white,
                                 ),
                               ],
                             ),
@@ -245,6 +268,21 @@ class TabOne extends StatelessWidget {
                       ),
                     );
                   },
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    color: Colors.white.withOpacity(0.3),
+                    child: Text(
+                      "'n/a' หมายถึง ไม่มีการติดตั้งเครื่องมือวัด",
+                      style: TextStyle(
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Kanit',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),

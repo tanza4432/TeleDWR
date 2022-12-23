@@ -10,9 +10,11 @@ import 'package:provider/provider.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
 
 class TabTwo extends StatelessWidget {
-  TabTwo(this.stnId, this.title);
+  TabTwo(this.stnId, this.title, this.wl, this.rf);
   var stnId;
   String title;
+  String wl;
+  String rf;
   List<DataModelGet> resultOffline = [];
   bool check = false;
 
@@ -178,7 +180,10 @@ class TabTwo extends StatelessWidget {
                                   Container(
                                       width: 50,
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(data_.Rain.toString(),
+                                      child: Text(
+                                          rf == ""
+                                              ? "n/a"
+                                              : data_.Rain.toString(),
                                           style: TextStyle(
                                               fontSize: 14.0,
                                               fontFamily: 'Kanit',
@@ -189,7 +194,10 @@ class TabTwo extends StatelessWidget {
                                   Container(
                                       width: 50,
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(data_.Water.toString(),
+                                      child: Text(
+                                          wl == ""
+                                              ? "n/a"
+                                              : data_.Water.toString(),
                                           textAlign: TextAlign.right,
                                           style: TextStyle(
                                               fontFamily: 'Kanit',
@@ -200,8 +208,10 @@ class TabTwo extends StatelessWidget {
                                       width: 100,
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       child: Text(
-                                        data_.Flow.toString(),
-                                        textAlign: TextAlign.right,
+                                        wl == ""
+                                            ? "n/a"
+                                            : data_.Flow.toString(),
+                                        textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontFamily: 'Kanit',
                                             fontWeight: FontWeight.normal),
@@ -210,6 +220,20 @@ class TabTwo extends StatelessWidget {
                               ]))
                           .toList()),
                 ),
+          Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            color: Colors.black.withOpacity(0.3),
+            child: Text(
+              "'n/a' หมายถึง ไม่มีการติดตั้งเครื่องมือวัด",
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontFamily: 'Kanit',
+                color: Colors.black,
+              ),
+            ),
+          ),
         ],
       ),
     );
