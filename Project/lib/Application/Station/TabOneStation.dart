@@ -51,6 +51,7 @@ class TabOneStation extends StatelessWidget {
     return ListView.builder(
       shrinkWrap: true,
       itemCount: station.length,
+      physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, int i) {
         var lastUpdate = station[i].LAST_UPDATE.split(" ");
         var time = lastUpdate[1].split(":");
