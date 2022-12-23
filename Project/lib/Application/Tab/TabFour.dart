@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:full_screen_image/full_screen_image.dart';
+import 'package:image_downloader/image_downloader.dart';
+// import 'package:gallery_saver/gallery_saver.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
 import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
 
@@ -89,22 +91,61 @@ class _TabFourState extends State<TabFour> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ZoomOverlay(
-                                minScale: 0.5,
-                                maxScale: 3.0,
-                                twoTouchOnly: true,
-                                child: ClipRRect(
-                                  child: FadeInImage.assetNetwork(
-                                    placeholder: 'assets/images/loading1.gif',
-                                    image: ('http://tele-' +
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        HeroPhotoViewRouteWrapper(
+                                      imageProvider: NetworkImage(
+                                        'http://tele-' +
+                                            widget.basinName +
+                                            '.dwr.go.th/image/' +
+                                            widget.stnId +
+                                            '/CCTV_image/Overview_1.jpg',
+                                      ),
+                                      path: 'http://tele-' +
+                                          widget.basinName +
+                                          '.dwr.go.th/image/' +
+                                          widget.stnId +
+                                          '/CCTV_image/Overview_1.jpg',
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                child: Hero(
+                                  tag: "1",
+                                  child: Image.network(
+                                    'http://tele-' +
                                         widget.basinName +
                                         '.dwr.go.th/image/' +
                                         widget.stnId +
-                                        '/CCTV_image/Overview_1.jpg'),
+                                        '/CCTV_image/Overview_1.jpg',
+                                    loadingBuilder: (context, child, chunk) =>
+                                        chunk != null ? Text("loading") : child,
                                   ),
                                 ),
-                              )),
+                              ),
+                            ),
+                            // ZoomOverlay(
+                            //   minScale: 0.5,
+                            //   maxScale: 3.0,
+                            //   twoTouchOnly: true,
+                            //   child: ClipRRect(
+                            //     child: FadeInImage.assetNetwork(
+                            //       placeholder: 'assets/images/loading1.gif',
+                            //       image: ('http://tele-' +
+                            //           widget.basinName +
+                            //           '.dwr.go.th/image/' +
+                            //           widget.stnId +
+                            //           '/CCTV_image/Overview_1.jpg'),
+                            //     ),
+                            //   ),
+                            // ),
+                          ),
                         ),
                       ),
                 Padding(
@@ -116,21 +157,58 @@ class _TabFourState extends State<TabFour> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: ZoomOverlay(
-                        minScale: 0.5,
-                        maxScale: 3.0,
-                        child: ClipRRect(
-                          child: FadeInImage.assetNetwork(
-                            placeholder: 'assets/images/loading1.gif',
-                            image: ('http://tele-' +
-                                widget.basinName +
-                                '.dwr.go.th/image/' +
-                                widget.stnId +
-                                '/CCTV_image/Staff_1.jpg'),
-                            fit: BoxFit.cover,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HeroPhotoViewRouteWrapper(
+                                imageProvider: NetworkImage(
+                                  'http://tele-' +
+                                      widget.basinName +
+                                      '.dwr.go.th/image/' +
+                                      widget.stnId +
+                                      '/CCTV_image/Staff_1.jpg',
+                                ),
+                                path: 'http://tele-' +
+                                    widget.basinName +
+                                    '.dwr.go.th/image/' +
+                                    widget.stnId +
+                                    '/CCTV_image/Staff_1.jpg',
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          child: Hero(
+                            tag: "2",
+                            child: Image.network(
+                              'http://tele-' +
+                                  widget.basinName +
+                                  '.dwr.go.th/image/' +
+                                  widget.stnId +
+                                  '/CCTV_image/Staff_1.jpg',
+                              loadingBuilder: (context, child, chunk) =>
+                                  chunk != null ? Text("loading") : child,
+                            ),
                           ),
                         ),
                       ),
+                      // ZoomOverlay(
+                      //   minScale: 0.5,
+                      //   maxScale: 3.0,
+                      //   child: ClipRRect(
+                      //     child: FadeInImage.assetNetwork(
+                      //       placeholder: 'assets/images/loading1.gif',
+                      //       image: ('http://tele-' +
+                      //           widget.basinName +
+                      //           '.dwr.go.th/image/' +
+                      //           widget.stnId +
+                      //           '/CCTV_image/Staff_1.jpg'),
+                      //       fit: BoxFit.cover,
+                      //     ),
+                      //   ),
+                      // ),
                     ),
                   ),
                 )
@@ -176,6 +254,72 @@ class TabTitleBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class HeroPhotoViewRouteWrapper extends StatelessWidget {
+  const HeroPhotoViewRouteWrapper({
+    this.imageProvider,
+    this.backgroundDecoration,
+    this.minScale,
+    this.maxScale,
+    this.path,
+  });
+
+  final ImageProvider imageProvider;
+  final BoxDecoration backgroundDecoration;
+  final dynamic minScale;
+  final dynamic maxScale;
+  final String path;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          constraints: BoxConstraints.expand(
+            height: MediaQuery.of(context).size.height,
+          ),
+          child: PhotoView(
+            imageProvider: imageProvider,
+            backgroundDecoration: backgroundDecoration,
+            minScale: minScale,
+            maxScale: maxScale,
+            heroAttributes: const PhotoViewHeroAttributes(tag: "someTag"),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 40, left: 20, right: 20),
+          child: Container(
+            width: double.infinity,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.white,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    var a = await ImageDownloader.downloadImage(path);
+                    print(a);
+                  },
+                  child: Icon(
+                    Icons.download,
+                    color: Colors.white,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

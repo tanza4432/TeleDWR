@@ -414,7 +414,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                                         .split(":");
                                                     return GestureDetector(
                                                       onTap: () {
-                                                        print(index);
+                                                        // print(index);
                                                       },
                                                       child: ListTile(
                                                         contentPadding:
