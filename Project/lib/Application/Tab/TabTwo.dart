@@ -205,7 +205,7 @@ class TabTwo extends StatelessWidget {
                                 ),
                                 DataCell(
                                   Container(
-                                      width: 100,
+                                      width: size.width * 0.2,
                                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       child: Text(
                                         wl == ""
