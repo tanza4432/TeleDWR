@@ -6,7 +6,7 @@
    <application
         android:name="${applicationName}"
         android:label="TELEDWR"
-        usesCleartextTraffic="true"
+        android:usesCleartextTraffic="true"
         androidSupportRtl="true"
         android:icon="@mipmap/ic_launcher">
         <service android:name="com.example.app.backgroundService"
