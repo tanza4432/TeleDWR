@@ -41,7 +41,10 @@ class TabTwo extends StatelessWidget {
                 return LoadingSquareCircle();
               }
             } else if (snapshot.hasData) {
+              // print(jsonEncode(snapshot.data));
+
               data = snapshot.data;
+              data.sort((b, a) => a.Label.compareTo(b.Label));
               resultData = DataStnIdModelGet(stnId: stnId, data: data);
               if (Data.dataRiver.length == 0) {
                 Data.addData(resultData);
@@ -192,16 +195,20 @@ class TabTwo extends StatelessWidget {
                                 ),
                                 DataCell(
                                   Container(
-                                      width: 50,
-                                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: Text(
-                                          wl == ""
-                                              ? "n/a"
-                                              : data_.Water.toString(),
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                              fontFamily: 'Kanit',
-                                              fontWeight: FontWeight.normal))),
+                                    width: 50,
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    child: Text(
+                                      wl == ""
+                                          ? "n/a"
+                                          : double.parse(data_.Water)
+                                              .toStringAsFixed(2),
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                        fontFamily: 'Kanit',
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                    ),
+                                  ),
                                 ),
                                 DataCell(
                                   Container(
@@ -210,7 +217,8 @@ class TabTwo extends StatelessWidget {
                                       child: Text(
                                         wl == ""
                                             ? "n/a"
-                                            : data_.Flow.toString(),
+                                            : double.parse(data_.Flow)
+                                                .toStringAsFixed(2),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                             fontFamily: 'Kanit',

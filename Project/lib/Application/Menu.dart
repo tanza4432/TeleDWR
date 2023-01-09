@@ -59,6 +59,25 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
     infoBasin = await basinInfoData();
   }
 
+  Future<String> imageRiver(int basin) async {
+    switch (basin) {
+      case 1:
+        return ImgRiver.imgBasin1;
+      case 2:
+        return ImgRiver.imgBasin2;
+      case 3:
+        return ImgRiver.imgBasin3;
+      case 4:
+        return ImgRiver.imgBasin4;
+      case 5:
+        return ImgRiver.imgBasin5;
+      case 6:
+        return ImgRiver.imgBasin6;
+      case 7:
+        return ImgRiver.imgBasin7;
+    }
+  }
+
   void selectInfoBasin(int basin) {
     switch (basin) {
       case 1:
@@ -415,6 +434,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                                     return GestureDetector(
                                                       onTap: () {
                                                         // print(index);
+                                                        // รอ API ส่ง stnId ไป return ข้อมูลที่มี basin กลับมา
                                                       },
                                                       child: ListTile(
                                                         contentPadding:
@@ -773,7 +793,22 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                         alignment: Alignment.topLeft,
                         decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage("assets/images/river.png"),
+                            image: NetworkImage(
+                              i == 1
+                                  ? ImgRiver.imgBasin1
+                                  : i == 2
+                                      ? ImgRiver.imgBasin2
+                                      : i == 3
+                                          ? ImgRiver.imgBasin3
+                                          : i == 4
+                                              ? ImgRiver.imgBasin4
+                                              : i == 5
+                                                  ? ImgRiver.imgBasin5
+                                                  : i == 6
+                                                      ? ImgRiver.imgBasin6
+                                                      : ImgRiver.imgBasin7,
+                            ),
+                            // image: AssetImage("assets/images/river.png"),
                             fit: BoxFit.cover,
                           ),
                           color: optionSelected == i + 1

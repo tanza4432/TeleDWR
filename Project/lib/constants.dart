@@ -9,6 +9,23 @@ Color waveup2 = Color(0xFFE2F3FF);
 
 Color backgroundmenu = Color(0xFF7484AC);
 
+class ImgRiver {
+  static String imgBasin1 =
+      "https://tele-songkramhuailuang.dwr.go.th/image/BasinImg/river_1.png";
+  static String imgBasin2 =
+      "https://tele-songkramhuailuang.dwr.go.th/image/BasinImg/river_2.png";
+  static String imgBasin3 =
+      "https://tele-songkramhuailuang.dwr.go.th/image/BasinImg/river_3.png";
+  static String imgBasin4 =
+      "https://tele-songkramhuailuang.dwr.go.th/image/BasinImg/river_4.png";
+  static String imgBasin5 =
+      "https://tele-songkramhuailuang.dwr.go.th/image/BasinImg/river_5.png";
+  static String imgBasin6 =
+      "https://tele-songkramhuailuang.dwr.go.th/image/BasinImg/river_6.png";
+  static String imgBasin7 =
+      "https://tele-songkramhuailuang.dwr.go.th/image/BasinImg/river_7.png";
+}
+
 class ListRiver {
   static List<Map<String, dynamic>> items = <Map<String, dynamic>>[
     <String, dynamic>{
@@ -103,6 +120,14 @@ TextStyle DefaultTitleB() {
       color: Colors.black,
       fontFamily: 'Kanit',
       fontSize: 22.0,
+      fontWeight: FontWeight.w200);
+}
+
+TextStyle DefaultChart() {
+  return TextStyle(
+      color: Colors.black,
+      fontFamily: 'Kanit',
+      fontSize: 16.0,
       fontWeight: FontWeight.w200);
 }
 

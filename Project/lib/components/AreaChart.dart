@@ -40,7 +40,7 @@ class _AreaChartState extends State<AreaChart> {
       enableDoubleTapZooming: true,
       enableSelectionZooming: true,
       enablePanning: true,
-      zoomMode: ZoomMode.x,
+      zoomMode: ZoomMode.xy,
     );
     super.initState();
   }
@@ -101,6 +101,7 @@ class _AreaChartState extends State<AreaChart> {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1),
                   itemBuilder: (BuildContext context, int index) {
+                    // print(resultChart[index].columnName);
                     return SafeArea(
                       child: SfCartesianChart(
                         tooltipBehavior: _tooltipBehavior,
@@ -108,20 +109,34 @@ class _AreaChartState extends State<AreaChart> {
                         zoomPanBehavior: _zoomPanbehavior,
                         title: ChartTitle(
                           text: resultChart[index].title,
-                          textStyle: DefaultTitleB(),
+                          textStyle: DefaultChart(),
                         ),
                         primaryYAxis: NumericAxis(
-                          minimum: double.parse((resultChart[index].min -
-                                  (resultChart[index].max -
-                                          resultChart[index].min) /
-                                      5)
-                              .toStringAsFixed(2)),
-                          maximum: double.parse((resultChart[index].max +
-                                  (resultChart[index].max -
-                                          resultChart[index].min) /
-                                      10)
-                              .toStringAsFixed(2)),
-                          labelFormat: '{value} มม.',
+                          minimum: resultChart[index].columnName ==
+                                      "ระดับน้ำ" ||
+                                  resultChart[index].columnName == "ปริมาณน้ำ"
+                              ? 0.0
+                              : double.parse((resultChart[index].min -
+                                      (resultChart[index].max -
+                                              resultChart[index].min) /
+                                          5)
+                                  .toStringAsFixed(2)),
+                          maximum: resultChart[index].columnName ==
+                                      "ระดับน้ำ" ||
+                                  resultChart[index].columnName == "ปริมาณน้ำ"
+                              ? double.parse((resultChart[index].max * 1.2)
+                                  .toStringAsFixed(2))
+                              : double.parse((resultChart[index].max +
+                                      (resultChart[index].max -
+                                              resultChart[index].min) /
+                                          10)
+                                  .toStringAsFixed(2)),
+                          labelFormat:
+                              resultChart[index].columnName == "ระดับน้ำ"
+                                  ? "{value} ม.รทก."
+                                  : resultChart[index].columnName == "ปริมาณน้ำ"
+                                      ? "{value} ลบม./วินาที"
+                                      : '{value} มม.',
                           interactiveTooltip: InteractiveTooltip(enable: false),
                         ),
                         primaryXAxis: CategoryAxis(
@@ -144,7 +159,6 @@ class _AreaChartState extends State<AreaChart> {
                               : SplineAreaSeries(
                                   borderColor: Colors.blue,
                                   borderWidth: 2,
-
                                   gradient: LinearGradient(
                                       colors: <Color>[
                                         Colors.blue.withOpacity(0.6),
@@ -158,6 +172,7 @@ class _AreaChartState extends State<AreaChart> {
                                       end: Alignment.bottomCenter),
 
                                   name: resultChart[index].columnName,
+
                                   dataSource: resultChart[index].data,
                                   xValueMapper: (RainChartData rains, _) =>
                                       rains.label,
