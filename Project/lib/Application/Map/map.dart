@@ -23,8 +23,8 @@ import 'package:dwr0001/components/switchColor.dart';
 
 class MapPage extends StatefulWidget {
   final List<StationModel> data;
-  final List<StationModel> notify;
-  MapPage({Key key, this.data, this.notify}) : super(key: key);
+
+  MapPage({Key key, this.data}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -254,6 +254,21 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
             },
           );
         }
+      }
+      if (i == 1 && snapshots == null ||
+          i == 2 && snapshots == null ||
+          i == 3 && snapshots == null) {
+        basinList.add(
+          SpeedDialChild(
+            child: const Icon(Icons.reply_outlined, color: Colors.white),
+            label: ListRiver.items[i - 1]['title'],
+            labelStyle: DefaultStyleTextBoxMap(),
+            backgroundColor: Colors.blueAccent,
+            onTap: () {
+              _animatedMapMove(ListRiver.items[i - 1]['latlng'], 8.5);
+            },
+          ),
+        );
       }
     }
   }
@@ -507,19 +522,46 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             ],
                           ),
                         ),
-                        DetailSheet("ปริมาณน้ำฝน สะสม 15 นาที",
-                            item.CURR_Acc_Rain_15_M, "มม"),
-                        DetailSheet("ปริมาณน้ำฝน สะสม 1 ชม",
-                            item.CURR_Acc_Rain_60_M, "มม"),
-                        DetailSheet("ปริมาณน้ำฝน สะสม 12 ขม",
-                            item.CURR_Acc_Rain_12_H, "มม"),
-                        DetailSheet("ปริมาณน้ำฝน สะสม 1 วัน",
-                            item.CURR_Acc_Rain_1_D, "มม"),
-                        DetailSheet(
-                            "ระดับน้ำ", item.CURR_Water_D_Level_MSL, "ม.รทก."),
-                        DetailSheet("ปริมาณน้ำ", item.CURR_Water_U_Level_MSL,
-                            "ลบ.ม./วิ"),
-                        DetailSheet("ปริมาณความจุลำน้ำ", "0.0", "(น้ำน้อย)"),
+                        item.RF == "RF"
+                            ? DetailSheet("ปริมาณน้ำฝน สะสม 15 นาที",
+                                item.CURR_Acc_Rain_15_M, "มม")
+                            : SizedBox(),
+                        item.RF == "RF"
+                            ? DetailSheet("ปริมาณน้ำฝน สะสม 1 ชม",
+                                item.CURR_Acc_Rain_60_M, "มม")
+                            : SizedBox(),
+                        item.RF == "RF"
+                            ? DetailSheet("ปริมาณน้ำฝน สะสม 12 ชม",
+                                item.CURR_Acc_Rain_12_H, "มม")
+                            : SizedBox(),
+                        item.RF == "RF"
+                            ? DetailSheet("ปริมาณน้ำฝน สะสม 1 วัน",
+                                item.CURR_Acc_Rain_1_D, "มม")
+                            : SizedBox(),
+                        item.WL == "WL"
+                            ? DetailSheet("ระดับน้ำ",
+                                item.CURR_Water_D_Level_MSL, "ม.รทก.")
+                            : SizedBox(),
+                        item.WL == "WL"
+                            ? DetailSheet("ปริมาณน้ำ",
+                                item.CURR_Water_U_Level_MSL, "ลบ.ม./วินาที")
+                            : DetailSheet("", "", ""),
+                        item.WL == "WL"
+                            ? DetailSheet(
+                                "ปริมาณความจุลำน้ำ", "0.0%", "(น้ำน้อย)")
+                            : DetailSheet("", "", ""),
+                        item.WL == "WL" && item.RF != "RF"
+                            ? DetailSheet("", "", "")
+                            : SizedBox(),
+                        item.WL == "WL" && item.RF != "RF"
+                            ? DetailSheet("", "", "")
+                            : SizedBox(),
+                        item.WL == "WL" && item.RF != "RF"
+                            ? DetailSheet("", "", "")
+                            : SizedBox(),
+                        item.WL == "WL" && item.RF != "RF"
+                            ? DetailSheet("", "", "")
+                            : SizedBox(),
                       ],
                     ),
                   ),
@@ -601,6 +643,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
           body: FlutterMap(
             mapController: _mapController,
             options: MapOptions(
+              interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
               center:
                   // LatLng(17.1408165, 103.4063071),
                   // กรุงเทพ

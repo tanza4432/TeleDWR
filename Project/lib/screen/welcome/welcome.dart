@@ -1,4 +1,5 @@
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:dwr0001/Application/Map/map.dart';
 import 'package:dwr0001/Application/Menu.dart';
 import 'package:dwr0001/Application/providers/river_provider.dart';
 import 'package:dwr0001/Models/station_model.dart';
@@ -62,6 +63,13 @@ class _WelcomeState extends State<Welcome> {
   }
 
   void GetData(BuildContext context) async {
+    var dataSession = await FlutterSession().get('data');
+    if (dataSession != null) {
+      for (var i in dataSession) {
+        Provider.of<FavoriteRiver>(context).addData(i);
+      }
+    }
+
     for (var i = 1; i < 8; i++) {
       List<StationModel> data = await getStationListTab(i, "1");
       checkCallApi = i;
@@ -81,15 +89,22 @@ class _WelcomeState extends State<Welcome> {
         }
         print(i);
       }
-
     }
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => MapPage(
+          data: newdata,
+        ),
+      ),
+    );
+
     setState(() {});
   }
 
   @override
   void initState() {
     GetData(context);
-    print("สำเร็จ");
+    // print("สำเร็จ");
     SetSession();
     super.initState();
   }
@@ -111,50 +126,9 @@ class _WelcomeState extends State<Welcome> {
           alignment: Alignment.center,
           children: <Widget>[
             Positioned(
-                bottom: 100,
-                child: checkCallApi == 7
-                    ? Consumer<FavoriteRiver>(
-                        builder: (context, Data, _) {
-                          return GestureDetector(
-                            onTap: () async {
-                              var data = await FlutterSession().get('data');
-                              if (data != null) {
-                                for (var i in data) {
-                                  Data.addData(i);
-                                }
-                              }
-
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => MenuPage(
-                                    data: newdata,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Image(
-                              image: AssetImage(
-                                  'assets/banner/banner01/sign_in.png'),
-                              fit: BoxFit.cover,
-                              height: size.height * 0.11,
-                            ),
-                          );
-                        },
-                      )
-                    : LoadingCubeGrid()),
-            // Positioned(
-            //   top: 50,
-            //   child: TextButton(
-
-            //     onPressed: () {
-            //       NotiAlert.showBigTextNotification(
-            //           title: "Test",
-            //           body: "You long body",
-            //           fln: flutterLocalNotificationsPlugin);
-            //     },
-            //     child: Text("Noti"),
-            //   ),
-            // ),
+              bottom: 100,
+              child: checkCallApi == 7 ? SizedBox() : LoadingCubeGrid(),
+            ),
           ],
         ),
       ),

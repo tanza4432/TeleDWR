@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:dwr0001/Models/station_model.dart';
 import 'package:dwr0001/Services/main_Service.dart';
@@ -55,6 +57,7 @@ class TabOneStation extends StatelessWidget {
       itemBuilder: (context, int i) {
         var lastUpdate = station[i].LAST_UPDATE.split(" ");
         var time = lastUpdate[1].split(":");
+        // print(jsonEncode());
         return Column(
           children: [
             new ListTile(
@@ -68,6 +71,7 @@ class TabOneStation extends StatelessWidget {
                   showTwoGlows: true,
                   repeatPauseDuration: Duration(milliseconds: 200),
                   child: Stack(
+                    clipBehavior: Clip.none,
                     alignment: Alignment.center,
                     children: [
                       station[i].RF == "RF"
@@ -194,6 +198,18 @@ class TabOneStation extends StatelessWidget {
                               ),
                             )
                           : Container(),
+                      station[i].CURR_CCTV == "CCTV"
+                          ? Positioned(
+                              right: -20,
+                              top: 0,
+                              child: Container(
+                                child: Image.network(
+                                  "https://tele-nakhonsri.dwr.go.th/image/TCAM.png",
+                                  scale: 1.5,
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),

@@ -42,7 +42,8 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
   List<StationModel> Listnotify = [];
   List<StationModel> ListnotifyStream = [];
   List<BasinsInfoModel> infoBasin = [];
-  String Project_URL = "https://tele-maeklong.dwr.go.th/home/INFO_PROJECT";
+  String Project_URL =
+      "https://tele-maeklong.dwr.go.th/home/INFO_PROJECT?mb=TRUE";
   String Forecast_URL = "https://tele-maeklong.dwr.go.th/fs/forecast.php";
 
   StreamController<StationModel> _streamControllerNoti = StreamController();
@@ -811,6 +812,17 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                             // image: AssetImage("assets/images/river.png"),
                             fit: BoxFit.cover,
                           ),
+                          boxShadow: optionSelected == i + 1
+                              ? [
+                                  BoxShadow(
+                                    color:
+                                        Colors.lightBlue[600].withOpacity(0.8),
+                                    // spreadRadius: 5,
+                                    blurRadius: 10,
+                                    offset: Offset(4, 2),
+                                  ),
+                                ]
+                              : [],
                           color: optionSelected == i + 1
                               ? Colors.lightBlue[600]
                               : Colors.white,

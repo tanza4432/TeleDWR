@@ -56,7 +56,7 @@ class _NavigationBurgerMenuWidgetState
               Path: MapPage(data: widget.data),
             ),
             buildMenuItem(
-              text: "ตั้งค่า",
+              text: "เกี่ยวกับ",
               icon: Icons.settings,
               Path: SettingPage(data: widget.data),
             ),

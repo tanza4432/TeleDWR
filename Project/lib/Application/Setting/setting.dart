@@ -9,7 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 class SettingPage extends StatefulWidget {
   final List<StationModel> data;
   final List<StationModel> notify;
-  SettingPage({Key key, this.data,this.notify}) : super(key: key);
+  SettingPage({Key key, this.data, this.notify}) : super(key: key);
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -28,7 +28,6 @@ class _SettingPageState extends State<SettingPage> {
                 MaterialPageRoute(
                   builder: (context) => MenuPage(
                     data: widget.data,
-                   
                   ),
                 ),
               );
@@ -38,7 +37,7 @@ class _SettingPageState extends State<SettingPage> {
           ),
           centerTitle: true,
           title: Text(
-            'การตั้งค่า',
+            'เกี่ยวกับ',
             style: DefaultTitleB(),
           ),
           backgroundColor: Colors.white,
@@ -48,18 +47,13 @@ class _SettingPageState extends State<SettingPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "เกี่ยวกับ",
-                style: DefaultTitleB(),
-              ),
-              Divider(color: Colors.black38),
               ExpansionTile(
                 leading: Icon(
-                  Icons.wifi_calling_3_outlined,
+                  Icons.web_asset,
                   color: Colors.black,
                 ),
                 title: Text(
-                  "ติดต่อเรา",
+                  "เว็บไซต์",
                   style: DefaultStyleB(),
                 ),
                 children: <Widget>[
@@ -72,19 +66,59 @@ class _SettingPageState extends State<SettingPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           BoxAbout(
-                            title: "เว็บไซต์",
+                            title: "ลุ่มน้ำแม่กลอง",
                             icon: Icons.web_asset,
                             path: () {
-                              launch("http://tele-kokkhong.dwr.go.th/");
+                              launch(
+                                  "https://tele-maeklong.dwr.go.th/home/Index_HOME");
                             },
                           ),
                           BoxAbout(
-                            title: "อีเมล",
-                            icon: Icons.email_outlined,
+                            title: "ลุ่มน้ำสาละวิน",
+                            icon: Icons.web_asset,
                             path: () {
-                              launch("mailto:terkid1412@gmail.com?subject="
-                                  "&body="
-                                  "");
+                              launch(
+                                  "https://tele-salawin.dwr.go.th/home/Index_HOME");
+                            },
+                          ),
+                          BoxAbout(
+                            title: "ลุ่มน้ำกกและโขงเหนือ",
+                            icon: Icons.web_asset,
+                            path: () {
+                              launch(
+                                  "https://tele-kokkhong.dwr.go.th/home/Index_HOME");
+                            },
+                          ),
+                          BoxAbout(
+                            title: "ลุ่มน้ำสงครามและห้วยหลวง",
+                            icon: Icons.web_asset,
+                            path: () {
+                              launch(
+                                  "https://tele-songkramhuailuang.dwr.go.th/home/Index_HOME");
+                            },
+                          ),
+                          BoxAbout(
+                            title: "ลุ่มน้ำบางปะกง",
+                            icon: Icons.web_asset,
+                            path: () {
+                              launch(
+                                  "https://tele-bangpakong.dwr.go.th/home/Index_HOME");
+                            },
+                          ),
+                          BoxAbout(
+                            title: "อำเภอบางสะพาน",
+                            icon: Icons.web_asset,
+                            path: () {
+                              launch(
+                                  "https://tele-bangsaphan.dwr.go.th/home/Index_HOME");
+                            },
+                          ),
+                          BoxAbout(
+                            title: "จังหวัดนครศรีธรรมราช",
+                            icon: Icons.web_asset,
+                            path: () {
+                              launch(
+                                  "https://tele-nakhonsri.dwr.go.th/home/Index_HOME");
                             },
                           ),
                         ],
@@ -93,6 +127,55 @@ class _SettingPageState extends State<SettingPage> {
                   ),
                 ],
               ),
+              BoxAbout(
+                title: "mekhala@dwr.mail.go.th",
+                icon: Icons.email_outlined,
+                path: () {
+                  launch("mailto:mekhala@dwr.mail.go.th?subject="
+                      "&body="
+                      "");
+                },
+              ),
+              // ExpansionTile(
+              //   leading: Icon(
+              //     Icons.wifi_calling_3_outlined,
+              //     color: Colors.black,
+              //   ),
+              //   title: Text(
+              //     "mekhala@dwr.mail.go.th",
+              //     style: DefaultStyleB(),
+              //   ),
+              //   children: <Widget>[
+              //     Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              //       child: Align(
+              //         alignment: Alignment.topLeft,
+              //         child: Column(
+              //           mainAxisAlignment: MainAxisAlignment.start,
+              //           mainAxisSize: MainAxisSize.min,
+              //           children: <Widget>[
+              //             BoxAbout(
+              //               title: "เว็บไซต์",
+              //               icon: Icons.web_asset,
+              //               path: () {
+              //                 launch("http://tele-kokkhong.dwr.go.th/");
+              //               },
+              //             ),
+              //             BoxAbout(
+              //               title: "อีเมล",
+              //               icon: Icons.email_outlined,
+              //               path: () {
+              //                 launch("mailto:terkid1412@gmail.com?subject="
+              //                     "&body="
+              //                     "");
+              //               },
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
               BoxAbout(
                 title: "เกี่ยวกับ TeleDWR",
                 icon: Icons.info_outline,
