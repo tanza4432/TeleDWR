@@ -83,6 +83,7 @@ flutter:
     - assets/images/river2.png
     - assets/images/river3.png
     - assets/images/wallpaper_new.jpeg
+    - assets/banner/banner01/
     - assets/banner/banner01/background02.png
     - assets/banner/banner01/sign_in.png
     - assets/banner/banner02/background03.png

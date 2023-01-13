@@ -323,7 +323,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                 color: Colors.white.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(10),
               ),
-              height: 270,
+              height: item.RF == "RF" && item.WL == "WL" ? 270 : 200,
               width: double.infinity,
               child: Stack(
                 children: [
@@ -558,23 +558,23 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                         item.WL == "WL"
                             ? DetailSheet("ปริมาณน้ำ",
                                 item.CURR_Water_U_Level_MSL, "ลบ.ม./วินาที")
-                            : DetailSheet("", "", ""),
+                            : SizedBox(),
                         item.WL == "WL"
                             ? DetailSheet(
                                 "ปริมาณความจุลำน้ำ", "0.0%", "(น้ำน้อย)")
-                            : DetailSheet("", "", ""),
-                        item.WL == "WL" && item.RF != "RF"
-                            ? DetailSheet("", "", "")
                             : SizedBox(),
-                        item.WL == "WL" && item.RF != "RF"
-                            ? DetailSheet("", "", "")
-                            : SizedBox(),
-                        item.WL == "WL" && item.RF != "RF"
-                            ? DetailSheet("", "", "")
-                            : SizedBox(),
-                        item.WL == "WL" && item.RF != "RF"
-                            ? DetailSheet("", "", "")
-                            : SizedBox(),
+                        // item.WL == "WL" && item.RF != "RF"
+                        //     ? DetailSheet("", "", "")
+                        //     : SizedBox(),
+                        // item.WL == "WL" && item.RF != "RF"
+                        //     ? DetailSheet("", "", "")
+                        //     : SizedBox(),
+                        // item.WL == "WL" && item.RF != "RF"
+                        //     ? DetailSheet("", "", "")
+                        //     : SizedBox(),
+                        // item.WL == "WL" && item.RF != "RF"
+                        //     ? DetailSheet("", "", "")
+                        //     : SizedBox(),
                       ],
                     ),
                   ),

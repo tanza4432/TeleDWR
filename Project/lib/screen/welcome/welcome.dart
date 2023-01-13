@@ -115,16 +115,42 @@ class _WelcomeState extends State<Welcome> {
     return Scaffold(
       body: Container(
         height: size.height,
-        width: double.infinity,
-        constraints: BoxConstraints.expand(),
+        width: size.width,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: AssetImage('assets/banner/banner01/background02.png'),
-              fit: BoxFit.fill),
+            image: AssetImage('assets/banner/banner01/background01.png'),
+            fit: BoxFit.cover,
+          ),
         ),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
+            Positioned(
+              top: 80,
+              right: 0,
+              left: 0,
+              child: Image.asset(
+                "assets/banner/banner01/head01.png",
+              ),
+            ),
+            Positioned(
+              top: 60,
+              right: 0,
+              left: 0,
+              child: Image.asset(
+                "assets/banner/banner01/logo.png",
+                scale: 2,
+              ),
+            ),
+            Positioned(
+              bottom: 260,
+              right: 0,
+              left: 0,
+              child: Image.asset(
+                "assets/banner/banner01/TeleDWR.png",
+                scale: 2.6,
+              ),
+            ),
             Positioned(
               bottom: 100,
               child: checkCallApi == 7 ? SizedBox() : LoadingCubeGrid(),

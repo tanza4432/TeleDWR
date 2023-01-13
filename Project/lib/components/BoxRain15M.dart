@@ -21,7 +21,7 @@ class BoxRain15M extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Container(
+        FittedBox(
           child: Text(
             "ปริมาณน้ำฝนสะสม",
             style: TextStyle(
