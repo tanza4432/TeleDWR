@@ -17,7 +17,7 @@ class TabTwo extends StatelessWidget {
   String rf;
   List<DataModelGet> resultOffline = [];
   bool check = false;
-  var myFormatNumber = NumberFormat('#,##0.' + "##" * 2);
+  NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +169,10 @@ class TabTwo extends StatelessWidget {
                     ],
                     rows: data.map(
                       (data_) {
+                        var format = NumberFormat.currency(locale: 'en_CH')
+                            .format(double.parse(data_.Flow));
+                        var dataresult = format.split("USD");
+                        data_.Flow = dataresult[1];
                         return DataRow(
                           cells: [
                             DataCell(
@@ -216,11 +220,7 @@ class TabTwo extends StatelessWidget {
                                 width: size.width * 0.2,
                                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                                 child: Text(
-                                  wl == ""
-                                      ? "n/a"
-                                      : double.parse(
-                                              data_.Flow.replaceAll(",", ""))
-                                          .toStringAsFixed(2),
+                                  wl == "" ? "n/a" : data_.Flow,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: 'Kanit',

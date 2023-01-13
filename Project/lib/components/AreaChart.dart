@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:math';
+import 'package:intl/intl.dart';
 
 class AreaChart extends StatefulWidget {
   var data;
@@ -102,6 +103,12 @@ class _AreaChartState extends State<AreaChart> {
                       crossAxisCount: 1),
                   itemBuilder: (BuildContext context, int index) {
                     // print(resultChart[index].columnName);
+                    for (var i in resultChart[index].data) {
+                      var format =
+                          NumberFormat.currency(locale: 'en_CH').format(i.rain);
+                      var dataresult = format.split("USD");
+                      i.rain = double.parse(dataresult[1]);
+                    }
                     return SafeArea(
                       child: SfCartesianChart(
                         tooltipBehavior: _tooltipBehavior,

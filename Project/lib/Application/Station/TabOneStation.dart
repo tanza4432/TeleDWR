@@ -13,7 +13,8 @@ class TabOneStation extends StatelessWidget {
   final List<StationModel> data;
   var basinID;
   List<StationModel> newResult = [];
-  TabOneStation(this.basinID, this.data);
+  var state;
+  TabOneStation(this.basinID, this.data, this.state);
 
   @override
   Widget build(BuildContext context) {
@@ -271,9 +272,9 @@ class TabOneStation extends StatelessWidget {
                   ), // icon-2
                 ],
               ),
-              onTap: () {
+              onTap: () async {
                 // await FlutterSession().set('river', basinID.toString());
-                Navigator.push(
+                await Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => StationPage(
@@ -286,6 +287,7 @@ class TabOneStation extends StatelessWidget {
                     ),
                   ),
                 );
+                state(() {});
               },
             ),
           ],

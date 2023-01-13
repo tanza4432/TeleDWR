@@ -16,6 +16,7 @@ import 'package:dwr0001/components/switchColor.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class MenuPage extends StatefulWidget {
   final List<StationModel> data;
@@ -166,6 +167,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    NumberFormat myFormat = NumberFormat.decimalPattern('en_us');
     Size size = MediaQuery.of(context).size;
     return Consumer<FavoriteRiver>(
       builder: (context, Data, _) {
@@ -749,8 +751,8 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                 ),
                                 Container(
                                   width: double.infinity,
-                                  child:
-                                      TabOneStation(SelectRiver, widget.data),
+                                  child: TabOneStation(
+                                      SelectRiver, widget.data, setState),
                                 ),
                               ],
                             ),
@@ -988,6 +990,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                         showTwoGlows: true,
                         repeatPauseDuration: Duration(milliseconds: 200),
                         child: Stack(
+                          clipBehavior: Clip.none,
                           alignment: Alignment.center,
                           children: [
                             station[i].RF == "RF"
@@ -1126,6 +1129,18 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                     ),
                                   )
                                 : Container(),
+                            station[i].CURR_CCTV == "CCTV"
+                                ? Positioned(
+                                    left: -20,
+                                    top: -20,
+                                    child: Container(
+                                      child: Image.network(
+                                        "https://tele-nakhonsri.dwr.go.th/image/TCAM.png",
+                                        scale: 1.2,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
                           ],
                         ),
                       ),
@@ -1367,30 +1382,159 @@ class MySearchDelegate extends SearchDelegate {
                   leading: Container(
                     child: AvatarGlow(
                       glowColor: Colors.blue,
-                      endRadius: 40.0,
+                      endRadius: 30.0,
                       duration: Duration(milliseconds: 2000),
                       repeat: true,
                       showTwoGlows: true,
                       repeatPauseDuration: Duration(milliseconds: 200),
-                      child: CircleAvatar(
-                        radius: 18.0,
-                        child: CircleAvatar(
-                          radius: 0,
-                          backgroundColor: Colors.greenAccent,
-                        ),
-                        backgroundColor: suggestion.CURR_STATUS == "0"
-                            ? Colors.green
-                            : suggestion.CURR_STATUS == "1"
-                                ? Colors.green
-                                : suggestion.CURR_STATUS == "2"
-                                    ? Colors.green
-                                    : suggestion.CURR_STATUS == "3"
-                                        ? Colors.white
-                                        : suggestion.CURR_STATUS == "4"
-                                            ? Colors.grey
-                                            : suggestion.CURR_STATUS == "5"
-                                                ? Colors.black
-                                                : Colors.green,
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        alignment: Alignment.center,
+                        children: [
+                          suggestion.RF == "RF"
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                          blurRadius: 1,
+                                          color: Colors.grey,
+                                          spreadRadius: 1)
+                                    ],
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 18.0,
+                                    backgroundColor: swColor
+                                        .switchColor(suggestion.CURR_STATUS),
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  backgroundColor: Colors.transparent,
+                                  radius: 18.0,
+                                ),
+                          suggestion.WL == "WL"
+                              ? Positioned(
+                                  bottom: suggestion.CURR_STATUS_WL == "6" ||
+                                          suggestion.CURR_STATUS_WL == "7"
+                                      ? null
+                                      : 8,
+                                  top: suggestion.CURR_STATUS_WL == "6" ||
+                                          suggestion.CURR_STATUS_WL == "7"
+                                      ? 8
+                                      : null,
+                                  child: Container(
+                                    child: suggestion.CURR_STATUS_WL == "6" ||
+                                            suggestion.CURR_STATUS_WL == "7"
+                                        ? CustomPaint(
+                                            painter: TrianglePainter(
+                                              strokeColor: suggestion
+                                                          .CURR_STATUS_WL ==
+                                                      "6"
+                                                  ? Color.fromARGB(
+                                                      255, 240, 220, 40)
+                                                  : suggestion.CURR_STATUS_WL ==
+                                                          "7"
+                                                      ? Color.fromARGB(
+                                                          255, 183, 25, 14)
+                                                      : swColor.switchColor(
+                                                          suggestion
+                                                              .CURR_STATUS),
+                                              strokeWidth: 10,
+                                              paintingStyle: PaintingStyle.fill,
+                                              angle: 0,
+                                            ),
+                                            child: Container(
+                                              height: 28,
+                                              width: 30,
+                                            ),
+                                          )
+                                        : CustomPaint(
+                                            painter: TrianglePainter(
+                                              strokeColor: suggestion
+                                                          .CURR_STATUS_WL ==
+                                                      "0"
+                                                  ? Color.fromARGB(
+                                                      255, 35, 119, 36)
+                                                  : suggestion.CURR_STATUS_WL ==
+                                                          "1"
+                                                      ? Color.fromARGB(
+                                                          255, 240, 220, 40)
+                                                      : suggestion.CURR_STATUS_WL ==
+                                                              "2"
+                                                          ? Colors.red
+                                                          : suggestion.CURR_STATUS_WL ==
+                                                                  "3"
+                                                              ? suggestion.CURR_STATUS ==
+                                                                      "3"
+                                                                  ? Colors.grey
+                                                                  : Colors.white
+                                                              : suggestion.CURR_STATUS_WL ==
+                                                                      "4"
+                                                                  ? suggestion.CURR_STATUS ==
+                                                                          "4"
+                                                                      ? Color.fromARGB(
+                                                                          255,
+                                                                          200,
+                                                                          200,
+                                                                          200)
+                                                                      : Colors
+                                                                          .grey
+                                                                  : suggestion.CURR_STATUS ==
+                                                                          "5"
+                                                                      ? Color.fromARGB(
+                                                                          255,
+                                                                          108,
+                                                                          108,
+                                                                          108)
+                                                                      : Colors
+                                                                          .black,
+                                              strokeWidth: 1,
+                                              paintingStyle: suggestion
+                                                          .CURR_STATUS_WL ==
+                                                      "3"
+                                                  ? suggestion.CURR_STATUS ==
+                                                          "3"
+                                                      ? PaintingStyle.stroke
+                                                      : PaintingStyle.fill
+                                                  : suggestion.CURR_STATUS_WL ==
+                                                          "4"
+                                                      ? suggestion.CURR_STATUS ==
+                                                              "4"
+                                                          ? PaintingStyle.stroke
+                                                          : PaintingStyle.fill
+                                                      : suggestion.CURR_STATUS_WL ==
+                                                              "5"
+                                                          ? suggestion.CURR_STATUS ==
+                                                                  "5"
+                                                              ? PaintingStyle
+                                                                  .stroke
+                                                              : PaintingStyle
+                                                                  .fill
+                                                          : PaintingStyle.fill,
+                                              angle: 1,
+                                            ),
+                                            child: Container(
+                                              height: 28,
+                                              width: 30,
+                                            ),
+                                          ),
+                                  ),
+                                )
+                              : Container(),
+                          suggestion.CURR_CCTV == "CCTV"
+                              ? Positioned(
+                                  right: -20,
+                                  top: 0,
+                                  child: Container(
+                                    child: Image.network(
+                                      "https://tele-nakhonsri.dwr.go.th/image/TCAM.png",
+                                      scale: 1.5,
+                                    ),
+                                  ),
+                                )
+                              : SizedBox(),
+                        ],
                       ),
                     ),
                   ),

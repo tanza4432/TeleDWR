@@ -113,6 +113,7 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                             showTwoGlows: true,
                             repeatPauseDuration: Duration(milliseconds: 200),
                             child: Stack(
+                              clipBehavior: Clip.none,
                               alignment: Alignment.center,
                               children: [
                                 item.RF == "RF"
@@ -239,6 +240,18 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
                                                   ),
                                       )
                                     : Container(),
+                                item.CURR_CCTV == "CCTV"
+                                    ? Positioned(
+                                        right: -5,
+                                        top: 0,
+                                        child: Container(
+                                          child: Image.network(
+                                            "https://tele-nakhonsri.dwr.go.th/image/TCAM.png",
+                                            scale: 1.5,
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox(),
                               ],
                             ),
                           ),
