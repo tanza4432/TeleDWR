@@ -10,8 +10,8 @@
 #endif
 #endif
 
-#import "FLTPathProviderPlugin.h"
+#import "ImageDownloaderPlugin.h"
 
-FOUNDATION_EXPORT double path_providerVersionNumber;
-FOUNDATION_EXPORT const unsigned char path_providerVersionString[];
+FOUNDATION_EXPORT double image_downloaderVersionNumber;
+FOUNDATION_EXPORT const unsigned char image_downloaderVersionString[];
 
