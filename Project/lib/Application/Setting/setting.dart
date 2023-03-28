@@ -193,7 +193,7 @@ class _SettingPageState extends State<SettingPage> {
                       content: Padding(
                         padding: const EdgeInsets.only(bottom: 50),
                         child: Text(
-                          'เป็นแอปพลิเคชันสำหรับการติดตามสถานะการณ์ของน้ำฝนและน้ำท่า ประเทศไทย ตามลุ่มน้ำที่กำหนด มีการติดตามดูสถานการณ์น้ำผ่านกล้อง CCTV',
+                          'เป็นแอปพลิเคชันสำหรับการติดตามสถานะการณ์ของน้ำฝนและน้ำท่า ประเทศไทย \nตามลุ่มน้ำที่กำหนด มีการติดตามดูสถานการณ์น้ำผ่านกล้อง CCTV',
                           textAlign: TextAlign.center,
                           style: DefaultStyleB(),
                         ),
