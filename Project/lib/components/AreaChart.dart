@@ -102,13 +102,6 @@ class _AreaChartState extends State<AreaChart> {
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 1),
                   itemBuilder: (BuildContext context, int index) {
-                    // print(resultChart[index].columnName);
-                    for (var i in resultChart[index].data) {
-                      var format =
-                          NumberFormat.currency(locale: 'en_CH').format(i.rain);
-                      var dataresult = format.split("USD");
-                      i.rain = double.parse(dataresult[1]);
-                    }
                     return SafeArea(
                       child: SfCartesianChart(
                         tooltipBehavior: _tooltipBehavior,
@@ -145,6 +138,10 @@ class _AreaChartState extends State<AreaChart> {
                                       ? "{value} ลบม./วินาที"
                                       : '{value} มม.',
                           interactiveTooltip: InteractiveTooltip(enable: false),
+                          numberFormat: NumberFormat.currency(
+                    locale: 'en_CH',
+                    symbol: ""
+                ),
                         ),
                         primaryXAxis: CategoryAxis(
                           edgeLabelPlacement: EdgeLabelPlacement.shift,

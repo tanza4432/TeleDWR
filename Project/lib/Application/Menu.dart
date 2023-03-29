@@ -110,6 +110,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
         {
           Project_URL = infoBasin[3].projectUrl;
           Forecast_URL = infoBasin[3].forecastUrl;
+          print(Project_URL);
 
           setState(() {});
           break;
