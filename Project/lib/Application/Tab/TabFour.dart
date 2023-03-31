@@ -1,12 +1,13 @@
 import 'package:dwr0001/Services/main_Service.dart';
 import 'package:dwr0001/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:image_downloader/image_downloader.dart';
-// import 'package:gallery_saver/gallery_saver.dart';
+import 'package:flutter/services.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:responsive_flutter/responsive_flutter.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:zoom_pinch_overlay/zoom_pinch_overlay.dart';
+import 'package:dio/dio.dart';
 
 class TabFour extends StatefulWidget {
   TabFour(this.stnId, this.basinId, this.CCTV, this.title);
@@ -143,6 +144,7 @@ class _TabFourState extends State<TabFour> {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           HeroPhotoViewRouteWrapper(
+                                        context: context,
                                         imageProvider: NetworkImage(
                                           'http://tele-' +
                                               widget.basinName +
@@ -209,6 +211,7 @@ class _TabFourState extends State<TabFour> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => HeroPhotoViewRouteWrapper(
+                                  context: context,
                                   imageProvider: NetworkImage(
                                     'http://tele-' +
                                         widget.basinName +
@@ -306,12 +309,13 @@ class TabTitleBar extends StatelessWidget {
 }
 
 class HeroPhotoViewRouteWrapper extends StatelessWidget {
-  const HeroPhotoViewRouteWrapper({
+  HeroPhotoViewRouteWrapper({
     this.imageProvider,
     this.backgroundDecoration,
     this.minScale,
     this.maxScale,
     this.path,
+    this.context,
   });
 
   final ImageProvider imageProvider;
@@ -319,6 +323,27 @@ class HeroPhotoViewRouteWrapper extends StatelessWidget {
   final dynamic minScale;
   final dynamic maxScale;
   final String path;
+  var context;
+
+  void download(String url) async {
+    try {
+      var response = await Dio().get(
+        url,
+        options: Options(responseType: ResponseType.bytes),
+      );
+      final result = await ImageGallerySaver.saveImage(
+        Uint8List.fromList(response.data),
+        quality: 60,
+      );
+      Navigator.pop(context);
+      const snackBar = SnackBar(
+        content: Text('ดาวน์โหลดรูปภาพสำเร็จ'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } on PlatformException catch (error) {
+      print(error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -354,8 +379,7 @@ class HeroPhotoViewRouteWrapper extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    var a = await ImageDownloader.downloadImage(path);
-                    print(a);
+                    download(path);
                   },
                   child: Icon(
                     Icons.download,

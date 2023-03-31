@@ -35,11 +35,10 @@ dependencies:
   flutter_spinkit: ^5.1.0
   zoom_pinch_overlay: ^1.2.0
   flutter_speed_dial: ^6.2.0
-  image_downloader: ^0.20.1
-  # gallery_saver: any
-  # firebase_core: ^0.7.0
-  # firebase_messaging: ^8.0.0-dev.15
-  # flutter_local_notifications: ^4.0.1+2
+  # image_downloader: ^0.31.0
+  image_gallery_saver: ^1.7.1
+  dio: ^3.0.10
+
 
 dev_dependencies:
   flutter_test:
