@@ -81,11 +81,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-## image_downloader
+## image_gallery_saver
 
 MIT License
 
-Copyright (c) 2018 koji ishii
+Copyright (c) [2018] [xuqiangqiang]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
