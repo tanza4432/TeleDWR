@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 
 DateTime backbuttonpressedTime;
+
 class MenuPage extends StatefulWidget {
   final List<StationModel> data;
 
@@ -409,8 +410,8 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                                   children: [
                                                     Container(
                                                       height: 200,
-                                                      child: resultData(
-                                                          station, widget.data),
+                                                      child: resultData(station,
+                                                          widget.data, false),
                                                     ),
                                                   ],
                                                 ),
@@ -423,6 +424,7 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                           child: Consumer<NotificationRiver>(
                                             builder: (context, Noti, _) {
                                               return Container(
+                                                color: Colors.black12,
                                                 child: ListView.builder(
                                                   scrollDirection:
                                                       Axis.vertical,
@@ -436,244 +438,251 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                                         .split(" ");
                                                     var time = lastUpdate[1]
                                                         .split(":");
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        // print(index);
-                                                        // รอ API ส่ง stnId ไป return ข้อมูลที่มี basin กลับมา
-                                                      },
-                                                      child: ListTile(
-                                                        contentPadding:
-                                                            EdgeInsets.only(
-                                                                right: 0),
-                                                        leading: Container(
-                                                          child: AvatarGlow(
-                                                            glowColor:
-                                                                Colors.blue,
-                                                            endRadius: 30.0,
-                                                            duration: Duration(
-                                                                milliseconds:
-                                                                    2000),
-                                                            repeat: true,
-                                                            showTwoGlows: true,
-                                                            repeatPauseDuration:
-                                                                Duration(
-                                                                    milliseconds:
-                                                                        200),
-                                                            child: Stack(
-                                                              alignment:
-                                                                  Alignment
-                                                                      .center,
-                                                              children: [
-                                                                Noti.Notification[index]
-                                                                            .RF ==
-                                                                        "RF"
-                                                                    ? Container(
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          shape:
-                                                                              BoxShape.circle,
-                                                                          boxShadow: [
-                                                                            BoxShadow(
-                                                                                blurRadius: 1,
-                                                                                color: Colors.grey,
-                                                                                spreadRadius: 1)
-                                                                          ],
-                                                                        ),
-                                                                        child:
-                                                                            CircleAvatar(
-                                                                          radius:
-                                                                              18.0,
-                                                                          backgroundColor: swColor.switchColor(Noti
-                                                                              .Notification[index]
-                                                                              .CURR_STATUS),
-                                                                        ),
-                                                                      )
-                                                                    : CircleAvatar(
-                                                                        backgroundColor:
-                                                                            Colors.transparent,
-                                                                        radius:
-                                                                            18.0,
-                                                                      ),
-                                                                Noti.Notification[index]
-                                                                            .WL ==
-                                                                        "WL"
-                                                                    ? Positioned(
-                                                                        bottom: Noti.Notification[index].CURR_STATUS_WL == "6" ||
-                                                                                Noti.Notification[index].CURR_STATUS_WL == "7"
-                                                                            ? null
-                                                                            : 8,
-                                                                        top: Noti.Notification[index].CURR_STATUS_WL == "6" ||
-                                                                                Noti.Notification[index].CURR_STATUS_WL == "7"
-                                                                            ? 8
-                                                                            : null,
-                                                                        child:
-                                                                            Container(
-                                                                          child: Noti.Notification[index].CURR_STATUS_WL == "6" || Noti.Notification[index].CURR_STATUS_WL == "7"
-                                                                              ? CustomPaint(
-                                                                                  painter: TrianglePainter(
-                                                                                    strokeColor: Noti.Notification[index].CURR_STATUS_WL == "6"
-                                                                                        ? Color.fromARGB(255, 240, 220, 40)
-                                                                                        : Noti.Notification[index].CURR_STATUS_WL == "7"
-                                                                                            ? Color.fromARGB(255, 183, 25, 14)
-                                                                                            : swColor.switchColor(Noti.Notification[index].CURR_STATUS),
-                                                                                    strokeWidth: 10,
-                                                                                    paintingStyle: PaintingStyle.fill,
-                                                                                    angle: 0,
-                                                                                  ),
-                                                                                  child: Container(
-                                                                                    height: 28,
-                                                                                    width: 30,
-                                                                                  ),
-                                                                                )
-                                                                              : CustomPaint(
-                                                                                  painter: TrianglePainter(
-                                                                                    strokeColor: Noti.Notification[index].CURR_STATUS_WL == "0"
-                                                                                        ? Color.fromARGB(255, 35, 119, 36)
-                                                                                        : Noti.Notification[index].CURR_STATUS_WL == "1"
-                                                                                            ? Color.fromARGB(255, 240, 220, 40)
-                                                                                            : Noti.Notification[index].CURR_STATUS_WL == "2"
-                                                                                                ? Colors.red
-                                                                                                : Noti.Notification[index].CURR_STATUS_WL == "3"
-                                                                                                    ? Noti.Notification[index].CURR_STATUS == "3"
-                                                                                                        ? Colors.grey
-                                                                                                        : Colors.white
-                                                                                                    : Noti.Notification[index].CURR_STATUS_WL == "4"
-                                                                                                        ? Noti.Notification[index].CURR_STATUS == "4"
-                                                                                                            ? Color.fromARGB(255, 200, 200, 200)
-                                                                                                            : Colors.grey
-                                                                                                        : Noti.Notification[index].CURR_STATUS == "5"
-                                                                                                            ? Color.fromARGB(255, 108, 108, 108)
-                                                                                                            : Colors.black,
-                                                                                    strokeWidth: 1,
-                                                                                    paintingStyle: Noti.Notification[index].CURR_STATUS_WL == "3"
-                                                                                        ? Noti.Notification[index].CURR_STATUS == "3"
-                                                                                            ? PaintingStyle.stroke
-                                                                                            : PaintingStyle.fill
-                                                                                        : Noti.Notification[index].CURR_STATUS_WL == "4"
-                                                                                            ? Noti.Notification[index].CURR_STATUS == "4"
-                                                                                                ? PaintingStyle.stroke
-                                                                                                : PaintingStyle.fill
-                                                                                            : Noti.Notification[index].CURR_STATUS_WL == "5"
-                                                                                                ? Noti.Notification[index].CURR_STATUS == "5"
-                                                                                                    ? PaintingStyle.stroke
-                                                                                                    : PaintingStyle.fill
-                                                                                                : PaintingStyle.fill,
-                                                                                    angle: 1,
-                                                                                  ),
-                                                                                  child: Container(
-                                                                                    height: 28,
-                                                                                    width: 30,
-                                                                                  ),
-                                                                                ),
-                                                                        ),
-                                                                      )
-                                                                    : Container(),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        title: new Text(
-                                                          Noti
-                                                              .Notification[
-                                                                  index]
-                                                              .STN_ID,
-                                                          style: TextStyle(
-                                                            color:
-                                                                Colors.black54,
-                                                            fontFamily: 'Kanit',
-                                                            fontSize: 18.0,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                          ),
-                                                        ),
-                                                        subtitle: new Text(
-                                                          Noti
-                                                              .Notification[
-                                                                  index]
-                                                              .STN_Name,
-                                                          style: TextStyle(
-                                                            color:
-                                                                Colors.black54,
-                                                            fontFamily: 'Kanit',
-                                                            fontSize: 14.0,
-                                                            fontWeight:
-                                                                FontWeight.w200,
-                                                          ),
-                                                        ),
-                                                        trailing: Wrap(
-                                                          spacing:
-                                                              2, // space between two icons
-                                                          crossAxisAlignment:
-                                                              WrapCrossAlignment
-                                                                  .center,
-                                                          children: <Widget>[
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      right:
-                                                                          15.0),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .end,
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                            .only(
-                                                                        bottom:
-                                                                            2.0),
-                                                                    child: Text(
-                                                                      time[0] +
-                                                                          ":" +
-                                                                          time[
-                                                                              1],
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: Colors
-                                                                            .black54,
-                                                                        fontFamily:
-                                                                            'Kanit',
-                                                                        fontSize:
-                                                                            12.0,
-                                                                        fontWeight:
-                                                                            FontWeight.w200,
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  Text(
-                                                                    lastUpdate[
-                                                                        0],
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .black54,
-                                                                      fontFamily:
-                                                                          'Kanit',
-                                                                      fontSize:
-                                                                          10.0,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w200,
-                                                                    ),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              // color: Colors.red,
-                                                              child: Icon(Icons
-                                                                  .arrow_forward_ios),
-                                                            ), // icon-2
-                                                          ],
-                                                        ),
-                                                        onTap: () {
-                                                          // await FlutterSession().set('river', basinID.toString());
-                                                        },
-                                                      ),
+                                                    return Container(
+                                                      height: 200,
+                                                      child: resultData(
+                                                          Noti.Notification,
+                                                          widget.data,
+                                                          true),
                                                     );
+                                                    // GestureDetector(
+                                                    //   onTap: () {
+                                                    //     // print(index);
+                                                    //     // รอ API ส่ง stnId ไป return ข้อมูลที่มี basin กลับมา
+                                                    //   },
+                                                    //   child: ListTile(
+                                                    //     contentPadding:
+                                                    //         EdgeInsets.only(
+                                                    //             right: 0),
+                                                    //     leading: Container(
+                                                    //       child: AvatarGlow(
+                                                    //         glowColor:
+                                                    //             Colors.blue,
+                                                    //         endRadius: 30.0,
+                                                    //         duration: Duration(
+                                                    //             milliseconds:
+                                                    //                 2000),
+                                                    //         repeat: true,
+                                                    //         showTwoGlows: true,
+                                                    //         repeatPauseDuration:
+                                                    //             Duration(
+                                                    //                 milliseconds:
+                                                    //                     200),
+                                                    //         child: Stack(
+                                                    //           alignment:
+                                                    //               Alignment
+                                                    //                   .center,
+                                                    //           children: [
+                                                    //             Noti.Notification[index]
+                                                    //                         .RF ==
+                                                    //                     "RF"
+                                                    //                 ? Container(
+                                                    //                     decoration:
+                                                    //                         BoxDecoration(
+                                                    //                       color:
+                                                    //                           Colors.white,
+                                                    //                       shape:
+                                                    //                           BoxShape.circle,
+                                                    //                       boxShadow: [
+                                                    //                         BoxShadow(
+                                                    //                             blurRadius: 1,
+                                                    //                             color: Colors.grey,
+                                                    //                             spreadRadius: 1)
+                                                    //                       ],
+                                                    //                     ),
+                                                    //                     child:
+                                                    //                         CircleAvatar(
+                                                    //                       radius:
+                                                    //                           18.0,
+                                                    //                       backgroundColor: swColor.switchColor(Noti
+                                                    //                           .Notification[index]
+                                                    //                           .CURR_STATUS),
+                                                    //                     ),
+                                                    //                   )
+                                                    //                 : CircleAvatar(
+                                                    //                     backgroundColor:
+                                                    //                         Colors.transparent,
+                                                    //                     radius:
+                                                    //                         18.0,
+                                                    //                   ),
+                                                    //             Noti.Notification[index]
+                                                    //                         .WL ==
+                                                    //                     "WL"
+                                                    //                 ? Positioned(
+                                                    //                     bottom: Noti.Notification[index].CURR_STATUS_WL == "6" ||
+                                                    //                             Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                    //                         ? null
+                                                    //                         : 8,
+                                                    //                     top: Noti.Notification[index].CURR_STATUS_WL == "6" ||
+                                                    //                             Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                    //                         ? 8
+                                                    //                         : null,
+                                                    //                     child:
+                                                    //                         Container(
+                                                    //                       child: Noti.Notification[index].CURR_STATUS_WL == "6" || Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                    //                           ? CustomPaint(
+                                                    //                               painter: TrianglePainter(
+                                                    //                                 strokeColor: Noti.Notification[index].CURR_STATUS_WL == "6"
+                                                    //                                     ? Color.fromARGB(255, 240, 220, 40)
+                                                    //                                     : Noti.Notification[index].CURR_STATUS_WL == "7"
+                                                    //                                         ? Color.fromARGB(255, 183, 25, 14)
+                                                    //                                         : swColor.switchColor(Noti.Notification[index].CURR_STATUS),
+                                                    //                                 strokeWidth: 10,
+                                                    //                                 paintingStyle: PaintingStyle.fill,
+                                                    //                                 angle: 0,
+                                                    //                               ),
+                                                    //                               child: Container(
+                                                    //                                 height: 28,
+                                                    //                                 width: 30,
+                                                    //                               ),
+                                                    //                             )
+                                                    //                           : CustomPaint(
+                                                    //                               painter: TrianglePainter(
+                                                    //                                 strokeColor: Noti.Notification[index].CURR_STATUS_WL == "0"
+                                                    //                                     ? Color.fromARGB(255, 35, 119, 36)
+                                                    //                                     : Noti.Notification[index].CURR_STATUS_WL == "1"
+                                                    //                                         ? Color.fromARGB(255, 240, 220, 40)
+                                                    //                                         : Noti.Notification[index].CURR_STATUS_WL == "2"
+                                                    //                                             ? Colors.red
+                                                    //                                             : Noti.Notification[index].CURR_STATUS_WL == "3"
+                                                    //                                                 ? Noti.Notification[index].CURR_STATUS == "3"
+                                                    //                                                     ? Colors.grey
+                                                    //                                                     : Colors.white
+                                                    //                                                 : Noti.Notification[index].CURR_STATUS_WL == "4"
+                                                    //                                                     ? Noti.Notification[index].CURR_STATUS == "4"
+                                                    //                                                         ? Color.fromARGB(255, 200, 200, 200)
+                                                    //                                                         : Colors.grey
+                                                    //                                                     : Noti.Notification[index].CURR_STATUS == "5"
+                                                    //                                                         ? Color.fromARGB(255, 108, 108, 108)
+                                                    //                                                         : Colors.black,
+                                                    //                                 strokeWidth: 1,
+                                                    //                                 paintingStyle: Noti.Notification[index].CURR_STATUS_WL == "3"
+                                                    //                                     ? Noti.Notification[index].CURR_STATUS == "3"
+                                                    //                                         ? PaintingStyle.stroke
+                                                    //                                         : PaintingStyle.fill
+                                                    //                                     : Noti.Notification[index].CURR_STATUS_WL == "4"
+                                                    //                                         ? Noti.Notification[index].CURR_STATUS == "4"
+                                                    //                                             ? PaintingStyle.stroke
+                                                    //                                             : PaintingStyle.fill
+                                                    //                                         : Noti.Notification[index].CURR_STATUS_WL == "5"
+                                                    //                                             ? Noti.Notification[index].CURR_STATUS == "5"
+                                                    //                                                 ? PaintingStyle.stroke
+                                                    //                                                 : PaintingStyle.fill
+                                                    //                                             : PaintingStyle.fill,
+                                                    //                                 angle: 1,
+                                                    //                               ),
+                                                    //                               child: Container(
+                                                    //                                 height: 28,
+                                                    //                                 width: 30,
+                                                    //                               ),
+                                                    //                             ),
+                                                    //                     ),
+                                                    //                   )
+                                                    //                 : Container(),
+                                                    //           ],
+                                                    //         ),
+                                                    //       ),
+                                                    //     ),
+                                                    //     title: new Text(
+                                                    //       Noti
+                                                    //           .Notification[
+                                                    //               index]
+                                                    //           .STN_ID,
+                                                    //       style: TextStyle(
+                                                    //         color:
+                                                    //             Colors.black54,
+                                                    //         fontFamily: 'Kanit',
+                                                    //         fontSize: 18.0,
+                                                    //         fontWeight:
+                                                    //             FontWeight.w400,
+                                                    //       ),
+                                                    //     ),
+                                                    //     subtitle: new Text(
+                                                    //       Noti
+                                                    //           .Notification[
+                                                    //               index]
+                                                    //           .STN_Name,
+                                                    //       style: TextStyle(
+                                                    //         color:
+                                                    //             Colors.black54,
+                                                    //         fontFamily: 'Kanit',
+                                                    //         fontSize: 14.0,
+                                                    //         fontWeight:
+                                                    //             FontWeight.w200,
+                                                    //       ),
+                                                    //     ),
+                                                    //     trailing: Wrap(
+                                                    //       spacing:
+                                                    //           2, // space between two icons
+                                                    //       crossAxisAlignment:
+                                                    //           WrapCrossAlignment
+                                                    //               .center,
+                                                    //       children: <Widget>[
+                                                    //         Padding(
+                                                    //           padding:
+                                                    //               const EdgeInsets
+                                                    //                       .only(
+                                                    //                   right:
+                                                    //                       15.0),
+                                                    //           child: Column(
+                                                    //             crossAxisAlignment:
+                                                    //                 CrossAxisAlignment
+                                                    //                     .end,
+                                                    //             children: [
+                                                    //               Padding(
+                                                    //                 padding: const EdgeInsets
+                                                    //                         .only(
+                                                    //                     bottom:
+                                                    //                         2.0),
+                                                    //                 child: Text(
+                                                    //                   time[0] +
+                                                    //                       ":" +
+                                                    //                       time[
+                                                    //                           1],
+                                                    //                   style:
+                                                    //                       TextStyle(
+                                                    //                     color: Colors
+                                                    //                         .black54,
+                                                    //                     fontFamily:
+                                                    //                         'Kanit',
+                                                    //                     fontSize:
+                                                    //                         12.0,
+                                                    //                     fontWeight:
+                                                    //                         FontWeight.w200,
+                                                    //                   ),
+                                                    //                 ),
+                                                    //               ),
+                                                    //               Text(
+                                                    //                 lastUpdate[
+                                                    //                     0],
+                                                    //                 style:
+                                                    //                     TextStyle(
+                                                    //                   color: Colors
+                                                    //                       .black54,
+                                                    //                   fontFamily:
+                                                    //                       'Kanit',
+                                                    //                   fontSize:
+                                                    //                       10.0,
+                                                    //                   fontWeight:
+                                                    //                       FontWeight
+                                                    //                           .w200,
+                                                    //                 ),
+                                                    //               ),
+                                                    //             ],
+                                                    //           ),
+                                                    //         ),
+                                                    //         Container(
+                                                    //           // color: Colors.red,
+                                                    //           child: Icon(Icons
+                                                    //               .arrow_forward_ios),
+                                                    //         ), // icon-2
+                                                    //       ],
+                                                    //     ),
+                                                    //     onTap: () {
+                                                    //       // await FlutterSession().set('river', basinID.toString());
+                                                    //     },
+                                                    //   ),
+                                                    // );
                                                   },
                                                 ),
                                               );
@@ -819,17 +828,22 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                           boxShadow: optionSelected == i + 1
                               ? [
                                   BoxShadow(
-                                    color:
-                                        Colors.lightBlue[600].withOpacity(0.8),
-                                    // spreadRadius: 5,
+                                    color: Colors.lightBlue[600],
+                                    spreadRadius: 2,
                                     blurRadius: 10,
-                                    offset: Offset(4, 2),
+                                    offset: Offset(0, 0),
                                   ),
                                 ]
                               : [],
                           color: optionSelected == i + 1
                               ? Colors.lightBlue[600]
                               : Colors.white,
+                          // border: Border.all(
+                          //   color: optionSelected == i + 1
+                          //       ? Colors.lightBlue[600]
+                          //       : Colors.transparent,
+                          //   width: 5,
+                          // ),
                           borderRadius: BorderRadius.all(
                             Radius.circular(12),
                           ),
@@ -851,17 +865,18 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                                 maxLines: 1,
                                 softWrap: false,
                                 style: TextStyle(
-                                    fontFamily: 'Kanit',
-                                    fontSize: 14.0,
-                                    fontWeight: FontWeight.w200,
-                                    color: optionSelected == i + 1
-                                        ? Colors.white
-                                        : Colors.grey),
+                                  fontFamily: 'Kanit',
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.w200,
+                                  color: optionSelected == i + 1
+                                      ? Colors.white
+                                      : Colors.grey,
+                                ),
                               ),
                             ),
                             Expanded(
                               child: Container(
-                                decoration: BoxDecoration(
+                                decoration:optionSelected == i + 1 ?  BoxDecoration(): BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
@@ -920,7 +935,8 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
     );
   }
 
-  ListView resultData(List<StationModel> station, List<StationModel> data) {
+  ListView resultData(
+      List<StationModel> station, List<StationModel> data, bool noti) {
     return ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: station.length,
@@ -935,20 +951,22 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
             left: 10,
           ),
           child: InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => StationPage(
-                      stnId: station[i].STN_ID,
-                      basinID: station[i].BASINID,
-                      RF: station[i].RF,
-                      WL: station[i].WL,
-                      CCTV: station[i].CURR_CCTV,
-                      data: data),
-                ),
-              );
-            },
+            onTap: noti
+                ? null
+                : () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StationPage(
+                            stnId: station[i].STN_ID,
+                            basinID: station[i].BASINID,
+                            RF: station[i].RF,
+                            WL: station[i].WL,
+                            CCTV: station[i].CURR_CCTV,
+                            data: data),
+                      ),
+                    );
+                  },
             child: Container(
               width: 100,
               decoration: BoxDecoration(
@@ -961,28 +979,37 @@ class _MenuPageState extends State<MenuPage> with TickerProviderStateMixin {
                 padding: const EdgeInsets.all(5),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            setState(() {
-                              if (alreadyFavorite) {
-                                // Data.addData(station[i].STN_ID);
-                                Data.removeData(station[i].STN_ID);
-                                station.remove(station[i]);
-                              }
-                            });
-                          },
-                          child: Icon(
-                            alreadyFavorite
-                                ? Icons.star_outlined
-                                : Icons.star_border_outlined,
-                            color: alreadyFavorite ? Colors.yellow : null,
+                    noti
+                        ? Row(
+                            children: [
+                              Icon(
+                                Icons.star_border_outlined,
+                                color: Colors.transparent,
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              InkWell(
+                                onTap: () {
+                                  setState(() {
+                                    if (alreadyFavorite) {
+                                      // Data.addData(station[i].STN_ID);
+                                      Data.removeData(station[i].STN_ID);
+                                      station.remove(station[i]);
+                                    }
+                                  });
+                                },
+                                child: Icon(
+                                  alreadyFavorite
+                                      ? Icons.star_outlined
+                                      : Icons.star_border_outlined,
+                                  color: alreadyFavorite ? Colors.yellow : null,
+                                ),
+                              )
+                            ],
                           ),
-                        )
-                      ],
-                    ),
                     Container(
                       child: AvatarGlow(
                         glowColor: Colors.blue,

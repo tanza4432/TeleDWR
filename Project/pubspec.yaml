@@ -63,6 +63,7 @@ flutter:
     - images/bg.jpg
     - images/bg2.png
     - images/ic_launcher.png
+    - assets/images/logoButton.png
     - assets/images/loading1.gif
     - assets/images/loading2.gif
     - assets/images/beach.png

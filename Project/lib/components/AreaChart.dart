@@ -104,6 +104,7 @@ class _AreaChartState extends State<AreaChart> {
                   itemBuilder: (BuildContext context, int index) {
                     return SafeArea(
                       child: SfCartesianChart(
+                        
                         tooltipBehavior: _tooltipBehavior,
                         backgroundColor: Colors.transparent,
                         zoomPanBehavior: _zoomPanbehavior,
@@ -139,12 +140,14 @@ class _AreaChartState extends State<AreaChart> {
                                       : '{value} มม.',
                           interactiveTooltip: InteractiveTooltip(enable: false),
                           numberFormat: NumberFormat.currency(
-                    locale: 'en_CH',
-                    symbol: ""
-                ),
+                            locale: 'en_CH',
+                            symbol: "",
+                          ),
                         ),
                         primaryXAxis: CategoryAxis(
                           edgeLabelPlacement: EdgeLabelPlacement.shift,
+                          labelRotation: -90,
+                          
                         ),
                         series: [
                           resultChart[index].columnName == "ปริมาณน้ำฝน"

@@ -684,7 +684,12 @@ class _MapPageState extends State<MapPage> with TickerProviderStateMixin {
 
           // WidgetMap(markers: _markers, mapController: _mapController),
           floatingActionButton: SpeedDial(
-            icon: Icons.water,
+            child: Image.asset(
+              "assets/images/logoButton.png",
+              scale: 15,
+              alignment: Alignment.center,
+            ),
+            // icon: Icons.water,
             backgroundColor: Colors.blue,
             children: basinList.map(
               (data) {
