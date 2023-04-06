@@ -43,8 +43,8 @@ android {
         applicationId "com.teledwrapp.app"
         minSdkVersion 21
         targetSdkVersion 32
-        versionCode 9
-        versionName '3.0.6'
+        versionCode 12
+        versionName '3.1.0'
         multiDexEnabled true
     }
 
