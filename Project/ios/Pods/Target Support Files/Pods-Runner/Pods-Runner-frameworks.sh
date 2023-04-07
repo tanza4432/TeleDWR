@@ -178,6 +178,7 @@ code_sign_if_enabled() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Toast/Toast.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_webview_plugin/flutter_webview_plugin.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/fluttertoast/fluttertoast.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/image_gallery_saver/image_gallery_saver.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/shared_preferences/shared_preferences.framework"
@@ -187,6 +188,7 @@ fi
 if [[ "$CONFIGURATION" == "Profile" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Toast/Toast.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_webview_plugin/flutter_webview_plugin.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/fluttertoast/fluttertoast.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/image_gallery_saver/image_gallery_saver.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/shared_preferences/shared_preferences.framework"
@@ -196,6 +198,7 @@ fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/Toast/Toast.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_webview_plugin/flutter_webview_plugin.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/fluttertoast/fluttertoast.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/image_gallery_saver/image_gallery_saver.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/shared_preferences/shared_preferences.framework"
